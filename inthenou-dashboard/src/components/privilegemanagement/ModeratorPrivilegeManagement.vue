@@ -4,7 +4,6 @@
   <v-row align ="center" justify="center" no-gutters style="height: 150px;"> 
     <!-- the privilege management view tag is used for displaying the privilege controls module-->
     <!-- <p-m-v viewtype=("moderator","eventcreator")></p-m-v> the optinos are used to display either moderators or event creators -->
-    <p-m-v viewtype="moderator" ></p-m-v>
     <p-m-v viewtype="eventcreator" ></p-m-v>
   </v-row>
 </template>
@@ -16,4 +15,5 @@
       'p-m-v': ModeratorPrivilegeManagementView // instance of the import of the component PrivilegeManegement.vue, used for the tags above
     }
   }
+
 </script>
