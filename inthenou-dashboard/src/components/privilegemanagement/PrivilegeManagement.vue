@@ -11,7 +11,7 @@
             <v-spacer></v-spacer>
              <v-card-actions>
                 <v-col cols="4">
-                    <v-dialog v-model="adddialog" persistent max-width="600px">
+                  <v-dialog v-model="adddialog" persistent max-width="600px">
                     <template v-slot:activator="{ on }">
                         <div class="text-right">
                         <v-btn color="primary mb-0 pa-0" dark v-on="on" class="mx-2" fab>
@@ -21,39 +21,26 @@
                     </template>
                     <v-card>
                         <v-card-title>
-                        <span
-                            v-if="viewtype==='moderator'"
-                            vclass="headline"
-                        >Grant Moderator Privileges</span>
-                        <span
-                            v-else-if="viewtype==='eventcreator'"
-                            vclass="headline"
-                        >Event Creator Privileges</span>
+                          <span v-if="viewtype==='moderator'" vclass="headline">Grant Moderator Privileges</span>
+                          <span v-else-if="viewtype==='eventcreator'" vclass="headline">Event Creator Privileges</span>
                         </v-card-title>
                         <v-card-text>
-                        <v-container>
-                            <v-row>
-                            <v-col cols="12" >
-                                <v-text-field
-                                :class="{invalid: $v.formemail.$error}"
-                                @input="$v.formemail.$touch()"
-                                v-model.lazy="formemail"
-                                label="Email*"
-                                required
-                                hint="enter the email of the user you wish to grant Moderator privileges"
-                                ></v-text-field>
-                            </v-col>
-                            </v-row>
-                        </v-container>
-                        <small>*indicates required field</small>
+                          <v-container>
+                              <v-row>
+                              <v-col cols="12" >
+                                <v-text-field :class="{invalid: $v.formemail.$error}" @input="$v.formemail.$touch()" v-model.lazy="formemail" label="Email*" required hint="enter the email of the user you wish to grant Moderator privileges" ></v-text-field>
+                              </v-col>
+                              </v-row>
+                          </v-container>
+                          <small>*indicates required field</small>
                         </v-card-text>
                         <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="blue darken-1" text @click="adddialog = false">Cancel</v-btn>
-                        <v-btn color="blue darken-1" text :disabled="$v.$invalid" @click="grantPrivileges" >continue</v-btn>
+                        <v-btn color="blue darken-1" text :disabled="$v.$invalid" @click="setPrivilege(viewtype,true)" >continue</v-btn>
                         </v-card-actions>
                     </v-card>
-                    </v-dialog>
+                  </v-dialog>
                 </v-col>
              </v-card-actions>
           </v-row>
@@ -77,12 +64,7 @@
                   <v-list-item-group v-model="revokePrivList" multiple>
                     <template v-for="(user, i) in users">
                       <v-divider v-if="!user" :key="`divider-${i}`"></v-divider>
-                      <v-list-item
-                        v-else
-                        :key="`item-${i}`"
-                        :value="user"
-                        active-class="blue--text text--accent-4"
-                      >
+                      <v-list-item v-else :key="`item-${i}`" :value="user" active-class="blue--text text--accent-4" >
                       <!-- <template v-slot:default="{ active, toggle }"> -->
                         <template >
                           <v-col v-if="viewtype==='moderator'">
@@ -128,7 +110,7 @@
               <v-dialog v-model="dialog" scrollable max-width="300px">
                 <template v-slot:activator="{ on }">
                   <div class="text-center">
-                    <v-btn v-show="revokePrivList.length>0" large color="primary" dark v-on="on">
+                    <v-btn  :disabled="revokePrivList.length<=0"  large color="primary" dark v-on="on">
                       <h1>Remove</h1>
                     </v-btn>
                   </div>
@@ -145,7 +127,7 @@
                   <v-divider></v-divider>
                   <v-card-actions>
                     <v-btn color="blue darken-1" text @click="dialog = false">Cancel</v-btn>
-                    <v-btn color="blue darken-1"  text @click="revokePrivileges">Continune</v-btn>
+                    <v-btn color="blue darken-1"  text @click="setPrivilege(viewtype, false)">Continune</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -161,54 +143,59 @@
 import { required, email } from "vuelidate/lib/validators";
 export default {
   data: () => ({
-    remove: false,
     adddialog: false,
     dialog: false,
-    users: [ ],
-    revokePrivList: [],
-    formemail: ""
+    users: [],         //current users in list
+    revokePrivList: [], //current selected user to delete
+    formemail: ""       //variable that holds email input from add user form
   }),
   validations: {
-    //binded in template
+       //binded in template
+      //validator for email control
     formemail: {
-      //validators for this controll
       required,
       email
     }
   },
   methods: {
+
     onScroll(e) {
       this.offsetTop = e.target.scrollTop;
     },
-    revokePrivileges() {
-      //simulates the post method on selected users from list
-      this.dialog = false;
-      var list = JSON.parse(JSON.stringify(this.revokePrivList));
-      for (var i = 0; i < list.length; i++) {
-        console.log("POST delete:" + list[i].Email);
-      }
-      return;
-    },
-    grantPrivileges() {
-      //needs to see if already in users/ or event creators
-      //needs to handle error like already in email using js code to alert like using dialog
-         console.log(" POST grant privileges to"+ this.formemail)
-      return  this.adddialog = false
+    setPrivilege: function(type, value){
+     //removing moderator privileges
+      if((type == 'moderator' || type =='eventcreator')&& value == true){
+          //POST method here to add moderator using email
+          //needs to make the correct POST depending if is a mod or event creator 
+          console.log(' POST grant privileges to'+ this.formemail)
+          return  this.adddialog = false;  
+       }
+      else if((type=='moderator' || type=='eventcreator' )&& value == false){
+          //no need to verify if they are moderators or event creator since user can only select from served lists
+          //A user ca not remove their status as moderator or administrator
+          this.dialog = false; //set the dialog to false
+          var list = JSON.parse(JSON.stringify(this.revokePrivList));//list of selected users to revoke moderator privileges
+          for (var i = 0; i < list.length; i++) {
+          //here makes POST to each user selected to remove them from list
+          console.log('POST delete:' + list[i].Email);
+          //get new updated list 
+        }
+         
+         this.users = this.users.filter(n => !this.revokePrivList.includes(n));
+         this.revokePrivList = [];
+         return;
+       }
+
     }
   },
-  emptyRevokeList() {
-    this.revokePrivList = [];
-    return;
-  },
   props: {
-    viewtype: String //either moderator or eventcreator
-  },
-  fetchSupervisees(){
-     
+    viewtype: String, //either moderator or eventcreator
+    userid: String
   },
   created(){
-      //once is created get all users
- this.$http.get('https://raw.githubusercontent.com/InTheNou/InTheNou-AdminDashboard/development/users.json')
+      //once is created get all users to show, this need to take in consideration the  log in user, 
+      //may need to use session token or UID
+ this.$http.get('https://raw.githubusercontent.com/InTheNou/InTheNou-AdminDashboard/development/'+ String(this.userid) +'users.json')
       .then(response =>{
          return response.json()
       })
