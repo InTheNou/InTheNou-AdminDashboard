@@ -13,16 +13,16 @@
         <v-btn text color="grey">
             <span>Sign Out</span>
             <v-icon right></v-icon>
-        </v-btn>    
+        </v-btn>
     </v-app-bar >
     <v-navigation-drawer app v-model="drawer" >
         <v-list-item>
             <v-list-item-content>
             <v-list-item-title class="title">
-              
+
             </v-list-item-title>
             <v-list-item-subtitle>
-               
+
             </v-list-item-subtitle>
             </v-list-item-content>
         </v-list-item>
@@ -49,40 +49,40 @@
             </v-list-item>
         </v-list>
     </v-navigation-drawer>
-       
+
 </nav>
 </template>
 <script>
 export default {
-    data () {
-      return {
-        drawer: false,
-        items: [
-          { title: 'All Current Events', icon: 'mdi-calendar',route: '/allcurrentevents'},
-          { title: 'All Events Archive', icon: 'mdi-history',route: 'alleventsarchive' },
-          { title: 'My Events Archive', icon: 'mdi-history',route: '/myeventsarchive' },
-          { title: 'Privilege Management', icon: 'mdi-account-key-outline', route: '/privilegemanagement' },
-          { title: 'Information Base', icon: 'mdi-database',route: 'informationbase' },
-          { title: 'Information Base Management', icon: 'mdi-desktop-mac-dashboard', route: '/informationbasemanagement' }
-        ],
-        color: 'primary',
-        colors: [
-          'primary',
-          'blue',
-          'success',
-          'red',
-          'teal',
-        ],
-        right: true,
-        miniVariant: false,
-        expandOnHover: false,
-        background: false,
-      }
-    },
-    computed: {
-      bg () {
-        return this.background ? 'https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg' : undefined
-      },
-    },
+  data () {
+    return {
+      drawer: false,
+      items: [
+        { title: 'All Current Events', icon: 'mdi-calendar', route: '/allcurrentevents' },
+        { title: 'All Events Archive', icon: 'mdi-history', route: 'alleventsarchive' },
+        { title: 'My Events Archive', icon: 'mdi-history', route: '/myeventsarchive' },
+        { title: 'Privilege Management', icon: 'mdi-account-key-outline', route: '/privilegemanagement' },
+        { title: 'Information Base', icon: 'mdi-database', route: '/informationbase' },
+        { title: 'Information Base Management', icon: 'mdi-desktop-mac-dashboard', route: '/informationbasemanagement' }
+      ],
+      color: 'primary',
+      colors: [
+        'primary',
+        'blue',
+        'success',
+        'red',
+        'teal'
+      ],
+      right: true,
+      miniVariant: false,
+      expandOnHover: false,
+      background: false
+    }
+  },
+  computed: {
+    bg () {
+      return this.background ? 'https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg' : undefined
+    }
   }
+}
 </script>

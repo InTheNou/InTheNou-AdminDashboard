@@ -1,5 +1,3 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
 import InformationBase from '../views/InformationBase.vue'
 import InformationBaseManagement from '../views/InformationBaseManagement.vue'
 import AllcurrentEvents from '../views/AllCurrentEvents.vue'
@@ -9,11 +7,10 @@ import AllEventsArchive from '../views/AllEventsArchive.vue'
 import PrivilegeManagement from '../views/PrivilegeManagement.vue'
 import BuildingFloors from '../components/informationbase/BuildingFloors.vue'
 import UserEvents from '../components/eventsmanagement/UserEvents.vue'
+import Supervees from '../views/Supervees.vue'
 import FloorRooms from '../components/informationbase/FloorRooms.vue'
 
-Vue.use(VueRouter)
-
-const routes = [
+export const routes = [
   {
     path: '/',
     name: 'home',
@@ -26,13 +23,18 @@ const routes = [
   },
   {
     path: '/myevents',
-    name: 'my events',
+    name: 'myevents',
     component: MyEvents
   },
   {
     path: '/alleventsarchive',
     name: 'all events archive',
     component: AllEventsArchive
+  },
+  {
+    path: '/myeventsarchive',
+    name: 'myeventsarchive',
+    component: MyEventsArchive
   },
   {
     path: '/privilegemanagement',
@@ -46,45 +48,30 @@ const routes = [
 
   },
   {
-    path: '/informationbasemanagement',
-    name: 'information base management',
-    component: InformationBaseManagement
-  },
-  {
-    path: '/informationbase',
-    name: 'home',
-    component: InformationBase
-  },
-  {
     path: '/informationbase/buildings/:bid/floors',
     name: 'building floors',
     component: BuildingFloors
   },
   {
-    path: '/myeventsarchive',
-    name: 'my events archive',
-    component: MyEventsArchive
+    path: '/informationbase/buildings/:bid/floors/:fid/rooms',
+    name: 'room',
+    component: FloorRooms
+
+  },
+  {
+    path: '/informationbasemanagement',
+    name: 'information base management',
+    component: InformationBaseManagement
   },
   {
     path: '/userevents/:uid',
-    name: 'user events',
-    component: UserEvents,
-    props: true
-
+    name: 'userevents',
+    component: UserEvents
   },
   {
-    path: 'informationbase/buildings/:bid/floors',
-    name: 'room',
-    component: FloorRooms,
-
-  },
+    path: '/supervees/:modid',
+    name: 'supervees',
+    component: Supervees
+  }
 
 ]
-
-const router = new VueRouter({
-  mode: 'hash',
-  base: process.env.BASE_URL,
-  routes
-})
-
-export default router

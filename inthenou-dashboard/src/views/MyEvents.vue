@@ -23,24 +23,24 @@
       </v-row>
     </v-container>
   </v-card>
+
 </template>
 
-
 <script>
-  export default {
-    data: () => ({
-      events: [
-        { EID: 41,Title: "IEE", Description: "Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros",StarTimeDate:"1:00 pm, abril 15", EndTimeDate:"2:00pm, abril 15", CreationDate:"04 10 2020", Status:"true", StatusDate:"true",Room:"S-128"},
-        { EID: 42,Title: "IEE", Description: "Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros",StarTimeDate:"1:00 pm, abril 15", EndTimeDate:"2:00pm, abril 15", CreationDate:"04 10 2020", Status:"true", StatusDate:"true",Room:"S-128"},      
-        { EID: 43,Title: "IEE", Description: "Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros",StarTimeDate:"1:00 pm, abril 15", EndTimeDate:"2:00pm, abril 15", CreationDate:"04 10 2020", Status:"true", StatusDate:"true",Room:"S-128"},
-        { EID: 44,Title: "IEE", Description: "Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros",StarTimeDate:"1:00 pm, abril 15", EndTimeDate:"2:00pm, abril 15", CreationDate:"04 10 2020", Status:"true", StatusDate:"true",Room:"S-128"},
-        { EID: 45,Title: "IEE", Description: "Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros",StarTimeDate:"1:00 pm, abril 15", EndTimeDate:"2:00pm, abril 15", CreationDate:"04 10 2020", Status:"true", StatusDate:"true",Room:"S-128"},
-        { EID: 41,Title: "IEE", Description: "Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros",StarTimeDate:"1:00 pm, abril 15", EndTimeDate:"2:00pm, abril 15", CreationDate:"04 10 2020", Status:"true", StatusDate:"true",Room:"S-128"},
-        { EID: 42,Title: "IEE", Description: "Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros",StarTimeDate:"1:00 pm, abril 15", EndTimeDate:"2:00pm, abril 15", CreationDate:"04 10 2020", Status:"true", StatusDate:"true",Room:"S-128"},      
-        { EID: 43,Title: "IEE", Description: "Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros",StarTimeDate:"1:00 pm, abril 15", EndTimeDate:"2:00pm, abril 15", CreationDate:"04 10 2020", Status:"true", StatusDate:"true",Room:"S-128"},
-        { EID: 44,Title: "IEE", Description: "Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros",StarTimeDate:"1:00 pm, abril 15", EndTimeDate:"2:00pm, abril 15", CreationDate:"04 10 2020", Status:"true", StatusDate:"true",Room:"S-128"},
-        { EID: 45,Title: "IEE", Description: "Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros",StarTimeDate:"1:00 pm, abril 15", EndTimeDate:"2:00pm, abril 15", CreationDate:"04 10 2020", Status:"true", StatusDate:"true",Room:"S-128"}
-      ]
-  }),
-  }
+export default {
+  data: () => ({
+    events: [
+      { EID: 41, Title: 'IEE', Description: 'Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros', StarTimeDate: '1:00 pm, abril 15', EndTimeDate: '2:00pm, abril 15', CreationDate: '04 10 2020', Status: 'true', StatusDate: 'true', Room: 'S-128' },
+      { EID: 42, Title: 'IEE', Description: 'Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros', StarTimeDate: '1:00 pm, abril 15', EndTimeDate: '2:00pm, abril 15', CreationDate: '04 10 2020', Status: 'true', StatusDate: 'true', Room: 'S-128' },
+      { EID: 43, Title: 'IEE', Description: 'Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros', StarTimeDate: '1:00 pm, abril 15', EndTimeDate: '2:00pm, abril 15', CreationDate: '04 10 2020', Status: 'true', StatusDate: 'true', Room: 'S-128' },
+      { EID: 44, Title: 'IEE', Description: 'Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros', StarTimeDate: '1:00 pm, abril 15', EndTimeDate: '2:00pm, abril 15', CreationDate: '04 10 2020', Status: 'true', StatusDate: 'true', Room: 'S-128' },
+      { EID: 45, Title: 'IEE', Description: 'Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros', StarTimeDate: '1:00 pm, abril 15', EndTimeDate: '2:00pm, abril 15', CreationDate: '04 10 2020', Status: 'true', StatusDate: 'true', Room: 'S-128' },
+      { EID: 41, Title: 'IEE', Description: 'Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros', StarTimeDate: '1:00 pm, abril 15', EndTimeDate: '2:00pm, abril 15', CreationDate: '04 10 2020', Status: 'true', StatusDate: 'true', Room: 'S-128' },
+      { EID: 42, Title: 'IEE', Description: 'Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros', StarTimeDate: '1:00 pm, abril 15', EndTimeDate: '2:00pm, abril 15', CreationDate: '04 10 2020', Status: 'true', StatusDate: 'true', Room: 'S-128' },
+      { EID: 43, Title: 'IEE', Description: 'Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros', StarTimeDate: '1:00 pm, abril 15', EndTimeDate: '2:00pm, abril 15', CreationDate: '04 10 2020', Status: 'true', StatusDate: 'true', Room: 'S-128' },
+      { EID: 44, Title: 'IEE', Description: 'Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros', StarTimeDate: '1:00 pm, abril 15', EndTimeDate: '2:00pm, abril 15', CreationDate: '04 10 2020', Status: 'true', StatusDate: 'true', Room: 'S-128' },
+      { EID: 45, Title: 'IEE', Description: 'Ven y visitanos para saber mas sobre la IEE y como ser parte de nosostros', StarTimeDate: '1:00 pm, abril 15', EndTimeDate: '2:00pm, abril 15', CreationDate: '04 10 2020', Status: 'true', StatusDate: 'true', Room: 'S-128' }
+    ]
+  })
+}
 </script>

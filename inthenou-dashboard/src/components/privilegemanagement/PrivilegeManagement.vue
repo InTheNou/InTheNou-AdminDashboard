@@ -65,34 +65,48 @@
                     <template v-for="(user, i) in users">
                       <v-divider v-if="!user" :key="`divider-${i}`"></v-divider>
                       <v-list-item v-else :key="`item-${i}`" :value="user" active-class="blue--text text--accent-4" >
-                      <!-- <template v-slot:default="{ active, toggle }"> -->
-                        <template >
+                        <template v-slot:default="{ active, toggle }">
                           <v-col v-if="viewtype==='moderator'">
                             <v-list-item-content >
-                              <v-list-item-title>User: {{user.Email}}</v-list-item-title>
+                              <v-list-item-title>
+                                <v-list-item-action>
+                                  <v-checkbox
+                                    :input-value="active"
+                                    :true-value="user"
+                                    color="blue accent-4"
+                                    @click="toggle"
+                                  ></v-checkbox>
+                                </v-list-item-action>
+                                <v-list-item-action>
+                                  User: {{user.Email}}
+                                </v-list-item-action>
+                                <v-list-item-action>
+                                  <router-link :to="'/userevents/'+ user.UID"> <v-btn color="primary" dark ><v-icon dark>mdi-arrow-right-bold-circle-outline</v-icon> </v-btn></router-link>
+                                </v-list-item-action>
+                                <v-list-item-action>
+                                  <router-link :to="'/supervees/'+ user.UID"> <v-btn color="primary" dark ><v-icon dark>mdi-account-multiple</v-icon> </v-btn></router-link>
+                                </v-list-item-action>
+                            </v-list-item-title>
                             </v-list-item-content>
-                            <v-list-item-action>
-                              <!-- <v-checkbox
-                                :input-value="active"
-                                :true-value="user"
-                                color="blue accent-4"
-                                @click="toggle"
-                              ></v-checkbox> -->
-                            </v-list-item-action>
                           </v-col>
                           <v-col v-else-if="viewtype==='eventcreator'">
                             <v-list-item-content >
-                              <v-list-item-title>Event Creator: {{user.Email}}</v-list-item-title>
-                              <v-list-item-title>user: {{user.SupEmail}}</v-list-item-title>
+                              <v-list-item-title>
+                                <v-list-item-action>
+                                  <v-checkbox
+                                    :input-value="active"
+                                    :true-value="user"
+                                    color="blue accent-4"
+                                    @click="toggle"
+                                  ></v-checkbox>
+                                </v-list-item-action>
+                                Event Creator: {{user.Email}}
+                                  <v-list-item-action>
+                                    <router-link :to="'/userevents/'+ user.UID"> <v-btn color="primary" dark ><v-icon dark>mdi-arrow-right-bold-circle-outline</v-icon> </v-btn></router-link>
+                                  </v-list-item-action>
+                                </v-list-item-title>
+                              <v-list-item-subtitle>  Supervisor: {{user.SupEmail}}</v-list-item-subtitle>
                             </v-list-item-content>
-                            <!-- <v-list-item-action>
-                              <v-checkbox
-                                :input-value="active"
-                                :true-value="user"
-                                color="blue accent-4"
-                                @click="toggle"
-                              ></v-checkbox>
-                            </v-list-item-action> -->
                           </v-col>
                         </template>
                       </v-list-item>
@@ -140,69 +154,200 @@
 </template>
 
 <script>
-import { required, email } from "vuelidate/lib/validators";
+import { required, email } from 'vuelidate/lib/validators'
 export default {
   data: () => ({
+    vieweruid: null,
     adddialog: false,
     dialog: false,
-    users: [],         //current users in list
-    revokePrivList: [], //current selected user to delete
-    formemail: ""       //variable that holds email input from add user form
+    users: [], // current users in list
+    revokePrivList: [], // current selected user to delete
+    formemail: '', // variable that holds email input from add user form
+    addinguser: false
   }),
   validations: {
-       //binded in template
-      //validator for email control
+    // binded in template
+    // validator for email control
     formemail: {
       required,
       email
     }
   },
+  mounted () {
+    console.log(this.$route.params.uid)
+  },
   methods: {
 
-    onScroll(e) {
-      this.offsetTop = e.target.scrollTop;
+    onScroll (e) {
+      this.offsetTop = e.target.scrollTop
     },
-    setPrivilege: function(type, value){
-     //removing moderator privileges
-      if((type == 'moderator' || type =='eventcreator')&& value == true){
-          //POST method here to add moderator using email
-          //needs to make the correct POST depending if is a mod or event creator 
-          console.log(' POST grant privileges to'+ this.formemail)
-          return  this.adddialog = false;  
-       }
-      else if((type=='moderator' || type=='eventcreator' )&& value == false){
-          //no need to verify if they are moderators or event creator since user can only select from served lists
-          //A user ca not remove their status as moderator or administrator
-          this.dialog = false; //set the dialog to false
-          var list = JSON.parse(JSON.stringify(this.revokePrivList));//list of selected users to revoke moderator privileges
-          for (var i = 0; i < list.length; i++) {
-          //here makes POST to each user selected to remove them from list
-          console.log('POST delete:' + list[i].Email);
-          //get new updated list 
+    setPrivilege: function (type, value) {
+      // removing moderator privileges
+      if ((type === 'moderator' || type === 'eventcreator') && value === true) {
+        // POST method here to add moderator using email
+        // needs to make the correct POST depending if is a mod or event creator
+        console.log(' POST grant privileges to' + this.formemail)
+        this.users.push({ UID: 12435, Email: this.formemail, SupEmail: 'sup@gmail.com' })
+        this.adddialog = false
+      } else if ((type === 'moderator' || type === 'eventcreator') && value === false) {
+        // no need to verify if they are moderators or event creator since user can only select from served lists
+        // A user ca not remove their status as moderator or administrator
+        this.dialog = false // set the dialog to false
+        var list = JSON.parse(JSON.stringify(this.revokePrivList))// list of selected users to revoke moderator privileges
+        for (var i = 0; i < list.length; i++) {
+          // here makes POST to each user selected to remove them from list
+          console.log('POST delete:' + list[i].Email)
+          // get new updated list
         }
-         
-         this.users = this.users.filter(n => !this.revokePrivList.includes(n));
-         this.revokePrivList = [];
-         return;
-       }
 
+        this.users = this.users.filter(n => !this.revokePrivList.includes(n))
+        this.revokePrivList = []
+      }
+      this.addinguser = false
     }
   },
   props: {
-    viewtype: String, //either moderator or eventcreator
-    userid: String
+    viewtype: String // either moderator or eventcreator
   },
-  created(){
-      //once is created get all users to show, this need to take in consideration the  log in user, 
-      //may need to use session token or UID
- this.$http.get('https://raw.githubusercontent.com/InTheNou/InTheNou-AdminDashboard/development/'+ String(this.userid) +'users.json')
-      .then(response =>{
-         return response.json()
-      })
-      .then(data => this.users=data);
-      console.log(this.users)
+  created () {
+    // once is created get all users to show, this need to take in consideration the  log in user,
+    // may need to use session token or UID
+    console.log('https://raw.githubusercontent.com/InTheNou/InTheNou-AdminDashboard/development/users.json')
+    // this.$http.get('https://raw.githubusercontent.com/InTheNou/InTheNou-AdminDashboard/development/users.json')
+    //   .then(response => {
+    //     return response.json()
+    //   })
+    //   .then(data => { this.users = data })
+
+    this.users = [
+      {
+        UID: 541,
+        Email: 'user.email1@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 542,
+        Email: 'user.email2@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 543,
+        Email: 'user.email3@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 544,
+        Email: 'user.email4@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 545,
+        Email: 'user.email5@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 1541,
+        Email: 'user.emai6l@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 5142,
+        Email: 'user.email7@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 5413,
+        Email: 'user.email8@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 5414,
+        Email: 'user.email9@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 5415,
+        Email: 'user.email10@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 5411,
+        Email: 'user.email11@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 5412,
+        Email: 'user.email12@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 54113,
+        Email: 'user.email13@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 54314,
+        Email: 'user.email14@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 54415,
+        Email: 'user.email15@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 54311,
+        Email: 'user.email16@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 542812,
+        Email: 'user.email17@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 54813,
+        Email: 'user.email18@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 54014,
+        Email: 'user.email19@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 54915,
+        Email: 'user.email20@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 54711,
+        Email: 'user.email21@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 54142,
+        Email: 'user.email22@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 54313,
+        Email: 'user.email23@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 54124,
+        Email: 'user.email24@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      },
+      {
+        UID: 54715,
+        Email: 'user.email25@gmail.com',
+        SupEmail: 'user2.email@gmail.com'
+      }
+    ]
   }
-};
+}
 </script>
 <style scoped>
 .v-col.v-text-field {
