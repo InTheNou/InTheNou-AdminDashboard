@@ -1,11 +1,12 @@
 <template>
-  <div>
-    <container ></container>
-
-      <service-management></service-management>
-      <tags-management></tags-management>
-
-  </div>
+  <v-row align ="center" justify="center" no-gutters style="height: 150px;" >
+      <v-col cols="6">
+       <service-management></service-management>
+       </v-col>
+       <v-col cols="6">
+         <tags-management></tags-management>
+       </v-col>
+  </v-row>
 </template>
 <script>
 import ServiceManagement from '../informationbasemanagement/ServiceManagement.vue'

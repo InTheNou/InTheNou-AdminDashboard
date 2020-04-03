@@ -1,0 +1,15 @@
+[{
+        "UID": 541,
+        "Email": "user.email1@gmail.com",
+        "SupEmail": "user2.email@gmail.com"
+    },
+    {
+        "UID": 542,
+        "Email": "user.email2@gmail.com",
+        "SupEmail": "user2.email@gmail.com"
+    },
+    {
+        "UID": 543,
+        "Email": "user.email3@gmail.com",
+        "SupEmail": "user2.email@gmail.com"
+    }]

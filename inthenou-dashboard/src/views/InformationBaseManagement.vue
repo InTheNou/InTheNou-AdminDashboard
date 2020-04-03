@@ -1,5 +1,5 @@
 <template>
-  <information-base-management></information-base-management>
+     <information-base-management></information-base-management>
 </template>
 
 <script>

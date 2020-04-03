@@ -7,7 +7,7 @@
         <v-col
           v-for="building in buildings"
           :key="building.BID"
-          :cols="2"
+          :cols="3"
         >
           <v-card>
             <v-card-title class="headline indigo darken-4  ">Name: {{building.Name}}</v-card-title>
@@ -30,13 +30,20 @@
 <script>
 export default {
   data: () => ({
-    buildings: [
-      { BID: 1, Name: 'Stefanie', Abbreviation: 'S', NumFloors: 6, CommonName: 'stef', Type: 'no administrativo', bPhoto: 'https://cdn.pixabay.com/photo/2016/12/17/20/05/architecture-1914309_1280.jpg' },
-      { BID: 2, Name: 'Stefanie', Abbreviation: 'S', NumFloors: 6, CommonName: 'stef', Type: 'no administrativo', bPhoto: 'https://cdn.pixabay.com/photo/2016/12/17/20/05/architecture-1914309_1280.jpg' },
-      { BID: 3, Name: 'Stefanie', Abbreviation: 'S', NumFloors: 6, CommonName: 'stef', Type: 'no administrativo', bPhoto: 'https://cdn.pixabay.com/photo/2016/12/17/20/05/architecture-1914309_1280.jpg' },
-      { BID: 4, Name: 'Stefanie', Abbreviation: 'S', NumFloors: 6, CommonName: 'stef', Type: 'no administrativo', bPhoto: 'https://cdn.pixabay.com/photo/2016/12/17/20/05/architecture-1914309_1280.jpg' },
-      { BID: 5, Name: 'Stefanie', Abbreviation: 'S', NumFloors: 6, CommonName: 'stef', Type: 'no administrativo', bPhoto: 'https://cdn.pixabay.com/photo/2016/12/17/20/05/architecture-1914309_1280.jpg' }
-    ]
-  })
+    buildings: [],
+    buildingOffset: null,
+    builingLimit: null,
+    dialog: null,
+    listOfBuildings: null
+  }),
+  mounted () {
+
+  },
+  methods: {
+    getBuildings: async function () {
+
+    }
+
+  }
 }
 </script>

@@ -174,10 +174,9 @@ export default {
     }
   },
   mounted () {
-    console.log(this.$route.params.uid)
+    console.log('here ' + process.env.VUE_APP_USERSLIST1)
   },
   methods: {
-
     onScroll (e) {
       this.offsetTop = e.target.scrollTop
     },
@@ -208,144 +207,6 @@ export default {
   },
   props: {
     viewtype: String // either moderator or eventcreator
-  },
-  created () {
-    // once is created get all users to show, this need to take in consideration the  log in user,
-    // may need to use session token or UID
-    console.log('https://raw.githubusercontent.com/InTheNou/InTheNou-AdminDashboard/development/users.json')
-    // this.$http.get('https://raw.githubusercontent.com/InTheNou/InTheNou-AdminDashboard/development/users.json')
-    //   .then(response => {
-    //     return response.json()
-    //   })
-    //   .then(data => { this.users = data })
-
-    this.users = [
-      {
-        UID: 541,
-        Email: 'user.email1@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 542,
-        Email: 'user.email2@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 543,
-        Email: 'user.email3@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 544,
-        Email: 'user.email4@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 545,
-        Email: 'user.email5@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 1541,
-        Email: 'user.emai6l@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 5142,
-        Email: 'user.email7@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 5413,
-        Email: 'user.email8@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 5414,
-        Email: 'user.email9@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 5415,
-        Email: 'user.email10@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 5411,
-        Email: 'user.email11@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 5412,
-        Email: 'user.email12@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 54113,
-        Email: 'user.email13@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 54314,
-        Email: 'user.email14@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 54415,
-        Email: 'user.email15@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 54311,
-        Email: 'user.email16@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 542812,
-        Email: 'user.email17@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 54813,
-        Email: 'user.email18@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 54014,
-        Email: 'user.email19@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 54915,
-        Email: 'user.email20@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 54711,
-        Email: 'user.email21@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 54142,
-        Email: 'user.email22@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 54313,
-        Email: 'user.email23@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 54124,
-        Email: 'user.email24@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      },
-      {
-        UID: 54715,
-        Email: 'user.email25@gmail.com',
-        SupEmail: 'user2.email@gmail.com'
-      }
-    ]
   }
 }
 </script>
