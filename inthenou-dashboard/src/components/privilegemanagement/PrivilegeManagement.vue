@@ -20,6 +20,9 @@
                         </div>
                     </template>
                     <v-card>
+                      <v-row justify="space-around">
+                      </v-row>
+                      <v-form ref="form" v-model="valid" lazy-validation >
                         <v-card-title>
                           <span v-if="viewtype==='moderator'" vclass="headline">Grant Moderator Privileges</span>
                           <span v-else-if="viewtype==='eventcreator'" vclass="headline">Event Creator Privileges</span>
@@ -28,7 +31,7 @@
                           <v-container>
                               <v-row>
                               <v-col cols="12" >
-                                <v-text-field :class="{invalid: $v.formemail.$error}" @input="$v.formemail.$touch()" v-model.lazy="formemail" label="Email*" required hint="enter the email of the user you wish to grant Moderator privileges" ></v-text-field>
+                                <v-text-field v-model="formemail" :rules="[ v => !!v || 'E-mail is required', v => /.+@.+\..+/.test(v) || 'E-mail must be valid']" label="E-mail*" filled required ></v-text-field>
                               </v-col>
                               </v-row>
                           </v-container>
@@ -37,8 +40,9 @@
                         <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="blue darken-1" text @click="adddialog = false">Cancel</v-btn>
-                        <v-btn color="blue darken-1" text :disabled="$v.$invalid" @click="setPrivilege(viewtype,true)" >continue</v-btn>
+                        <v-btn color="blue darken-1" :disabled="!valid" text  @click="validate" >continue</v-btn>
                         </v-card-actions>
+                      </v-form>
                     </v-card>
                   </v-dialog>
                 </v-col>
@@ -78,13 +82,13 @@
                                   ></v-checkbox>
                                 </v-list-item-action>
                                 <v-list-item-action>
-                                  User: {{user.Email}}
+                                   {{user.Email}}
                                 </v-list-item-action>
                                 <v-list-item-action>
-                                  <router-link :to="'/userevents/'+ user.UID"> <v-btn color="primary" dark ><v-icon dark>mdi-arrow-right-bold-circle-outline</v-icon> </v-btn></router-link>
+                                  <router-link :to="'/userevents/'+ user.UID"> <v-btn color="primary" class="ml-3" dark ><v-icon dark>mdi-arrow-right-bold-circle-outline</v-icon> </v-btn></router-link>
                                 </v-list-item-action>
                                 <v-list-item-action>
-                                  <router-link :to="'/supervees/'+ user.UID"> <v-btn color="primary" dark ><v-icon dark>mdi-account-multiple</v-icon> </v-btn></router-link>
+                                  <router-link :to="'/delegatedusers/'+ user.UID"> <v-btn color="primary" dark ><v-icon dark>mdi-account-multiple</v-icon> </v-btn></router-link>
                                 </v-list-item-action>
                             </v-list-item-title>
                             </v-list-item-content>
@@ -140,8 +144,8 @@
                   </v-card-text>
                   <v-divider></v-divider>
                   <v-card-actions>
-                    <v-btn color="blue darken-1" text @click="dialog = false">Cancel</v-btn>
-                    <v-btn color="blue darken-1"  text @click="setPrivilege(viewtype, false)">Continune</v-btn>
+                    <v-btn color="blue darken-1"  @click="dialog = false">Cancel</v-btn>
+                    <v-btn color="blue darken-1"  @click="setPrivilege(viewtype, false)">Continune</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -154,27 +158,23 @@
 </template>
 
 <script>
-import { required, email } from 'vuelidate/lib/validators'
+import { userApiCall } from '../../dummyapicals/users.js'
 export default {
   data: () => ({
     vieweruid: null,
+    valid: true,
     adddialog: false,
     dialog: false,
     users: [], // current users in list
     revokePrivList: [], // current selected user to delete
     formemail: '', // variable that holds email input from add user form
-    addinguser: false
+    addinguser: false,
+    path: ''
   }),
-  validations: {
-    // binded in template
-    // validator for email control
-    formemail: {
-      required,
-      email
-    }
-  },
   mounted () {
+    this.path = ''
     console.log('here ' + process.env.VUE_APP_USERSLIST1)
+    this.getUsers()
   },
   methods: {
     onScroll (e) {
@@ -203,10 +203,48 @@ export default {
         this.revokePrivList = []
       }
       this.addinguser = false
+    },
+    getUsers: function () {
+      if (this.viewtype === 'moderator') {
+        //  this view is only for admin makes calll of the moderators in system
+        return new Promise((resolve, reject) => {
+          userApiCall({ url: '/users/2', method: 'GET' })
+            .then(response => {
+              resolve(this.users = response.Users)
+              console.log(response)
+            })
+            .catch(err => {
+              reject(err)
+            })
+        })
+      } else if (this.viewtype === 'eventcreator') {
+        return new Promise((resolve, reject) => {
+          userApiCall({ url: '/users/3', method: 'GET' })
+            .then(response => {
+              resolve(this.users = response.Users)
+            })
+            .catch(err => {
+              reject(err)
+            })
+        })
+      }
+    },
+    getUserEvents: function () {
+
+    },
+    getUserSupervees: function (VUID, UID) {
+
+    },
+    validate: function () {
+      if (this.$refs.form.validate()) {
+        this.setPrivilege(this.viewtype, true)
+      }
+      return this.$refs.form.validate()
     }
   },
   props: {
-    viewtype: String // either moderator or eventcreator
+    viewtype: String, // either moderator or eventcreator
+    UID: String // Id of the user to get view
   }
 }
 </script>

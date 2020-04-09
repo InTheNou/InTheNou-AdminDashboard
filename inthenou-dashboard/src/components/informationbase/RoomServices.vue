@@ -4,60 +4,52 @@
   >
     <v-container fluid>
       <v-row dense>
-        <!-- <v-col
-          v-for="room in roomsList"
-          :key="room.RID"
-          :cols="2"
-        > -->
           <v-card class="d-flex pa-2">
             <v-container fluid>
               <v-row dense>
-                <v-col v-for="room in roomsList" :key="room.RID" :cols="4">
-                  <v-card>
-                    <v-card-title class="headline blue darken-4 white--text"> {{room.rCode}}
-                      <v-spacer></v-spacer>
-                            <div class="text-right">
-                                <v-btn @click="editCoorDialog = !editCoorDialog, roomID = room.RID, roomCode = room.rCode" color="primary mb-0 pa-0" dark class="mx-2" fab>
-                                    <v-icon dark> mdi-map-marker-radius</v-icon>
-                                </v-btn>
-                            </div>
+                <v-col v-for="service in servicesList" :key="service.sid" :cols="4">
+                  <v-card height="100%">
+                    <v-card-title class="headline blue darken-4 white--text" style="font-size:1vw;"> {{service.sname}}
                     </v-card-title>
-                    <v-card-subtitle class="pt-0 pb-0 ma-0 blue accent-1">custodian: {{room.rCustodian}}, Name: {{room.bName}} </v-card-subtitle>
+                    <v-card-subtitle class="pt-0 pb-0 ma-0 blue accent-1">Schedule: {{service.sschedule}} </v-card-subtitle>
                     <v-card-text>
-                    <v-card-subtitle class="pt-0 pb-0 ma-0">Occuopancy: {{room.Ocuppancy}} </v-card-subtitle>
-                    <v-card-subtitle class="pt-0 pb-0 ma-0" >Description: {{room.rDescription}} </v-card-subtitle>
+                    <v-card-subtitle class="pt-0 pb-0 ma-0" >Description: {{service.sdescription}} </v-card-subtitle>
                     </v-card-text>
+                    <v-spacer></v-spacer>
                     <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <router-link :to="'/informationbase/buildings/'+ buildingID +'/floors/'+ floorID + '/rooms/' + room.RID + '/services'"><v-btn large color="primary">Services</v-btn></router-link>
+                        <div>
+                            <v-btn @click="editServiceDialog = !editServiceDialog" color="primary mb-0 pa-0" dark class="mx-2" >
+                                <v-icon dark>mdi-pencil-box-outline</v-icon>Edit
+                            </v-btn>
+                        </div>
                     </v-card-actions>
                   </v-card>
                 </v-col>
                     <v-card-actions>
                           <v-col cols="4">
-                            <v-dialog v-model="editCoorDialog" persistent max-width="600px">
+                            <v-dialog v-model="editServiceDialog" persistent max-width="600px">
                                 <v-card>
                                     <v-card-title>
                                     <span  vclass="headline">Edit Coordinates: {{roomCode}}</span>
                                     </v-card-title>
-                                    <v-card-subtitle>Current Values: ({{savedLatitude}},{{savedLongitude}})</v-card-subtitle>
+                                    <v-card-subtitle></v-card-subtitle>
                                     <v-card-text>
                                     <v-container>
-                                        <v-row>
+                                        <!-- <v-row>
                                         <v-col cols="4" >
                                           <span>*Latitude:</span>  <v-text-field v-model.lazy="formLatitudeInput"    required hint="Enter Latitude" ></v-text-field>
                                         </v-col>
                                         <v-col cols="4" >
                                             <span>*Longitude:</span> <v-text-field v-model.lazy="formLongitudeInput"  required hint="Enter Longitude" ></v-text-field>
                                         </v-col>
-                                        </v-row>
+                                        </v-row> -->
                                     </v-container>
                                     <small>*indicates required field</small>
                                     </v-card-text>
                                     <v-card-actions>
                                     <v-spacer></v-spacer>
-                                    <v-btn color="blue darken-1" text @click="editCoorDialog = false">Cancel</v-btn>
-                                    <v-btn color="blue darken-1" text  :disabled="validateCoordinates()" @click="editCoorDialog = false" >continue</v-btn>
+                                    <v-btn color="blue darken-1" text @click="editServiceDialog = false">Cancel</v-btn>
+                                    <v-btn color="blue darken-1" text  :disabled="validateCoordinates()" @click="editEditServiceDialog = false" >continue</v-btn>
                                     </v-card-actions>
                                 </v-card>
                             </v-dialog>
@@ -75,44 +67,35 @@
 import { infobaseApiCall } from '../../dummyapicals/InformationBase.js'
 export default {
   data: () => ({
-    editCoorDialog: false,
-    validCoordinates: false,
-    formLongitudeInput: null,
-    formLatitudeInput: null,
+    editServiceDialog: false,
     buildingID: null,
     floorID: null,
     roomID: null,
     roomCode: null,
-    savedLongitude: null,
-    savedLatitude: null,
-    roomsList: [],
+    servicesList: [],
     path: ''
   }),
-  created () {
+  mounted () {
     this.buildingID = this.$route.params.bid
     this.floorID = this.$route.params.fid
-    this.path = '/informationbase/buildings/' + this.buildingID + '/floors/' + this.floorID + '/rooms'
-    this.getRooms()
+    this.roomID = this.$route.params.rid
+    this.path = '/informationbase/buildings/' + this.buildingID + '/floors/' + this.floorID + '/rooms/' + this.roomID + '/services'
+    this.getServices()
   },
   methods: {
-    getRooms: function () {
+    getServices: function () {
       return new Promise((resolve, reject) => {
         infobaseApiCall({ url: this.path, method: 'GET' })
           .then(response => {
-            resolve(this.roomsList = response.Room)
+            resolve(this.servicesList = response.Service)
           })
           .catch(err => {
             reject(err)
           })
       })
     },
-    editCoordinates: function (longitude, latitude) {
-
-    },
-    getCurrentCoordinates: function () {
-
-    },
     validateCoordinates: function () {
+      // /^[+-]?\d+(\.\d+)?$/
       if (this.formLongitudeInput != null && this.formLatitudeInput != null) {
         if (this.formLongitudeInput.match(/^([+-]?\d{1,3})[.](\d{0,4})$/) && this.formLatitudeInput.match(/^([+-]?\d{1,3})[.](\d{0,4})$/)) {
           return true

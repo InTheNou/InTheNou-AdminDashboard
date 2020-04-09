@@ -10,10 +10,7 @@
             <h1>In<span style="color:red">The</span>Nou</h1>
         </v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn text color="grey">
-            <span>Sign Out</span>
-            <v-icon right></v-icon>
-        </v-btn>
+        <log-out></log-out>
     </v-app-bar >
     <v-navigation-drawer app v-model="drawer" >
         <v-list-item>
@@ -53,6 +50,7 @@
 </nav>
 </template>
 <script>
+import Logout from '../components/auth/logout.vue'
 export default {
   data () {
     return {
@@ -60,6 +58,7 @@ export default {
       items: [
         { title: 'All Current Events', icon: 'mdi-calendar', route: '/allcurrentevents' },
         { title: 'All Events Archive', icon: 'mdi-history', route: 'alleventsarchive' },
+        { title: 'My Events ', icon: 'mdi-calendar', route: '/myevents' },
         { title: 'My Events Archive', icon: 'mdi-history', route: '/myeventsarchive' },
         { title: 'Privilege Management', icon: 'mdi-account-key-outline', route: '/privilegemanagement' },
         { title: 'Information Base', icon: 'mdi-database', route: '/informationbase' },
@@ -83,6 +82,9 @@ export default {
     bg () {
       return this.background ? 'https://cdn.vuetifyjs.com/images/backgrounds/bg-2.jpg' : undefined
     }
+  },
+  components: {
+    'log-out': Logout
   }
 }
 </script>

@@ -13,7 +13,7 @@
             <v-card-title class="headline">Floor: {{floornumber}}</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
-               <router-link :to=" '/informationbase/buildings/'+building + '/floors/' + floornumber + '/rooms' "><v-btn large color="primary">Floor Rooms</v-btn></router-link>
+               <router-link :to=" '/informationbase/buildings/'+ building + '/floors/' + floornumber + '/rooms' "><v-btn large color="primary">Floor Rooms</v-btn></router-link>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -30,9 +30,13 @@ export default {
   }),
   mounted () {
     this.building = this.$route.params.bid
-    console.log(this.$route.params.bid)
     // this would be a get for the number of floors of the current building
-    this.numfloors = 4
+    this.numfloors = this.getNumberOfFloors()
+  },
+  methods: {
+    getNumberOfFloors () {
+      return parseInt(this.$route.params.numfloors)
+    }
   }
 }
 </script>

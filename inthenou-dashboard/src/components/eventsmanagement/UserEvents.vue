@@ -12,7 +12,7 @@
         >
           <v-card-actions>
             <v-btn justify="start" rounded color="primary" dark @click="previous()"><v-icon large right>mdi-skip-previous</v-icon> <h1 class="ml-4">Previous</h1> </v-btn>
-            <v-spacer></v-spacer>
+            <v-spacer><h1>User Events</h1></v-spacer>
             <v-btn rounded color="primary" dark @click="next()"> <h1 class="ml-10 mr-10">Next</h1><v-icon large right>mdi-skip-next</v-icon></v-btn>
           </v-card-actions>
           <v-card
@@ -25,7 +25,7 @@
                   :key="event.EID"
                   :cols="4"
                 >
-                  <v-card>
+                  <v-card height="100%">
                     <v-card-title class="headline blue darken-4 white--text"> {{event.eTitle}}
                       <v-spacer></v-spacer>
                       <v-btn large text color="grey">
@@ -70,74 +70,33 @@
 </template>
 
 <script>
+import { onScroll, getEvents, getNumberOfEvents, previous, next, uid, offsetTop, eidtoremove, etitletoremove, offset, limit, dialog, listofevents, deleteEvent, path, path1 } from '../vueinstances/events.js'
 export default {
   data: () => ({
-    uid: null,
-    offsetTop: 0,
-    eidtoremove: null,
-    etitletoremove: null,
-    offset: 0,
-    limit: 5,
-    dialog: false,
-    listofevents: [],
-    remotedummyeventlist: []
+    uid,
+    offsetTop,
+    eidtoremove,
+    etitletoremove,
+    offset,
+    limit,
+    dialog,
+    listofevents,
+    path,
+    path1
   }),
   mounted () {
     this.uid = this.$route.params.uid
-    this.$http.get(this.usersAPIURL)
-      .then(response => {
-        return response.json()
-      })
-      .then(data => { this.users = data })
-
+    this.path = '/Events/User/' + this.uid
+    this.path1 = '/Events/Myevents/size'
     this.listofevents = this.getEvents(this.offset, this.limit)
   },
   methods: {
-    onScroll (e) {
-      this.offsetTop = e.target.scrollTop
-    },
-    getEvents: function (offset, limit) {
-      // Route: /Events/Created/Users/{UID:INT}/{IgnoreFirst:INT}/{GetRows:INT}
-      var listtoreturn = []
-      for (var i = offset; (i < offset + limit) && (i < this.remotedummyeventlist.length); i++) {
-        if (this.remotedummyeventlist[i] != null) listtoreturn.push(this.remotedummyeventlist[i])
-      }
-      return listtoreturn
-    },
-    getNumberOfEvents: function () {
-      return this.remotedummyeventlist.length
-    },
-    deleteEvent: function () {
-      // Route: /Events/{EID:INT}/User/{UID:INT}/Delete
-      // EID: Id of event to be deleted.
-      // UID: id of the user deleting event, save in the central app store when user login.
-      for (var i = 0; (i < this.remotedummyeventlist.length); i++) {
-        if (this.remotedummyeventlist[i].EID === this.eidtoremove) {
-          this.remotedummyeventlist.splice(i, 1)
-          if (i < this.listofevents.length) this.listofevents.splice(i, 1)
-        }
-      }
-      this.dialog = false
-    },
-    previous: function () {
-      //
-      if ((this.offset - this.limit) >= 0) this.offset -= this.limit
-      if ((this.offset - this.limit) > 0) this.offset -= this.limit
-      this.listofevents = this.getEvents(this.offset, this.limit)
-    },
-    next: function () {
-      //
-      console.log('here offset = ' + this.offset)
-      console.log('offset + limit' + this.offset + this.limit)
-      console.log(this.listofevents)
-      console.log('thisgetNumberOfEvents' + this.getNumberOfEvents())
-      if ((this.offset + this.limit) < this.getNumberOfEvents()) this.offset += this.limit
-      console.log('updated offset = ' + this.offset)
-      console.log('limit = ' + this.limit)
-      console.log(this.getEvents(this.offset, this.limit))
-      this.listofevents = this.getEvents(this.offset, this.limit)
-    }
-
+    onScroll,
+    getEvents,
+    getNumberOfEvents,
+    deleteEvent,
+    previous,
+    next
   }
 }
 </script>

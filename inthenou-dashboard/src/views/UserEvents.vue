@@ -1,17 +1,17 @@
 <template>
 <div>
 <nav-var></nav-var>
-<my-events></my-events>
+<user-events></user-events>
 </div>
 </template>
 
 <script>
 import Navbar from '../components/Navbar.vue'
-import MyEvents from '../components/eventsmanagement/MyEvents.vue'
+import UserEvents from '../components/eventsmanagement/UserEvents'
 export default {
   components: {
     'nav-var': Navbar,
-    'my-events': MyEvents
+    'user-events': UserEvents
   }
 }
 </script>

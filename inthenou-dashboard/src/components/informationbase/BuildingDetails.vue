@@ -18,7 +18,7 @@
             <v-card-subtitle class="pt-0 pb-0 ma-0">Type: {{building.Type}} </v-card-subtitle>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <router-link :to="'/informationbase/buildings/'+ building.BID +'/floors'"><v-btn large color="primary">Floors</v-btn></router-link>
+              <router-link :to="'/informationbase/buildings/'+ building.BID +'/floors/'+building.NumFloors"><v-btn large color="primary">Floors</v-btn></router-link>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -28,20 +28,30 @@
 </template>
 
 <script>
+import { infobaseApiCall } from '../../dummyapicals/InformationBase.js'
 export default {
   data: () => ({
     buildings: [],
     buildingOffset: null,
     builingLimit: null,
-    dialog: null,
-    listOfBuildings: null
+    listOfBuildings: null,
+    path: ''
   }),
   mounted () {
-
+    this.path = '/informationbase/buildings'
+    this.getBuildings()
   },
   methods: {
     getBuildings: async function () {
-
+      return new Promise((resolve, reject) => {
+        infobaseApiCall({ url: this.path, method: 'GET' })
+          .then(response => {
+            resolve(this.buildings = response.Building)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
     }
 
   }

@@ -13,9 +13,6 @@ import ModeratorPrivilegeManagementView from './PrivilegeManagement.vue'
 export default {
   components: {
     'p-m-v': ModeratorPrivilegeManagementView // instance of the import of the component PrivilegeManegement.vue, used for the tags above
-  },
-  props: {
-    userid: String
   }
 }
 </script>

@@ -5,21 +5,20 @@
   <v-row>
       <v-container>
         <v-col v-scroll:#scroll-target="onScroll" align="center" justify="center" style="height: 1000px" >
-
           <v-card-actions>
             <v-btn justify="start" rounded color="primary" dark @click="previous()"><v-icon large right>mdi-skip-previous</v-icon> <h1 class="ml-4">Previous</h1> </v-btn>
-            <v-spacer></v-spacer>
+            <v-spacer><h1>All Current Events</h1></v-spacer>
             <v-btn rounded color="primary" dark @click="next()"> <h1 class="ml-10 mr-10">Next</h1><v-icon large right>mdi-skip-next</v-icon></v-btn>
           </v-card-actions>
           <v-card class="d-flex pa-2">
             <v-container fluid>
               <v-row dense>
                 <v-col v-for="event in listofevents" :key="event.EID" :cols="4">
-                  <v-card>
+                  <v-card height="100%">
                     <v-card-title class="headline blue darken-4 white--text"> {{event.eTitle}}
                       <v-spacer></v-spacer>
                       <v-btn large text color="grey">
-                          <v-icon large right @click="dialog=true, eidtoremove=event.EID, etitletoremove=event.eTitle" >mdi-delete-forever</v-icon>
+                          <v-icon  large right @click="dialog=true, eidtoremove=event.EID, etitletoremove=event.eTitle" >mdi-delete-forever</v-icon>
                       </v-btn>
                     </v-card-title>
                     <v-card-subtitle class="pt-0 pb-0 ma-0 blue accent-1">Created: {{event.CreationDate}}</v-card-subtitle>
@@ -28,7 +27,7 @@
                     <v-card-subtitle class="pt-0 pb-0 ma-0">Location: {{event.Room}}</v-card-subtitle>
                     <v-card-subtitle class="pt-0 pb-0 ma-0" >Start: {{event.eStartTime}} </v-card-subtitle>
                     <v-card-subtitle class="pt-0 pb-0 ma-0" >End: {{event.eEndTime}} </v-card-subtitle>
-                    <v-card-subtitle class="pt-0 pb-0  ma-0">Description: {{event.eDescription}} </v-card-subtitle>
+                    <v-card-subtitle class="pt-0 pb-0  ma-0" >Description: {{event.eDescription}} </v-card-subtitle>
                     </v-card-text>
                   </v-card>
                 </v-col>
@@ -56,7 +55,7 @@
 </template>
 
 <script>
-import { onScroll, getEvents, getNumberOfEvents, previous, next, uid, offsetTop, eidtoremove, etitletoremove, offset, limit, dialog, listofevents, remotedummyeventlist } from '../vueinstances/events.js'
+import { onScroll, getEvents, getNumberOfEvents, previous, next, uid, offsetTop, eidtoremove, etitletoremove, offset, limit, dialog, deleteEvent, listofevents, path, path1 } from '../vueinstances/events.js'
 export default {
   data: () => ({
     uid,
@@ -67,9 +66,12 @@ export default {
     limit,
     dialog,
     listofevents,
-    remotedummyeventlist
+    path,
+    path1
   }),
   mounted () {
+    this.path1 = '/Events/size'
+    this.path = '/Events'
     this.listofevents = this.getEvents(this.offset, this.limit)
   },
   methods: {
@@ -78,18 +80,7 @@ export default {
     getNumberOfEvents,
     previous,
     next,
-    deleteEvent: function () {
-      // Route: /Events/{EID:INT}/User/{UID:INT}/Delete
-      // EID: Id of event to be deleted.
-      // UID: id of the user deleting event, save in the central app store when user login.
-      for (var i = 0; (i < this.remotedummyeventlist.length); i++) {
-        if (this.remotedummyeventlist[i].EID === this.eidtoremove) {
-          this.remotedummyeventlist.splice(i, 1)
-          if (i < this.listofevents.length) this.listofevents.splice(i, 1)
-        }
-      }
-      this.dialog = false
-    }
+    deleteEvent
   }
 }
 </script>

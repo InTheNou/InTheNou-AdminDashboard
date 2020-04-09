@@ -5,7 +5,6 @@
               <v-img src="https://image.flaticon.com/icons/svg/950/950299.svg" aspect-ratio="1.7" contain></v-img>
               <v-card-title class="headline justify-center" >Service</v-card-title>
                 <v-card-actions>
-
                     <v-dialog v-model="editServiceDialog" persistent max-width="900px">
                       <template v-slot:activator="{ on }">
                           <v-row justify="center">
@@ -22,6 +21,40 @@
                             lazy-validation
                             class="ma-6"
                           >
+                          <v-row>
+                            <v-col cols="4">
+                              <v-select
+                              @change="updateFloors()"
+                              v-model="buildingName"
+                              :rules="[ v => !!v]"
+                              :items="buildings"
+                              label="Building"
+                              filled
+                              required
+                              ></v-select>
+                            </v-col>
+                            <v-col cols="4">
+                              <v-select
+                              @change="updateRooms()"
+                              v-model="floor"
+                              :rules="[ v => !!v]"
+                              :items="floors"
+                              label="Floor"
+                              filled
+                              required
+                              ></v-select>
+                            </v-col>
+                            <v-col cols="4">
+                              <v-select
+                              v-model="roomID"
+                              :rules="[ v => !!v]"
+                              :items="rooms"
+                              label="Room"
+                              filled
+                              required
+                              ></v-select>
+                            </v-col>
+                          </v-row>
                           <v-row>
                             <v-col cols="4">
                               <v-text-field
@@ -58,10 +91,8 @@
                               <v-select
                               v-model="phoneType"
                               :items="['extension','mobile','frame']"
-                              :rules="[v => !!v || 'Item is required']"
-                              label="Item"
+                              label="Type"
                               filled
-                              required
                               ></v-select>
                             </v-col>
                             <v-btn @click="addNumberToList" color="primary mb-0 mt-3 pa-0 " dark  class="mx-2" fab>
@@ -137,6 +168,7 @@
 </template>
 
 <script>
+import { infobaseApiCall } from '../../dummyapicals/InformationBase.js'
 export default {
   data: () => ({
     editServiceDialog: null,
@@ -151,22 +183,88 @@ export default {
     phoneType: null,
     phoneNumbers: [],
     phoneNumbersList: [],
-    buildingID: [],
+    buildingName: null,
+    buildingID: null,
+    buildings: [],
+    buildingList: [],
+    floors: [],
     floor: null,
-    roomID: null
+    roomName: null,
+    roomID: null,
+    rooms: [],
+    roomList: []
   }),
+  mounted: async function () {
+    await this.getBuildings()
+
+    for (var i = 0; i < this.buildingList.length; i++) {
+      this.buildings.push(this.buildingList[i].Name)
+    }
+  },
   methods: {
+    validate: function () {
+      this.$refs.form.validate()
+    },
+    updateFloors: function () {
+      console.log('on update floors')
+      this.floors = []
+      for (var i = 0; i < this.buildingList.length; i++) {
+        if (this.buildingName === this.buildingList[i].Name) {
+          for (var n = 0; n < this.buildingList[i].NumFloors; n++) {
+            this.floors.push(n + 1)
+          }
+        }
+      }
+    },
+    updateBuildingID: function () {
+      for (var i = 0; i < this.buildingList.length; i++) {
+        if (this.buildingName === this.buildingList[i].Name) {
+          this.buildingID = this.buildingList[i].BID
+        }
+      }
+    },
+    updateRooms: async function () {
+      this.updateBuildingID()
+      this.rooms = []
+      await this.getRooms()
+      for (var i = 0; i < this.roomList.length; i++) {
+        this.rooms.push(this.roomList[i].rCode)
+      }
+    },
+    getBuildings: async function () {
+      return await new Promise((resolve, reject) => {
+        infobaseApiCall({ url: '/informationbase/buildings', method: 'GET' })
+          .then(response => {
+            resolve(this.buildingList = response.Building)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
+    getRooms: async function () {
+      return await new Promise((resolve, reject) => {
+        infobaseApiCall({ url: '/informationbase/buildings/' + this.buildingID + '/floors/' + this.floor + '/rooms', method: 'GET' })
+          .then(response => {
+            resolve(this.roomList = response.Room)
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
     createService: function () {
 
-    },
-    validate () {
-      this.$refs.form.validate()
     },
     addNumberToList: function () {
       var contains = false
       for (var i = 0; i < this.phoneNumbers.length; i++) {
-        if (this.phoneNumbers[i].Number === this.phoneNumber) contains = true
-        else contains = false
+        if (this.phoneNumbers[i].Number === this.phoneNumber) {
+          contains = true
+          alert('Entered number already in the phone list')
+        } else {
+          contains = false
+        }
       }
       // regex for ###-###-#### or ###-###-####,####
       if (this.phoneNumber != null && ((this.phoneNumber.match(/^(\d{3})[-](\d{3})[-](\d{4})$/) && this.phoneType === 'mobile') || (this.phoneNumber.match(/^(\d{3})[-](\d{3})[-](\d{4})$/) && this.phoneType === 'frame') || (this.phoneNumber.match(/^(\d{3})[-](\d{3})[-](\d{4})([,](\d{4}))$/) && this.phoneType === 'extension')) && this.phoneNumbers.length < 10 && !contains) {
@@ -175,6 +273,8 @@ export default {
         phone.Type = this.phoneType
         this.phoneNumbers.push(phone)
         this.phoneNumbersList = JSON.stringify(this.phoneNumbers)
+      } else {
+        alert('1.The entered number must be valid. \n 2.A valid type must be selected. \n **For extensions do not forget to use ###-###-####,#### ')
       }
     },
     removeNumberFromList: function () {
@@ -196,6 +296,8 @@ export default {
         website.URL = this.website.toString()
         this.websites.push(website)
         this.websitesList = JSON.stringify(this.websites)
+      } else {
+        alert('1.The entered number must be valid \n 2.A type must be selected ')
       }
     },
     removeWebsiteFromList: function () {
