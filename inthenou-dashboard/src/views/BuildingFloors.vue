@@ -14,7 +14,7 @@ export default {
     'building-floors': BuildingFloors
   },
   mounted () {
-    console.log('at building floors view ')
+    // console.log('at building floors view ')
   }
 }
 </script>
