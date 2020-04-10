@@ -16,15 +16,18 @@ import store from '../store/Store.js'
 const ifIsNotAuthenticated = (to, from, next) => {
   if (!store.getters.isAuthenticated) {
     next()
+  } else if (from.path !== '/' && to.path !== '/') {
+    next('/')
+  } else if (store.getters.isAuthenticated) {
+    next('/allcurrentevents')
   }
-  next('/')
 }
 const ifIsAuthenticated = (to, from, next) => {
   if (store.getters.isAuthenticated) {
     next()
-    return
+  } else {
+    next('/')
   }
-  next('/')
 }
 export const routes = [
   {
@@ -84,7 +87,7 @@ export const routes = [
   },
   {
     path: '/informationbase/buildings/:bid/floors/:fid/rooms/:rid/services',
-    name: 'room',
+    name: 'room services',
     component: RoomServices,
     beforeEnter: ifIsAuthenticated
   },

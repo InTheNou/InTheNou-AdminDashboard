@@ -173,7 +173,7 @@ export default {
   }),
   mounted () {
     this.path = ''
-    console.log('here ' + process.env.VUE_APP_USERSLIST1)
+    // console.log('here ' + process.env.VUE_APP_USERSLIST1)
     this.getUsers()
   },
   methods: {
@@ -185,7 +185,7 @@ export default {
       if ((type === 'moderator' || type === 'eventcreator') && value === true) {
         // POST method here to add moderator using email
         // needs to make the correct POST depending if is a mod or event creator
-        console.log(' POST grant privileges to' + this.formemail)
+        // console.log(' POST grant privileges to' + this.formemail)
         this.users.push({ UID: 12435, Email: this.formemail, SupEmail: 'sup@gmail.com' })
         this.adddialog = false
       } else if ((type === 'moderator' || type === 'eventcreator') && value === false) {
@@ -195,7 +195,7 @@ export default {
         var list = JSON.parse(JSON.stringify(this.revokePrivList))// list of selected users to revoke moderator privileges
         for (var i = 0; i < list.length; i++) {
           // here makes POST to each user selected to remove them from list
-          console.log('POST delete:' + list[i].Email)
+          // console.log('POST delete:' + list[i].Email)
           // get new updated list
         }
 
@@ -211,7 +211,7 @@ export default {
           userApiCall({ url: '/users/2', method: 'GET' })
             .then(response => {
               resolve(this.users = response.Users)
-              console.log(response)
+              // console.log(response)
             })
             .catch(err => {
               reject(err)

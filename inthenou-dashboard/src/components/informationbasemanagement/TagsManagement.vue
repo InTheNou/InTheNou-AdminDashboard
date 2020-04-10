@@ -60,7 +60,7 @@ export default {
     addTagToList: function () {
       var contains = false
       for (var i = 0; i < this.websites.length; i++) {
-        console.log(this.tagList[i].URL)
+        // console.log(this.tagList[i].URL)
         if (this.tagList[i].Tag === this.tagFormInput) contains = true
         else contains = false
       }

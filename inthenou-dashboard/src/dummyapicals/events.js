@@ -87,10 +87,10 @@ const eventsApiCall = ({ url, method }) =>
   new Promise((resolve, reject) => {
     setTimeout(() => {
       try {
-        console.log('Event API call:' + mocks + '[' + url + ']' + '[' + method + ']')
+        // console.log('Event API call:' + mocks + '[' + url + ']' + '[' + method + ']')
         resolve(mocks[url][method])
-        console.log(`Mocked '${url}' - ${method}`)
-        console.log('response: ', mocks[url][method])
+        // console.log(`Mocked '${url}' - ${method}`)
+        // console.log('response: ', mocks[url][method])
       } catch (err) {
         reject(new Error(err + '\n Path not found:' + url))
       }

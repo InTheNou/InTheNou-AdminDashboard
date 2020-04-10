@@ -58,7 +58,7 @@ export default {
   mounted () {
     this.modid = this.$route.params.modid
     this.path = '/supervees/' + this.modid
-    console.log(this.path)
+    // console.log(this.path)
     this.users = this.getUsers()
   },
   methods: {
@@ -71,7 +71,7 @@ export default {
         userApiCall({ url: this.path, method: 'GET' })
           .then(response => {
             resolve(this.users = response.Users)
-            console.log(response)
+            // console.log(response)
           })
           .catch(err => {
             reject(err)

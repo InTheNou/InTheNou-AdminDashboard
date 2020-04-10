@@ -20,7 +20,7 @@ function getEvents (offset, limit) {
     eventsApiCall({ url: this.path + '/offset=' + offset + '/limit=' + limit, method: 'GET' })
       .then(response => {
         resolve(this.listofevents = response.Events)
-        console.log(response)
+        // console.log(response)
       })
       .catch(err => {
         reject(err)
@@ -31,7 +31,7 @@ function getEvents (offset, limit) {
 
 function getNumberOfEvents () {
   return new Promise((resolve, reject) => {
-    console.log(this.path1)
+    // console.log(this.path1)
     eventsApiCall({ url: this.path1, method: 'GET' })
       .then(response => {
         resolve(response.size)

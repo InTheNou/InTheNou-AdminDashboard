@@ -38,8 +38,8 @@ const infobaseApiCall = ({ url, method }) =>
     setTimeout(() => {
       try {
         resolve(mocks[url][method])
-        console.log(`Mocked '${url}' - ${method}`)
-        console.log('response: ', mocks[url][method])
+        // console.log(`Mocked '${url}' - ${method}`)
+        // console.log('response: ', mocks[url][method])
       } catch (err) {
         reject(new Error(err + '\n Path not found:' + url))
       }

@@ -206,7 +206,7 @@ export default {
       this.$refs.form.validate()
     },
     updateFloors: function () {
-      console.log('on update floors')
+      // console.log('on update floors')
       this.floors = []
       for (var i = 0; i < this.buildingList.length; i++) {
         if (this.buildingName === this.buildingList[i].Name) {
@@ -286,7 +286,7 @@ export default {
     addWebsiteToList: function () {
       var contains = false
       for (var i = 0; i < this.websites.length; i++) {
-        console.log(this.websites[i].URL)
+        // console.log(this.websites[i].URL)
         if (this.websites[i].URL === this.website) contains = true
         else contains = false
       }

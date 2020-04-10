@@ -18,7 +18,7 @@ export default {
   },
   computed: mapGetters(['authStatus', 'isAuthenticated']),
   mounted () {
-    console.log('App.vue mounted:' + this.isAuthenticated)
+    // console.log('App.vue mounted:' + this.isAuthenticated)
   }
 }
 </script>
