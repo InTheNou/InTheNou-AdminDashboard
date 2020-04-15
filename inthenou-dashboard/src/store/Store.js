@@ -1,15 +1,24 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { authenticationApiCall } from '../dummyapicals/authentication.js'
 Vue.use(Vuex)
+const DISPLAY_NAME = 'inthenou-user-name'
+const EMAIL = 'inthenou-user-email'
+const ROLE_ID = 'inthenou-role-id'
+const TYPE = 'inthenou-type'
+const UID = 'inthenou-uid'
 
 export default new Vuex.Store({
   // state of the application contains all the properties our application has and share with all components
   state: {
   // set for test purposes of the login component
-    token: localStorage.getItem('login-token') || '',
+    // token: localStorage.getItem('login-token') || '',
+    display_name: localStorage.getItem(DISPLAY_NAME) || '',
+    email: localStorage.getItem(EMAIL) || '',
+    roleid: localStorage.getItem(ROLE_ID) || '',
+    type: localStorage.getItem(TYPE) || '',
+    uid: localStorage.getItem(UID) || '',
     status: '',
-    hasLoadedOnce: false
+    role: ''
   },
   // use to make centralized methods for access of  the store state variables
   getters: {
@@ -17,19 +26,28 @@ export default new Vuex.Store({
     authStatus: state => state.status
   },
   actions: {
-    AUTH_REQUEST: ({ commit, state }, user) => {
+    AUTH_REQUEST: ({ commit, state }, userid) => {
       return new Promise((resolve, reject) => {
         commit('AUTH_REQUEST') // invoke mutation handler to update status vairable
-        authenticationApiCall({ url: 'auth', data: user, method: 'POST' })
-          .then(response => {
-            localStorage.setItem('login-token', response.token) //  passed a key name and value, will add that key to the given Storage object, or update that key's value if it already exists.
-            commit('AUTH_SUCCESS', response.token) // cals AUTH_SUCCESS mutation with parameter(payload) equal to the receive token from the promise
-            resolve(response.token) // returns promise when resolved with the token value
-          })
+        fetch('https://inthenou.uprm.edu/App/Users/uid=' + userid)
           .catch(err => {
             commit('AUTH_ERROR', err) // invoke mutation handler to update status vairable with a payload
-            localStorage.removeItem('login-token')
+            // localStorage.removeItem('login-token')
             reject(err)
+          })
+          .then(response => {
+            // localStorage.setItem('login-token', response.token) //  passed a key name and value, will add that key to the given Storage object, or update that key's value if it already exists.
+            resolve(console.log(response))
+            return response.json()// returns promise when resolved with the token value
+          })
+          .then(userprofile => {
+            console.log('fetch data')
+            localStorage.setItem('inthenou-user-name', userprofile.display_name)
+            localStorage.setItem('inthenou-user-email', userprofile.email)
+            localStorage.setItem('inthenou-role-id', userprofile.roleid)
+            localStorage.setItem('inthenou-type', userprofile.type)
+            localStorage.setItem('inthenou-uid', userprofile.uid)
+            commit('AUTH_SUCCESS', userprofile) // cals AUTH_SUCCESS mutation with parameter(payload) equal to the receive token from the promise
           })
       })
     },
@@ -46,9 +64,13 @@ export default new Vuex.Store({
     AUTH_REQUEST: (state) => {
       state.status = 'loading' // updates the status state variable
     },
-    AUTH_SUCCESS: (state, token) => {
+    AUTH_SUCCESS: (state, userprofile) => {
+      state.display_name = userprofile.display_name
+      state.email = userprofile.email
+      state.roleid = userprofile.roleid
+      state.type = userprofile.type
+      state.uid = userprofile.uid
       state.status = 'success' // updates the status state variable
-      state.token = token
     },
     AUTH_ERROR: (state) => {
       state.status = 'error' // updates the status state variable

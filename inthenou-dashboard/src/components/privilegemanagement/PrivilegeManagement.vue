@@ -5,7 +5,7 @@
         <v-card-title class="headline justify-center blue darken-4 white--text">
           <v-row>
             <v-col cols="8">
-              <h3 v-if="viewtype=='moderator'">Moderator Users List</h3>
+              <h3 v-if="viewtype=='moderator'">Moderator  List</h3>
               <h3 v-else-if="viewtype==='eventcreator'">Event Creator List</h3>
             </v-col>
             <v-spacer></v-spacer>
@@ -25,7 +25,7 @@
                       <v-form ref="form" v-model="valid" lazy-validation >
                         <v-card-title>
                           <span v-if="viewtype==='moderator'" vclass="headline">Grant Moderator Privileges</span>
-                          <span v-else-if="viewtype==='eventcreator'" vclass="headline">Event Creator Privileges</span>
+                          <span v-else-if="viewtype==='eventcreator'" vclass="headline">Grant Event Creator Privileges</span>
                         </v-card-title>
                         <v-card-text>
                           <v-container>
@@ -52,12 +52,12 @@
         <hr />
         <v-row align="center">
           <div v-if="viewtype=='moderator'">
-            <v-subheader>1.to add new Moderators press the + sign above.</v-subheader>
+            <v-subheader>1.to add a new Moderator press the + sign above.</v-subheader>
             <v-subheader>2.to remove Moderators select from the list then press remove button.</v-subheader>
           </div>
           <div v-else-if="viewtype=='eventcreator'">
-            <v-subheader>1.to add new Event Creator press the + sign above.</v-subheader>
-            <v-subheader>2.to remove Event creator select from the list then press remove button.</v-subheader>
+            <v-subheader>1.to add a new Event Creator press the + sign above.</v-subheader>
+            <v-subheader>2.to remove Event creators select from the list then press remove button.</v-subheader>
           </div>
         </v-row>
         <v-container id="scroll-target" style="max-height: 600px" class="overflow-y-auto">

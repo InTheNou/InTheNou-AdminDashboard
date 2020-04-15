@@ -6,8 +6,10 @@ import store from './store/Store.js'
 import vuetify from './plugins/vuetify'
 import Vuelidate from 'vuelidate' // package for validation purposes
 import VueResource from 'vue-resource'
+import { LoaderPlugin } from 'vue-google-login'
 import Vuex from 'vuex'
 
+Vue.use(LoaderPlugin, { client_id: process.env.VUE_APP_CLIENT_ID })
 Vue.use(VueRouter) // inject package for use in the set up
 Vue.use(VueResource) // inject package for use in the set up
 Vue.use(Vuelidate) // inject package for use in the set up

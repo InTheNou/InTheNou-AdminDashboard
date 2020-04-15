@@ -1,19 +1,24 @@
 <template>
-  <v-card
-    class="d-flex pa-2"
-  >
-    <v-container fluid>
-      <v-row dense>
-          <v-card class="d-flex pa-2">
-            <v-container fluid>
-              <v-row dense>
-                <v-col v-for="service in servicesList" :key="service.sid" :cols="4">
+ <v-layout row wrap align-center justify-center>
+  <v-flex xs6 offset xs-1 sm6 offset-sm1 md6 offset-md1>
+          <v-card class="d-flex ma-10 ">
+             <v-container id="scroll-target" style="max-height: 700px" class="overflow-y-auto">
+                 <v-row  style="height: 550px"  >
+                <v-col
+                v-for="service in servicesList"
+                :key="service.sid"
+                :cols="12">
                   <v-card height="100%">
-                    <v-card-title class="headline blue darken-4 white--text" style="font-size:1vw;"> {{service.sname}}
+                    <v-card-title class="headline blue darken-4 white--text" style="font-size:1vw;">
+                      {{service.sname}}
                     </v-card-title>
-                    <v-card-subtitle class="pt-0 pb-0 ma-0 blue accent-1">Schedule: {{service.sschedule}} </v-card-subtitle>
+                    <v-card-subtitle class="pt-0 pb-0 ma-0 blue accent-1">
+                      Schedule: {{service.sschedule}}
+                    </v-card-subtitle>
                     <v-card-text>
-                    <v-card-subtitle class="pt-0 pb-0 ma-0" >Description: {{service.sdescription}} </v-card-subtitle>
+                    <v-card-subtitle class="pt-0 pb-0 ma-0" >
+                      Description: {{service.sdescription}}
+                    </v-card-subtitle>
                     </v-card-text>
                     <v-spacer></v-spacer>
                     <v-card-actions>
@@ -25,24 +30,13 @@
                     </v-card-actions>
                   </v-card>
                 </v-col>
-                    <v-card-actions>
-                          <v-col cols="4">
+                <v-card-actions>
+                          <v-col cols="12">
                             <v-dialog v-model="editServiceDialog" persistent max-width="600px">
                                 <v-card>
-                                    <v-card-title>
-                                    <span  vclass="headline">Edit Coordinates: {{roomCode}}</span>
-                                    </v-card-title>
                                     <v-card-subtitle></v-card-subtitle>
                                     <v-card-text>
                                     <v-container>
-                                        <!-- <v-row>
-                                        <v-col cols="4" >
-                                          <span>*Latitude:</span>  <v-text-field v-model.lazy="formLatitudeInput"    required hint="Enter Latitude" ></v-text-field>
-                                        </v-col>
-                                        <v-col cols="4" >
-                                            <span>*Longitude:</span> <v-text-field v-model.lazy="formLongitudeInput"  required hint="Enter Longitude" ></v-text-field>
-                                        </v-col>
-                                        </v-row> -->
                                     </v-container>
                                     <small>*indicates required field</small>
                                     </v-card-text>
@@ -55,16 +49,15 @@
                             </v-dialog>
                           </v-col>
                     </v-card-actions>
-              </v-row>
-            </v-container>
+                 </v-row>
+             </v-container>
           </v-card>
-      </v-row>
-    </v-container>
-  </v-card>
+  </v-flex>
+ </v-layout>
 </template>
 
 <script>
-import { infobaseApiCall } from '../../dummyapicals/InformationBase.js'
+import { offset, limit, next, previous } from '../utils/methods.js'
 export default {
   data: () => ({
     editServiceDialog: false,
@@ -73,26 +66,25 @@ export default {
     roomID: null,
     roomCode: null,
     servicesList: [],
-    path: ''
+    path: '',
+    offset,
+    limit
   }),
   mounted () {
     this.buildingID = this.$route.params.bid
     this.floorID = this.$route.params.fid
     this.roomID = this.$route.params.rid
-    this.path = '/informationbase/buildings/' + this.buildingID + '/floors/' + this.floorID + '/rooms/' + this.roomID + '/services'
     this.getServices()
   },
   methods: {
-    getServices: function () {
-      return new Promise((resolve, reject) => {
-        infobaseApiCall({ url: this.path, method: 'GET' })
-          .then(response => {
-            resolve(this.servicesList = response.Service)
-          })
-          .catch(err => {
-            reject(err)
-          })
-      })
+    getServices: async function () {
+      await fetch('https://inthenou.uprm.edu/Dashboard/Services/offset=' + this.offset + '/limit=' + this.limit)
+        .then((response) => {
+          return response.json()
+        })
+        .then((data) => {
+          this.servicesList = data.Services
+        })
     },
     validateCoordinates: function () {
       // /^[+-]?\d+(\.\d+)?$/
@@ -102,7 +94,9 @@ export default {
         }
       }
       return false
-    }
+    },
+    previous,
+    next
   }
 }
 </script>

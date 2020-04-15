@@ -1,45 +1,19 @@
-import { eventsApiCall } from '../../dummyapicals/events.js'
-
-var uid = null
-var offsetTop = 0
-var eidtoremove = null
-var etitletoremove = null
-var offset = 0
-var limit = 5
-var dialog = false
-var listofevents = []
-var path = ''
-var path1 = ''
 
 function onScroll (e) {
   this.offsetTop = e.target.scrollTop
 }
-
-function getEvents (offset, limit) {
-  return new Promise((resolve, reject) => {
-    eventsApiCall({ url: this.path + '/offset=' + offset + '/limit=' + limit, method: 'GET' })
-      .then(response => {
-        resolve(this.listofevents = response.Events)
-        // console.log(response)
-      })
-      .catch(err => {
-        reject(err)
-        alert(err)
-      })
-  })
-}
-
-function getNumberOfEvents () {
-  return new Promise((resolve, reject) => {
-    // console.log(this.path1)
-    eventsApiCall({ url: this.path1, method: 'GET' })
-      .then(response => {
-        resolve(response.size)
-      })
-      .catch(err => {
-        reject(err)
-      })
-  })
+//  /Dashboard/Events/offset=<int:offset>/limit=<int:limit>
+async function getEvents () {
+  var newList
+  console.log(this.path + '/offset=' + this.offset + '/limit=' + this.limit)
+  await fetch(this.path + '/offset=' + this.offset + '/limit=' + this.limit)
+    .then((response) => {
+      return response.json()
+    })
+    .then((data) => {
+      newList = data.events
+    })
+  return newList
 }
 
 function deleteEvent () {
@@ -55,19 +29,35 @@ function deleteEvent () {
 }
 
 function previous () {
-  //
+  console.log(this.path)
   if ((this.offset - this.limit) >= 0) {
+    if (this.disablenext === true) {
+      this.disablenext = false
+    }
     this.offset -= this.limit
-    this.listofevents = this.getEvents(this.offset, this.limit)
+    this.listofevents = this.getEvents(this.path, this.offset, this.limit)
   }
 }
 
-async function next () {
-  //
-  if ((this.offset + this.limit) < await this.getNumberOfEvents()) {
-    this.offset += this.limit
-    this.listofevents = this.getEvents(this.offset, this.limit)
+async function next (path) {
+  this.offset += this.limit
+  console.log(path)
+  var newList = await this.getEvents(path, this.offset, this.limit)
+  console.log('list length: ' + newList.length)
+
+  this.listofevents = (newList !== null && newList.length > 0 ? newList : this.listofevents)
+  if (newList.length === 0 || newList === null) {
+    this.disablenext = true
   }
 }
 
-export { onScroll, getEvents, getNumberOfEvents, previous, next, uid, offsetTop, eidtoremove, etitletoremove, offset, limit, dialog, listofevents, deleteEvent, path, path1 }
+function formatDate (date) {
+  var day = date.substring(8, 10)
+  var month = date.substring(5, 7)
+  var year = date.substring(0, 4)
+  var hour = (date.substring(10, 13) < 12 ? date.substring(10, 13) + ':' + date.substring(14, 16) + ' AM' : (date.substring(10, 13) % 12 || 12) + ':' + date.substring(14, 16) + ' PM')
+
+  return (' ' + day + '/' + month + '/' + year + ', ' + hour)
+}
+
+export { onScroll, getEvents, previous, next, deleteEvent, formatDate }

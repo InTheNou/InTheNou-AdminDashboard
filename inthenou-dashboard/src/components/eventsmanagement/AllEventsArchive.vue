@@ -55,11 +55,10 @@
 </template>
 
 <script>
-import { onScroll, getEvents, getNumberOfEvents, previous, next, uid, offsetTop, eidtoremove, etitletoremove, offset, limit, dialog, listofevents, path, path1 } from '../vueinstances/events.js'
+import { getEvents, getNumberOfEvents, previous, next, uid, eidtoremove, etitletoremove, offset, limit, dialog, listofevents, path, path1 } from '../vueinstances/events.js'
 export default {
   data: () => ({
     uid,
-    offsetTop,
     eidtoremove,
     etitletoremove,
     offset,
@@ -71,11 +70,9 @@ export default {
   }),
   mounted () {
     this.path = '/Events/Past'
-    this.path1 = '/Events/Past/size'
     this.listofevents = this.getEvents(this.offset, this.limit, this.path)
   },
   methods: {
-    onScroll,
     getEvents,
     getNumberOfEvents,
     previous,

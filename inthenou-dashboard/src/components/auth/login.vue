@@ -1,45 +1,81 @@
 <template>
+<v-container class="fill-height">
 <nav>
-  <v-app-bar
-      text
-      app
-      color = "blue darken-4"
-    >
-        <v-toolbar-title class="text-uppercase grey--text">
-            <h1>In<span style="color:red">The</span>Nou</h1>
-        </v-toolbar-title>
-        <v-spacer></v-spacer>
-    </v-app-bar >
-        <v-row
-          align="center"
-          justify="center"
-          class="grey lighten-5"
-          style="height: 400px;"
-        >
-        <v-col cols="12">
-          <v-card class="mx-auto pa-4" max-width="400">
-                <v-card-title> Login:</v-card-title>
-                <v-card-subtitle>Needs registration in the InTheNou app before login </v-card-subtitle>
-                <div class="text-center">
-                 <v-btn @click="login" rounded large color="green" elevation="10" dark>Login</v-btn>
-                </div>
-             </v-card>
-        </v-col>
-        </v-row>
+  <v-app-bar text app color = "blue darken-4">
+    <v-toolbar-title class="text-uppercase grey--text">
+      <h1>In<span style="color:red">The</span>Nou</h1>
+    </v-toolbar-title>
+  </v-app-bar >
 </nav>
+  <v-row align="center" justify="center">
+    <v-col cols="2">
+    <GoogleLogin :params="params" :renderParams="renderParams" :onSuccess="onSuccess" :onFailure="onFailure"></GoogleLogin>
+    </v-col>
+  </v-row>
+</v-container>
 </template>
 <script>
+// import axios from 'axios'
+import GoogleLogin from 'vue-google-login'
 export default {
   data: () => ({
-    username: 'kensy',
-    password: 'password'
+    user: {
+      access_token: null,
+      id: null,
+      email: '',
+      display_name: ''
+    },
+    params: { client_id: process.env.VUE_APP_CLIENT_ID },
+    renderParams: { width: 250, height: 50, longtitle: true }
   }),
+  components: {
+    GoogleLogin
+  },
   methods: {
-    login: function () {
-      const { username, password } = this
-      this.$store.dispatch('AUTH_REQUEST', { username, password }).then(() => { // creates promise triggers Action inside store
-        this.$router.push('/privilegemanagement') // push to the privilegemanagement component after validation
-      })
+    onSuccess: function (googleUser) {
+      console.log(googleUser)
+      this.user.access_token = googleUser.tc.access_token
+      this.user.id = googleUser.Pt.MU
+      this.user.email = googleUser.Pt.yu
+      this.user.display_name = googleUser.Pt.Ad
+      console.log(JSON.stringify(this.user))
+      this.sendSessionToDB()
+    },
+    onFailure: function () {
+    },
+    sendSessionToDB: async function () {
+      /** Body of the POST API call ***
+      {"access_token":"ACCESTOKENCODE;",
+      "id":"113768707919850641968",
+      "email":"jonathan.santiago27@upr.edu",
+      "display_name": "Jonathan X Santiago Gonzalez"
+      } */
+      return await fetch(
+        'https://inthenou.uprm.edu/App/login',
+        {
+          method: 'POST',
+          mode: 'cors',
+          credential: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(this.user)
+        })
+        .catch()
+        .then(response => {
+          // console.log(response)
+          // response.headers.forEach(console.log)
+          return response.json()
+        })
+        .then(data => {
+          this.$store.dispatch('AUTH_REQUEST', data.uid).then(() => {
+            // this.$router.push('/allcurrentevents')
+          })
+          console.log(data)
+        })
+      // axios.post('https://inthenou.uprm.edu/App/login', JSON.stringify(this.user), { withCredentials: true }).then(function (response) {
+      //   console.log(response)
+      // })
     }
   }
 }

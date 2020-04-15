@@ -1,9 +1,9 @@
 <template>
   <v-row align ="center" justify="center" no-gutters style="height: 150px;" >
-      <v-col cols="6">
+      <v-col cols="3">
        <service-management></service-management>
        </v-col>
-       <v-col cols="6">
+       <v-col cols="3">
          <tags-management></tags-management>
        </v-col>
   </v-row>

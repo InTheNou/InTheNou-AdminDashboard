@@ -1,112 +1,81 @@
 <template>
-  <v-card
-    class="d-flex pa-2"
-  >
-    <v-container fluid>
-      <v-row dense>
-        <!-- <v-col
-          v-for="room in roomsList"
-          :key="room.RID"
-          :cols="2"
-        > -->
-          <v-card class="d-flex pa-2">
-            <v-container fluid>
-              <v-row dense>
-                <v-col v-for="room in roomsList" :key="room.RID" :cols="4">
-                  <v-card>
-                    <v-card-title class="headline blue darken-4 white--text"> {{room.rCode}}
-                      <v-spacer></v-spacer>
-                            <div class="text-right">
-                                <v-btn @click="editCoorDialog = !editCoorDialog, roomID = room.RID, roomCode = room.rCode" color="primary mb-0 pa-0" dark class="mx-2" fab>
-                                    <v-icon dark> mdi-map-marker-radius</v-icon>
-                                </v-btn>
-                            </div>
-                    </v-card-title>
-                    <v-card-subtitle class="pt-0 pb-0 ma-0 blue accent-1">custodian: {{room.rCustodian}}, Name: {{room.bName}} </v-card-subtitle>
-                    <v-card-text>
-                    <v-card-subtitle class="pt-0 pb-0 ma-0">Occuopancy: {{room.Ocuppancy}} </v-card-subtitle>
-                    <v-card-subtitle class="pt-0 pb-0 ma-0" >Description: {{room.rDescription}} </v-card-subtitle>
-                    </v-card-text>
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <router-link :to="'/informationbase/buildings/'+ buildingID +'/floors/'+ floorID + '/rooms/' + room.RID + '/services'"><v-btn large color="primary">Services</v-btn></router-link>
-                    </v-card-actions>
-                  </v-card>
-                </v-col>
-                    <v-card-actions>
-                          <v-col cols="4">
-                            <v-dialog v-model="editCoorDialog" persistent max-width="600px">
-                                <v-card>
-                                    <v-card-title>
-                                    <span  vclass="headline">Edit Coordinates: {{roomCode}}</span>
-                                    </v-card-title>
-                                    <v-card-subtitle>Current Values: ({{savedLatitude}},{{savedLongitude}})</v-card-subtitle>
-                                    <v-card-text>
-                                    <v-container>
-                                        <v-row>
-                                        <v-col cols="4" >
-                                          <span>*Latitude:</span>  <v-text-field v-model.lazy="formLatitudeInput"    required hint="Enter Latitude" ></v-text-field>
-                                        </v-col>
-                                        <v-col cols="4" >
-                                            <span>*Longitude:</span> <v-text-field v-model.lazy="formLongitudeInput"  required hint="Enter Longitude" ></v-text-field>
-                                        </v-col>
-                                        </v-row>
-                                    </v-container>
-                                    <small>*indicates required field</small>
-                                    </v-card-text>
-                                    <v-card-actions>
-                                    <v-spacer></v-spacer>
-                                    <v-btn color="blue darken-1" text @click="editCoorDialog = false">Cancel</v-btn>
-                                    <v-btn color="blue darken-1" text  :disabled="validateCoordinates()" @click="editCoorDialog = false" >continue</v-btn>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-dialog>
-                          </v-col>
-                    </v-card-actions>
-              </v-row>
-            </v-container>
-          </v-card>
-      </v-row>
-    </v-container>
+<v-layout row wrap align-center justify-center>
+  <v-flex xs6 offset xs-1 sm6 offset-sm1 md6 offset-md1>
+  <v-card class="d-flex ma-10" >
+                <v-container id="scroll-target" style="max-height: 700px" class="overflow-y-auto">
+                 <v-row  style="height: 500px"  >
+                  <v-list>
+                    <v-list-item
+                    v-for="room in roomsList.rooms"
+                    :key="room.rid"
+                    @click="followRoute(buildingID, floorID, room.rid)"
+                    >
+                    <v-list-item-content>
+                      <v-divider> </v-divider>
+                      <v-list-item-title>
+                        Room: {{roomsList.building.babbrev}}-{{room.rcode}}
+                      </v-list-item-title>
+                       <v-list-item-title>
+                        Roomid: {{room.RID}}
+                      </v-list-item-title>
+                      <v-list-item-subtitle>
+                        Saved Values: ({{room.rlatitude}}, {{room.rlongitude}}, {{room.raltitude}})
+                      </v-list-item-subtitle>
+                      <v-list-item-subtitle>
+                        Department: {{room.rdept}}
+                      </v-list-item-subtitle>
+                      <v-list-item-subtitle>
+                        Custodian: {{room.rcustodian}}
+                      </v-list-item-subtitle>
+                      <v-list-item-subtitle>
+                        Occupancy: {{room.roccupancy}}
+                      </v-list-item-subtitle>
+                      <v-list-item-subtitle>
+                        Description: {{room.rdescription}}
+                      </v-list-item-subtitle>
+                    </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+                 </v-row>
+                </v-container>
   </v-card>
+  </v-flex>
+</v-layout>
 </template>
 
 <script>
-import { infobaseApiCall } from '../../dummyapicals/InformationBase.js'
 export default {
   data: () => ({
     editCoorDialog: false,
     validCoordinates: false,
     formLongitudeInput: null,
     formLatitudeInput: null,
+    formAltitudeInput: null,
     buildingID: null,
     floorID: null,
     roomID: null,
-    roomCode: null,
     savedLongitude: null,
     savedLatitude: null,
-    roomsList: [],
-    path: ''
+    savedAltitude: null,
+    roomsList: []
   }),
-  created () {
+  mounted () {
     this.buildingID = this.$route.params.bid
     this.floorID = this.$route.params.fid
-    this.path = '/informationbase/buildings/' + this.buildingID + '/floors/' + this.floorID + '/rooms'
     this.getRooms()
   },
   methods: {
-    getRooms: function () {
-      return new Promise((resolve, reject) => {
-        infobaseApiCall({ url: this.path, method: 'GET' })
-          .then(response => {
-            resolve(this.roomsList = response.Room)
-          })
-          .catch(err => {
-            reject(err)
-          })
-      })
+    getRooms: async function () {
+      await fetch('https://inthenou.uprm.edu/App/Rooms/bid=' + this.buildingID + '/rfloor=' + this.floorID)
+        .then((response) => {
+          return response.json()
+        })
+        .then((data) => {
+          this.roomsList = data
+          console.log(this.roomsList)
+        })
     },
-    editCoordinates: function (longitude, latitude) {
+    editCoordinates: function (longitude, latitude, altitude) {
 
     },
     getCurrentCoordinates: function () {
@@ -119,6 +88,10 @@ export default {
         }
       }
       return false
+    },
+    followRoute: function (buildingid, floor, roomid) {
+      console.log('follow route')
+      this.$router.push('/informationbase/buildings/' + buildingid + '/floors/' + floor + '/rooms/' + roomid + '/services')
     }
   }
 }

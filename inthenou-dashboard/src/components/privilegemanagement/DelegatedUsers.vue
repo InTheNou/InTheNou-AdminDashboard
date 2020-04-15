@@ -12,7 +12,7 @@
         <hr />
         <v-row align="center">
           <div>
-            <v-subheader>1.</v-subheader>
+            <v-subheader></v-subheader>
           </div>
         </v-row>
         <v-container id="scroll-target" style="max-height: 600px" class="overflow-y-auto">
