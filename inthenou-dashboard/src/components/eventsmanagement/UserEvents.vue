@@ -70,30 +70,26 @@
 </template>
 
 <script>
-import { onScroll, getEvents, getNumberOfEvents, previous, next, uid, offsetTop, eidtoremove, etitletoremove, offset, limit, dialog, listofevents, deleteEvent, path, path1 } from '../vueinstances/events.js'
+import { getEvents, previous, next, deleteEvent } from '../vueinstances/events.js'
 export default {
   data: () => ({
-    uid,
-    offsetTop,
-    eidtoremove,
-    etitletoremove,
-    offset,
-    limit,
-    dialog,
-    listofevents,
-    path,
-    path1
+    uid: null,
+    eidtoremove: null,
+    etitletoremove: null,
+    offset: 0,
+    limit: 5,
+    dialog: false,
+    listofevents: [],
+    path: null
   }),
   mounted () {
     this.uid = this.$route.params.uid
     this.path = '/Events/User/' + this.uid
     this.path1 = '/Events/Myevents/size'
-    this.listofevents = this.getEvents(this.offset, this.limit)
+    this.listofevents = this.getEvents(this.path)
   },
   methods: {
-    onScroll,
     getEvents,
-    getNumberOfEvents,
     deleteEvent,
     previous,
     next

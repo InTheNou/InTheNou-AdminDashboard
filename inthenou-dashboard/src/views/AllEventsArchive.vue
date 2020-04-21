@@ -1,10 +1,8 @@
 <template>
-<div>
-  <nav-bar></nav-bar>
   <v-content>
+    <nav-bar></nav-bar>
     <all-events-archive-view></all-events-archive-view>
   </v-content>
-</div>
 </template>
 
 <script>

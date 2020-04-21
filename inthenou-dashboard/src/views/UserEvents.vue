@@ -1,8 +1,8 @@
 <template>
-<div>
-<nav-var></nav-var>
-<user-events></user-events>
-</div>
+<v-content>
+  <nav-bar></nav-bar>
+  <user-events></user-events>
+</v-content>
 </template>
 
 <script>
@@ -10,7 +10,7 @@ import Navbar from '../components/Navbar.vue'
 import UserEvents from '../components/eventsmanagement/UserEvents'
 export default {
   components: {
-    'nav-var': Navbar,
+    'nav-bar': Navbar,
     'user-events': UserEvents
   }
 }

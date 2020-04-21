@@ -1,10 +1,8 @@
 <template>
-<div>
-  <nav-bar></nav-bar>
   <v-content>
+    <nav-bar></nav-bar>
     <all-current-events-view enableEventDelete='true'></all-current-events-view>
   </v-content>
-</div>
 </template>
 
 <script>

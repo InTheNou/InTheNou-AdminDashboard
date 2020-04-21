@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <nav-bar></nav-bar>
     <v-content>
+      <nav-bar></nav-bar>
       <information-base-management></information-base-management>
     </v-content>
-  </div>
 </template>
 
 <script>

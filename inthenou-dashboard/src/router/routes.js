@@ -16,12 +16,10 @@ import Home from '../views/Home.vue'
 import store from '../store/Store.js'
 
 const ifIsNotAuthenticated = (to, from, next) => {
-  if (!store.getters.isAuthenticated) {
-    next()
+  if (store.getters.isAuthenticated) {
+    next('/allcurrentevents')
   } else if (from.path !== '/' && to.path !== '/') {
     next('/')
-  } else if (store.getters.isAuthenticated) {
-    next('/allcurrentevents')
   }
 }
 const ifIsAuthenticated = (to, from, next) => {
@@ -53,68 +51,68 @@ export const routes = [
     path: '/myevents',
     name: 'myevents',
     component: MyEvents,
-    // beforeEnter: ifIsAuthenticated
+    beforeEnter: ifIsAuthenticated
   },
   {
     path: '/alleventsarchive',
     name: 'all events archive',
     component: AllEventsArchive,
-    // beforeEnter: ifIsAuthenticated
+    beforeEnter: ifIsAuthenticated
   },
   {
     path: '/myeventsarchive',
     name: 'myeventsarchive',
     component: MyEventsArchive,
-    // beforeEnter: ifIsAuthenticated
+    beforeEnter: ifIsAuthenticated
   },
   {
     path: '/privilegemanagement',
     name: 'privilege management',
     component: PrivilegeManagement,
-    // beforeEnter: ifIsAuthenticated
+    beforeEnter: ifIsAuthenticated
   },
   {
     path: '/informationbase',
     name: 'InformationBase',
     component: InformationBase,
-    // beforeEnter: ifIsAuthenticated
+    beforeEnter: ifIsAuthenticated
 
   },
   {
     path: '/informationbase/buildings/:bid',
     name: 'building details',
     component: BuildingDetails,
-    // beforeEnter: ifIsAuthenticated
+    beforeEnter: ifIsAuthenticated
   },
   {
     path: '/informationbase/buildings/:bid/floors/:fid/rooms',
     name: 'room',
     component: FloorRooms,
-    // beforeEnter: ifIsAuthenticated
+    beforeEnter: ifIsAuthenticated
   },
   {
     path: '/informationbase/buildings/:bid/floors/:fid/rooms/:rid/services',
     name: 'room services',
     component: RoomServices,
-    // beforeEnter: ifIsAuthenticated
+    beforeEnter: ifIsAuthenticated
   },
   {
     path: '/informationbasemanagement',
     name: 'information base management',
     component: InformationBaseManagement,
-    // beforeEnter: ifIsAuthenticated
+    beforeEnter: ifIsAuthenticated
   },
   {
     path: '/delegatedusers/:modid',
     name: 'delegated users',
     component: DelegatedUsers,
-    // beforeEnter: ifIsAuthenticated
+    beforeEnter: ifIsAuthenticated
   },
   {
     path: '/userevents/:uid',
     name: 'user events',
     component: UserEvents,
-    // beforeEnter: ifIsAuthenticated
+    beforeEnter: ifIsAuthenticated
   }
 
 ]

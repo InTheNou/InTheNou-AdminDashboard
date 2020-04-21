@@ -1,8 +1,8 @@
 <template>
-    <div>
-        <nav-bar></nav-bar>
+    <v-content>
+      <nav-bar></nav-bar>
         <floor-rooms></floor-rooms>
-    </div>
+    </v-content>
 </template>
 <script>
 import Navbar from '../components/Navbar.vue'

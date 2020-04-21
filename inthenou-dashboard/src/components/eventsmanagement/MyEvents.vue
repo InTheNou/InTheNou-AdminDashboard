@@ -1,18 +1,29 @@
 <template
-        id="scroll-target"
-        style="max-height: 600px"
-        class="overflow-y-auto">
+  id="scroll-target"
+  style="max-height: 600px"
+  class="overflow-y-auto">
   <v-row>
       <v-container>
         <v-col
-          v-scroll:#scroll-target="onScroll"
           align="center"
           justify="center"
           style="height: 1000px"
         >
+        <v-col cols="12">
+          <v-spacer><h1>My Events </h1></v-spacer>
+        </v-col>
           <v-card-actions>
             <v-btn justify="start" rounded color="primary" dark @click="previous()"><v-icon large right>mdi-skip-previous</v-icon> <h1 class="ml-4">Previous</h1> </v-btn>
-            <v-spacer><h1>My Events</h1></v-spacer>
+            <v-spacer>
+              <v-col cols="2" class="pt-8 ma-auto">
+               <v-select
+               v-model="limit"
+                :items="[6,12,18]"
+                dense
+                outlined >
+               </v-select>
+               </v-col>
+            </v-spacer>
             <v-btn rounded color="primary" dark @click="next()"> <h1 class="ml-10 mr-10">Next</h1><v-icon large right>mdi-skip-next</v-icon></v-btn>
           </v-card-actions>
           <v-card
@@ -52,7 +63,6 @@
             <v-btn justify="start" rounded color="primary" dark @click="previous()"><v-icon large right>mdi-skip-previous</v-icon> <h1 class="ml-4">Previous</h1> </v-btn>
             <v-spacer></v-spacer>
             <v-btn rounded color="primary" dark @click="next()"> <h1 class="ml-10 mr-10">Next</h1><v-icon large right>mdi-skip-next</v-icon></v-btn>
-
           </v-card-actions>
         </v-col>
     </v-container>
@@ -70,29 +80,24 @@
 </template>
 
 <script>
-import { onScroll, getEvents, getNumberOfEvents, previous, next, uid, offsetTop, eidtoremove, etitletoremove, offset, limit, dialog, listofevents, deleteEvent, path, path1 } from '../vueinstances/events.js'
+import { getEvents, previous, next, deleteEvent } from '../vueinstances/events.js'
 export default {
   data: () => ({
-    uid,
-    offsetTop,
-    eidtoremove,
-    etitletoremove,
-    offset,
-    limit,
-    dialog,
-    listofevents,
-    path,
-    path1
+    uid: null,
+    eidtoremove: null,
+    etitletoremove: null,
+    offset: 0,
+    limit: 5,
+    dialog: false,
+    listofevents: [],
+    path: ''
   }),
   mounted () {
-    this.path = '/Events/Myevents'
-    this.path1 = '/Events/Myevents/size'
-    this.listofevents = this.getEvents(this.offset, this.limit, this.path1)
+    this.path = process.env.VUE_APP_API_HOST + process.env.VUE_APP_USER_EVENTS_1 + this.uid + process.env.VUE_APP_USER_EVENTS_2 + this.offset + process.env.VUE_APP_USER_EVENTS_3 + this.limit
+    this.listofevents = this.getEvents(this.path)
   },
   methods: {
-    onScroll,
     getEvents,
-    getNumberOfEvents,
     deleteEvent,
     previous,
     next

@@ -5,7 +5,11 @@
                 <v-container id="scroll-target" style="max-height: 700px" class="overflow-y-auto">
                  <v-row  style="height: 500px"  >
                   <v-list>
+                    <v-list-item v-if="noDataAvailable">
+                      NO DATA AVAILABLE AT THE MOMENT
+                    </v-list-item>
                     <v-list-item
+                    v-else
                     v-for="room in roomsList.rooms"
                     :key="room.rid"
                     @click="followRoute(buildingID, floorID, room.rid)"
@@ -14,9 +18,6 @@
                       <v-divider> </v-divider>
                       <v-list-item-title>
                         Room: {{roomsList.building.babbrev}}-{{room.rcode}}
-                      </v-list-item-title>
-                       <v-list-item-title>
-                        Roomid: {{room.RID}}
                       </v-list-item-title>
                       <v-list-item-subtitle>
                         Saved Values: ({{room.rlatitude}}, {{room.rlongitude}}, {{room.raltitude}})
@@ -46,6 +47,7 @@
 <script>
 export default {
   data: () => ({
+    noDataAvailable: false,
     editCoorDialog: false,
     validCoordinates: false,
     formLongitudeInput: null,
@@ -66,13 +68,23 @@ export default {
   },
   methods: {
     getRooms: async function () {
-      await fetch('https://inthenou.uprm.edu/App/Rooms/bid=' + this.buildingID + '/rfloor=' + this.floorID)
+      await fetch(process.env.VUE_APP_API_HOST + process.env.VUE_APP_FLOOR_ROOMS_1 + this.buildingID + process.env.VUE_APP_FLOOR_ROOMS_2 + this.floorID)
         .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok')
+          }
           return response.json()
         })
         .then((data) => {
-          this.roomsList = data
-          console.log(this.roomsList)
+          if (data === null || data === '') {
+            this.noDataAvailable = true
+          } else {
+            this.noDataAvailable = false
+            this.roomsList = data
+          }
+        })
+        .catch((error) => {
+          console.error('There has been a problem with your fetch operation:', error)
         })
     },
     editCoordinates: function (longitude, latitude, altitude) {
@@ -81,6 +93,9 @@ export default {
     getCurrentCoordinates: function () {
 
     },
+    /**
+     *  Validate form coordinate input using regex, the coordinate is a float number with a total of 0 to 4 decimals
+     */
     validateCoordinates: function () {
       if (this.formLongitudeInput != null && this.formLatitudeInput != null) {
         if (this.formLongitudeInput.match(/^([+-]?\d{1,3})[.](\d{0,4})$/) && this.formLatitudeInput.match(/^([+-]?\d{1,3})[.](\d{0,4})$/)) {
@@ -90,7 +105,7 @@ export default {
       return false
     },
     followRoute: function (buildingid, floor, roomid) {
-      console.log('follow route')
+      // console.log('follow route')
       this.$router.push('/informationbase/buildings/' + buildingid + '/floors/' + floor + '/rooms/' + roomid + '/services')
     }
   }

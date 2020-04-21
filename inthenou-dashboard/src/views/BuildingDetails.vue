@@ -1,8 +1,8 @@
 <template>
-   <div>
-    <nav-bar></nav-bar>
+   <v-content>
+     <nav-bar></nav-bar>
     <building-floors></building-floors>
-   </div>
+   </v-content>
 </template>
 
 <script>

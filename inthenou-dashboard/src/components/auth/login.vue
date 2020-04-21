@@ -33,12 +33,12 @@ export default {
   },
   methods: {
     onSuccess: function (googleUser) {
-      console.log(googleUser)
+      // console.log(googleUser)
       this.user.access_token = googleUser.tc.access_token
       this.user.id = googleUser.Pt.MU
       this.user.email = googleUser.Pt.yu
       this.user.display_name = googleUser.Pt.Ad
-      console.log(JSON.stringify(this.user))
+      // console.log(JSON.stringify(this.user))
       this.sendSessionToDB()
     },
     onFailure: function () {
@@ -50,8 +50,9 @@ export default {
       "email":"jonathan.santiago27@upr.edu",
       "display_name": "Jonathan X Santiago Gonzalez"
       } */
+      // console.log('login: ' + process.env.VUE_APP_API_HOST + process.env.VUE_APP_LOGIN)
       return await fetch(
-        'https://inthenou.uprm.edu/App/login',
+        process.env.VUE_APP_API_HOST + process.env.VUE_APP_LOGIN,
         {
           method: 'POST',
           mode: 'cors',
@@ -69,13 +70,10 @@ export default {
         })
         .then(data => {
           this.$store.dispatch('AUTH_REQUEST', data.uid).then(() => {
+            console.log('here')
             // this.$router.push('/allcurrentevents')
           })
-          console.log(data)
         })
-      // axios.post('https://inthenou.uprm.edu/App/login', JSON.stringify(this.user), { withCredentials: true }).then(function (response) {
-      //   console.log(response)
-      // })
     }
   }
 }

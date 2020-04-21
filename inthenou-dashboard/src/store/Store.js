@@ -22,14 +22,14 @@ export default new Vuex.Store({
   },
   // use to make centralized methods for access of  the store state variables
   getters: {
-    isAuthenticated: state => !!state.token,
+    isAuthenticated: state => !!state.roleid,
     authStatus: state => state.status
   },
   actions: {
     AUTH_REQUEST: ({ commit, state }, userid) => {
       return new Promise((resolve, reject) => {
         commit('AUTH_REQUEST') // invoke mutation handler to update status vairable
-        fetch('https://inthenou.uprm.edu/App/Users/uid=' + userid)
+        fetch(process.env.VUE_APP_API_HOST + process.env.VUE_APP_GET_USER + userid)
           .catch(err => {
             commit('AUTH_ERROR', err) // invoke mutation handler to update status vairable with a payload
             // localStorage.removeItem('login-token')
@@ -37,24 +37,24 @@ export default new Vuex.Store({
           })
           .then(response => {
             // localStorage.setItem('login-token', response.token) //  passed a key name and value, will add that key to the given Storage object, or update that key's value if it already exists.
-            resolve(console.log(response))
+            // resolve(console.log(response))
             return response.json()// returns promise when resolved with the token value
           })
           .then(userprofile => {
-            console.log('fetch data')
+            // console.log('fetch data')
             localStorage.setItem('inthenou-user-name', userprofile.display_name)
             localStorage.setItem('inthenou-user-email', userprofile.email)
             localStorage.setItem('inthenou-role-id', userprofile.roleid)
             localStorage.setItem('inthenou-type', userprofile.type)
             localStorage.setItem('inthenou-uid', userprofile.uid)
             commit('AUTH_SUCCESS', userprofile) // cals AUTH_SUCCESS mutation with parameter(payload) equal to the receive token from the promise
+            resolve()
           })
       })
     },
     AUTH_LOGOUT: ({ commit }) => {
       return new Promise(resolve => {
         commit('AUTH_LOGOUT')
-        localStorage.removeItem('login-token')
         resolve()
       })
     }
@@ -76,7 +76,11 @@ export default new Vuex.Store({
       state.status = 'error' // updates the status state variable
     },
     AUTH_LOGOUT: state => {
-      state.token = '' // updates the status state variable
+      localStorage.removeItem('inthenou-user-name')
+      localStorage.removeItem('inthenou-user-email')
+      localStorage.removeItem('inthenou-role-id')
+      localStorage.removeItem('inthenou-type')
+      localStorage.removeItem('inthenou-uid')
     }
   }
 })

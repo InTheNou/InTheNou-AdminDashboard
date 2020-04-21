@@ -58,13 +58,13 @@ export default {
   },
   methods: {
     getBuildings: async function () {
-      await fetch('https://inthenou.uprm.edu/App/Buildings/bid=' + this.bid)
+      await fetch(process.env.VUE_APP_API_HOST + process.env.VUE_APP_BUILDINGS_DETAIL + this.bid)
         .then((response) => {
           return response.json()
         })
         .then((data) => {
           this.building = data
-          console.log(data)
+          // console.log(data)
         })
     },
     followRoute: function (bid, floor) {

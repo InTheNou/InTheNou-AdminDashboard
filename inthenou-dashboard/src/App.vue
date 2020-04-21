@@ -1,8 +1,13 @@
 <template>
     <v-app>
-      <v-content>
+      <v-container
+        fluid
+        fill-height
+      >
+        <v-layout>
         <router-view></router-view>
-      </v-content>
+        </v-layout>
+      </v-container>
     </v-app>
 </template>
 
@@ -10,11 +15,7 @@
 import { mapGetters } from 'vuex'
 export default {
   name: 'App',
-  data: () => ({
-    //
-  }),
   components: {
-
   },
   computed: mapGetters(['authStatus', 'isAuthenticated']),
   mounted () {

@@ -1,8 +1,8 @@
 <template>
-    <div>
-        <nav-bar></nav-bar>
-        <room-services></room-services>
-    </div>
+    <v-content>
+      <nav-bar></nav-bar>
+      <room-services></room-services>
+    </v-content>
 </template>
 
 <script>

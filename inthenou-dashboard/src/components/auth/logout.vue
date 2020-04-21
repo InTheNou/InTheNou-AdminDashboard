@@ -1,6 +1,6 @@
 <template>
     <v-btn @click="logout" text color="grey">
-            <GoogleLogin :params="params" :logoutButton=true><v-btn>Logout</v-btn></GoogleLogin>
+            <GoogleLogin :params="params" :logoutButton=true @click="logout()"><v-btn>Logout</v-btn></GoogleLogin>
             <v-icon right></v-icon>
     </v-btn>
 </template>
@@ -13,9 +13,11 @@ export default {
   }),
   methods: {
     logout: function () {
-      this.$store.dispatch('AUTH_LOGOUT').then(() => { // creates promise triggers Action inside store
-        this.$router.push('/') // push to the login screen
-      })
+      this.$store.dispatch('AUTH_LOGOUT')
+        .catch()
+        .then(() => { // creates promise triggers Action inside store
+          this.$router.push('/') // push to the login screen
+        })
     }
   },
   components: {

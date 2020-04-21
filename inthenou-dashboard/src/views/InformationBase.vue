@@ -1,8 +1,8 @@
 <template>
-<div>
-  <nav-bar></nav-bar>
+  <v-content>
+    <nav-bar></nav-bar>
     <all-buildings-view></all-buildings-view>
-  </div>
+  </v-content>
 </template>
 
 <script>

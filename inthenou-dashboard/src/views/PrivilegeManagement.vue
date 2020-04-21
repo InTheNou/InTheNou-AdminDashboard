@@ -1,11 +1,9 @@
 <template>
-<div>
-  <nav-bar></nav-bar>
-  <v-container class="grey lighten-5 mb-6">
+  <v-content class="grey lighten-5 ">
+    <nav-bar></nav-bar>
     <administrator-privilege-management-view    v-if="'administrator'==checkPrivileges('1')"></administrator-privilege-management-view>
     <moderator-privilege-management-view       v-else-if="'moderator'==checkPrivileges('3')"></moderator-privilege-management-view>
-    </v-container>
-  </div>
+  </v-content>
 </template>
 
 <script>

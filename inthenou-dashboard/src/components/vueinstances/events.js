@@ -3,14 +3,28 @@ function onScroll (e) {
   this.offsetTop = e.target.scrollTop
 }
 //  /Dashboard/Events/offset=<int:offset>/limit=<int:limit>
-async function getEvents () {
+// async function getEvents () {
+//   var newList
+//   // console.log(this.path + '/offset=' + this.offset + '/limit=' + this.limit)
+//   await fetch(this.path + '/offset=' + this.offset + '/limit=' + this.limit)
+//     .then((response) => {
+//       return response.json()
+//     })
+//     .then((data) => {
+//       newList = data.events
+//     })
+//   return newList
+// }
+
+async function getEvents (path) {
   var newList
-  console.log(this.path + '/offset=' + this.offset + '/limit=' + this.limit)
-  await fetch(this.path + '/offset=' + this.offset + '/limit=' + this.limit)
+  console.log(path)
+  await fetch(path)
     .then((response) => {
       return response.json()
     })
     .then((data) => {
+      console.log(data)
       newList = data.events
     })
   return newList
@@ -29,7 +43,7 @@ function deleteEvent () {
 }
 
 function previous () {
-  console.log(this.path)
+  // console.log(this.path)
   if ((this.offset - this.limit) >= 0) {
     if (this.disablenext === true) {
       this.disablenext = false
@@ -41,9 +55,9 @@ function previous () {
 
 async function next (path) {
   this.offset += this.limit
-  console.log(path)
+  // console.log(path)
   var newList = await this.getEvents(path, this.offset, this.limit)
-  console.log('list length: ' + newList.length)
+  // console.log('list length: ' + newList.length)
 
   this.listofevents = (newList !== null && newList.length > 0 ? newList : this.listofevents)
   if (newList.length === 0 || newList === null) {
@@ -55,7 +69,7 @@ function formatDate (date) {
   var day = date.substring(8, 10)
   var month = date.substring(5, 7)
   var year = date.substring(0, 4)
-  var hour = (date.substring(10, 13) < 12 ? date.substring(10, 13) + ':' + date.substring(14, 16) + ' AM' : (date.substring(10, 13) % 12 || 12) + ':' + date.substring(14, 16) + ' PM')
+  var hour = (date.substring(10, 13) < 12 ? (date.substring(10, 13) % 12 || 12) + ':' + date.substring(14, 16) + ' AM' : (date.substring(10, 13) % 12 || 12) + ':' + date.substring(14, 16) + ' PM')
 
   return (' ' + day + '/' + month + '/' + year + ', ' + hour)
 }

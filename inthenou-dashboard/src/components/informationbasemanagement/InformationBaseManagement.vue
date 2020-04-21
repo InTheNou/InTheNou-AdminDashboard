@@ -1,5 +1,5 @@
 <template>
-  <v-row align ="center" justify="center" no-gutters style="height: 150px;" >
+  <v-row align ="center" justify="center" no-gutters  >
       <v-col cols="3">
        <service-management></service-management>
        </v-col>

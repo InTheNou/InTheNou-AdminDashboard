@@ -1,9 +1,13 @@
-<template>
-<v-layout row wrap align-center justify-center>
-  <v-flex xs6 offset xs-1 sm6 offset-sm1 md6 offset-md1>
-  <v-container id="scroll-target" style="max-height: 600px" class="overflow-y-auto">
-  <v-row  style="height: 500px"  >
-  <v-col cols="10" >
+<template
+  id="scroll-target"
+  style="max-height: 600px"
+  class="overflow-y-auto">
+  <v-row>
+  <v-container>
+  <v-col
+  align="center"
+  justify="center"
+  style="height: 1000px" >
   <v-card>
         <v-list>
           <v-list-item
@@ -32,10 +36,8 @@
         </v-list>
   </v-card>
   </v-col>
-  </v-row>
   </v-container>
-  </v-flex>
-  </v-layout>
+  </v-row>
 </template>
 
 <script>
@@ -53,14 +55,15 @@ export default {
   },
   methods: {
     getBuildings: async function () {
-      await fetch('https://inthenou.uprm.edu/App/Buildings/offset=' + this.buildingOffset + '/limit=' + this.builingLimit)
+      console.log('buildings' + process.env.VUE_APP_API_HOST + process.env.VUE_APP_BUILDINGS + this.buildingOffset + '/limit=' + this.builingLimit)
+      await fetch(process.env.VUE_APP_API_HOST + process.env.VUE_APP_BUILDINGS + this.buildingOffset + '/limit=' + this.builingLimit)
         .then((response) => {
-          console.log(response)
+          // console.log(response)
           return response.json()
         })
         .then((data) => {
           this.buildings = data
-          console.log(data)
+          // console.log(data)
         })
     },
     followRoute: function (bid) {

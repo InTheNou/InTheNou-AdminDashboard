@@ -1,8 +1,7 @@
 <template>
-  <v-col cols="6">
-    <v-card class="pa-2 justify-center" outlined tile>
-      <v-card class="justify-center pa-0">
-        <v-card-title class="headline justify-center blue darken-4 white--text">
+  <v-col cols="5">
+      <v-card class="pa-5">
+        <v-card-title class="headline justify-center blue darken-4 white--text" >
           <v-row>
             <v-col cols="8">
               <h3 v-if="viewtype=='moderator'">Moderator  List</h3>
@@ -61,7 +60,7 @@
           </div>
         </v-row>
         <v-container id="scroll-target" style="max-height: 600px" class="overflow-y-auto">
-          <v-row v-scroll:#scroll-target="onScroll" style="height: 500px"  >
+          <v-row v-scroll:#scroll-target="onScroll" style="height: 300px"  >
             <v-col cols="12">
               <v-card >
                 <v-list shaped>
@@ -153,7 +152,6 @@
           </v-row>
         </v-card-actions>
       </v-card>
-    </v-card>
   </v-col>
 </template>
 

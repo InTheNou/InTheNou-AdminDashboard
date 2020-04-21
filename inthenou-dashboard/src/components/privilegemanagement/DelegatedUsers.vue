@@ -16,7 +16,7 @@
           </div>
         </v-row>
         <v-container id="scroll-target" style="max-height: 600px" class="overflow-y-auto">
-          <v-row v-scroll:#scroll-target="onScroll" style="height: 500px"  >
+          <v-row  style="height: 500px"  >
             <v-col cols="12">
               <v-card >
                 <v-list shaped>
@@ -26,7 +26,7 @@
                           <v-col>
                             <v-list-item-content>
                               <v-list-item-title>
-                                Event Creator: {{user.Email}}
+                                Event Creator: {{user.email}}
                                   <v-list-item-action>
                                     <router-link :to="'/userevents/'+ user.UID"> <v-btn color="primary" dark ><v-icon dark>mdi-arrow-right-bold-circle-outline</v-icon> </v-btn></router-link>
                                   </v-list-item-action>
@@ -48,7 +48,6 @@
 </template>
 
 <script>
-import { userApiCall } from '../../dummyapicals/users.js'
 export default {
   data: () => ({
     users: [], // current users in list
@@ -57,27 +56,21 @@ export default {
   }),
   mounted () {
     this.modid = this.$route.params.modid
-    this.path = '/supervees/' + this.modid
+    this.path = process.env.VUE_APP_API_HOST + process.env.VUE_APP_DELEGATED_USERS_1 + this.modid + process.env.VUE_APP_DELEGATED_USERS_2
     // console.log(this.path)
-    this.users = this.getUsers()
+    this.users = this.getUsers(this.path)
   },
   methods: {
-    onScroll (e) {
-      this.offsetTop = e.target.scrollTop
-    },
-    getUsers: function () {
-      //  this view is only for admin makes calll of the moderators in system
-      return new Promise((resolve, reject) => {
-        userApiCall({ url: this.path, method: 'GET' })
-          .then(response => {
-            resolve(this.users = response.Users)
-            // console.log(response)
-          })
-          .catch(err => {
-            reject(err)
-            alert(err)
-          })
-      })
+    getUsers: async function (path) {
+      var newList
+      await fetch(path)
+        .then((response) => {
+          return response.json()
+        })
+        .then((data) => {
+          newList = data
+        })
+      return newList
     }
   }
 }

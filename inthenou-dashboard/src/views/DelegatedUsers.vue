@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <nav-bar></nav-bar>
-      <v-container class="grey lighten-5 mb-6">
+      <v-content class="grey lighten-5 mb-6">
+        <nav-bar></nav-bar>
         <moderator-delegated-users-view></moderator-delegated-users-view>
-      </v-container>
-  </div>
+      </v-content>
 </template>
 
 <script>

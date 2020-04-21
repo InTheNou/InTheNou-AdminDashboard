@@ -26,7 +26,7 @@
                   :cols="4"
                 >
                   <v-card height="100%">
-                    <v-card-title class="headline blue-grey darken-4 white--text"> {{event.eTitle}}</v-card-title>
+                    <v-card-title class="headline blue-grey darken-4 white--text"> {{event.etitle}}</v-card-title>
                     <v-card-subtitle class="pt-0 pb-0 ma-0 blue accent-1">Created: {{event.CreationDate}}</v-card-subtitle>
                       <v-img
                         height="150"
@@ -55,29 +55,20 @@
 </template>
 
 <script>
-import { onScroll, getEvents, getNumberOfEvents, previous, next, uid, offsetTop, eidtoremove, etitletoremove, offset, limit, dialog, listofevents, path, path1 } from '../vueinstances/events.js'
+import { getEvents, previous, next } from '../vueinstances/events.js'
 export default {
   data: () => ({
-    uid,
-    offsetTop,
-    eidtoremove,
-    etitletoremove,
-    offset,
-    limit,
-    dialog,
-    listofevents,
-    path,
-    path1
+    offset: 0,
+    limit: 5,
+    listofevents: [],
+    path: ''
   }),
   mounted () {
     this.path = '/Events/Myevents/Past'
-    this.path1 = '/Events/Myevents/Past/size'
     this.listofevents = this.getEvents(this.offset, this.limit, '/Events')
   },
   methods: {
-    onScroll,
     getEvents,
-    getNumberOfEvents,
     previous,
     next
   }
