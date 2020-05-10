@@ -1,7 +1,17 @@
 <template>
-  <v-col cols="6">
+  <v-container>
+  <v-col
+    align="center"
+    justify="center">
     <v-card class="pa-2 justify-center" outlined tile>
-      <v-card class="justify-center pa-0">
+      <v-card v-if="noDataAvailable">
+            <v-row  align="center" justify="center">
+              <v-container >
+                <h2 class="text-center" style="height:100%; align:center;"> USER HAS NO DELEGATES USERS AT THE MOMENT </h2>
+              </v-container>
+            </v-row>
+      </v-card>
+      <v-card v-else class="justify-center pa-0">
         <v-card-title class="headline justify-center blue darken-4 white--text">
           <v-row>
             <v-col cols="8">
@@ -15,8 +25,8 @@
             <v-subheader></v-subheader>
           </div>
         </v-row>
-        <v-container id="scroll-target" style="max-height: 600px" class="overflow-y-auto">
-          <v-row  style="height: 500px"  >
+        <v-container id="scroll-target" style="max-height: 400px" class="overflow-y-auto">
+          <v-row  style="height: 400px"  >
             <v-col cols="12">
               <v-card >
                 <v-list shaped>
@@ -26,12 +36,12 @@
                           <v-col>
                             <v-list-item-content>
                               <v-list-item-title>
-                                Event Creator: {{user.email}}
+                                Event Creator: {{user.display_name}}
+                                <v-list-item-subtitle>  Email: {{user.email}}</v-list-item-subtitle>
                                   <v-list-item-action>
                                     <router-link :to="'/userevents/'+ user.UID"> <v-btn color="primary" dark ><v-icon dark>mdi-arrow-right-bold-circle-outline</v-icon> </v-btn></router-link>
                                   </v-list-item-action>
                                 </v-list-item-title>
-                              <v-list-item-subtitle>  Supervisor: {{user.SupEmail}}</v-list-item-subtitle>
                             </v-list-item-content>
                           </v-col>
                       </v-list-item>
@@ -45,32 +55,42 @@
       </v-card>
     </v-card>
   </v-col>
+  </v-container>
 </template>
 
 <script>
 export default {
   data: () => ({
     users: [], // current users in list
-    path: '',
-    modid: ''
+    modid: '',
+    noDataAvailable: false
   }),
-  mounted () {
+  computed: {
+    path: function () {
+      return process.env.VUE_APP_API_HOST + process.env.VUE_APP_DELEGATED_USERS_1 + this.modid + process.env.VUE_APP_DELEGATED_USERS_2
+    }
+  },
+  async mounted () {
     this.modid = this.$route.params.modid
-    this.path = process.env.VUE_APP_API_HOST + process.env.VUE_APP_DELEGATED_USERS_1 + this.modid + process.env.VUE_APP_DELEGATED_USERS_2
-    // console.log(this.path)
-    this.users = this.getUsers(this.path)
+    await this.getUsers()
   },
   methods: {
-    getUsers: async function (path) {
-      var newList
-      await fetch(path)
+    getUsers: async function () {
+      await fetch(this.path)
+        .catch(error => {
+          alert(error)
+        })
         .then((response) => {
           return response.json()
         })
         .then((data) => {
-          newList = data
+          if (data.Users === null || data.Users === undefined) {
+            this.noDataAvailable = true
+          } else {
+            this.noDataAvailable = false
+            this.users = data.Users
+          }
         })
-      return newList
     }
   }
 }

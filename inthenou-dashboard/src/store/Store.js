@@ -14,16 +14,18 @@ export default new Vuex.Store({
     // token: localStorage.getItem('login-token') || '',
     display_name: localStorage.getItem(DISPLAY_NAME) || '',
     email: localStorage.getItem(EMAIL) || '',
-    roleid: localStorage.getItem(ROLE_ID) || '',
+    roleid: localStorage.getItem(ROLE_ID),
     type: localStorage.getItem(TYPE) || '',
     uid: localStorage.getItem(UID) || '',
-    status: '',
-    role: ''
+    status: ''
   },
   // use to make centralized methods for access of  the store state variables
   getters: {
     isAuthenticated: state => !!state.roleid,
-    authStatus: state => state.status
+    authStatus: state => state.status,
+    uid: state => { return state.uid },
+    roleid: state => { return state.roleid },
+    status: state => { return state.status}
   },
   actions: {
     AUTH_REQUEST: ({ commit, state }, userid) => {
@@ -47,7 +49,7 @@ export default new Vuex.Store({
             localStorage.setItem('inthenou-role-id', userprofile.roleid)
             localStorage.setItem('inthenou-type', userprofile.type)
             localStorage.setItem('inthenou-uid', userprofile.uid)
-            commit('AUTH_SUCCESS', userprofile) // cals AUTH_SUCCESS mutation with parameter(payload) equal to the receive token from the promise
+            commit('AUTH_SUCCESS', userprofile) // call AUTH_SUCCESS mutation with parameter(payload) equal to the receive token from the promise
             resolve()
           })
       })

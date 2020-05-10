@@ -1,5 +1,5 @@
 <template>
-  <v-col cols="5">
+  <v-col cols="6">
       <v-card class="pa-5">
         <v-card-title class="headline justify-center blue darken-4 white--text" >
           <v-row>
@@ -13,8 +13,8 @@
                   <v-dialog v-model="adddialog" persistent max-width="600px">
                     <template v-slot:activator="{ on }">
                         <div class="text-right">
-                        <v-btn color="primary mb-0 pa-0" dark v-on="on" class="mx-2" fab>
-                            <v-icon dark>mdi-plus</v-icon>
+                        <v-btn v-bind="size" color="primary mb-0 pa-0" dark v-on="on" class="mx-2" fab>
+                            <v-icon v-bind="size" dark>mdi-plus</v-icon>
                         </v-btn>
                         </div>
                     </template>
@@ -31,6 +31,9 @@
                               <v-row>
                               <v-col cols="12" >
                                 <v-text-field v-model="formemail" :rules="[ v => !!v || 'E-mail is required', v => /.+@.+\..+/.test(v) || 'E-mail must be valid']" label="E-mail*" filled required ></v-text-field>
+                              </v-col>
+                              <v-col>
+                                <p v-show="invalidEmail"><span style="color:red">The entered email is not a valid registered user in the system!</span></p>
                               </v-col>
                               </v-row>
                           </v-container>
@@ -60,9 +63,9 @@
           </div>
         </v-row>
         <v-container id="scroll-target" style="max-height: 600px" class="overflow-y-auto">
-          <v-row v-scroll:#scroll-target="onScroll" style="height: 300px"  >
+          <v-row  style="height: 300px"  >
             <v-col cols="12">
-              <v-card >
+              <v-card v-model="users">
                 <v-list shaped>
                   <v-list-item-group v-model="revokePrivList" multiple>
                     <template v-for="(user, i) in users">
@@ -81,19 +84,29 @@
                                   ></v-checkbox>
                                 </v-list-item-action>
                                 <v-list-item-action>
-                                   {{user.Email}}
+                                   {{user.email}}
                                 </v-list-item-action>
                                 <v-list-item-action>
-                                  <router-link :to="'/userevents/'+ user.UID"> <v-btn color="primary" class="ml-3" dark ><v-icon dark>mdi-arrow-right-bold-circle-outline</v-icon> </v-btn></router-link>
+                                  <v-tooltip top>
+                                    <template v-slot:activator="{ on }">
+                                      <router-link :to="'/userevents/'+ user.uid"> <v-btn v-bind="size" color="primary" class="ml-3" dark v-on="on"><v-icon v-bind="size" dark>mdi-calendar</v-icon> </v-btn></router-link>
+                                    </template>
+                                    <span>User Events</span>
+                                  </v-tooltip>
                                 </v-list-item-action>
                                 <v-list-item-action>
-                                  <router-link :to="'/delegatedusers/'+ user.UID"> <v-btn color="primary" dark ><v-icon dark>mdi-account-multiple</v-icon> </v-btn></router-link>
+                                  <v-tooltip top>
+                                    <template v-slot:activator="{ on }">
+                                      <router-link :to="'/delegatedusers/'+ user.uid"> <v-btn v-bind="size" color="primary" dark v-on="on"><v-icon v-bind="size" dark>mdi-account-multiple</v-icon> </v-btn></router-link>
+                                    </template>
+                                    <span>Delegated Users</span>
+                                  </v-tooltip>
                                 </v-list-item-action>
                             </v-list-item-title>
                             </v-list-item-content>
                           </v-col>
                           <v-col v-else-if="viewtype==='eventcreator'">
-                            <v-list-item-content >
+                            <v-list-item-content>
                               <v-list-item-title>
                                 <v-list-item-action>
                                   <v-checkbox
@@ -102,13 +115,17 @@
                                     color="blue accent-4"
                                     @click="toggle"
                                   ></v-checkbox>
-                                </v-list-item-action>
-                                Event Creator: {{user.Email}}
+                                  </v-list-item-action>
+                                     {{user.email}}
                                   <v-list-item-action>
-                                    <router-link :to="'/userevents/'+ user.UID"> <v-btn color="primary" dark ><v-icon dark>mdi-arrow-right-bold-circle-outline</v-icon> </v-btn></router-link>
+                                    <v-tooltip top>
+                                    <template v-slot:activator="{ on }">
+                                      <router-link :to="'/userevents/'+ user.uid"> <v-btn v-bind="size" color="primary" dark v-on="on"><v-icon v-bind="size" dark>mdi-calendar</v-icon> </v-btn></router-link>
+                                    </template>
+                                    <span>User Events</span>
+                                  </v-tooltip>
                                   </v-list-item-action>
                                 </v-list-item-title>
-                              <v-list-item-subtitle>  Supervisor: {{user.SupEmail}}</v-list-item-subtitle>
                             </v-list-item-content>
                           </v-col>
                         </template>
@@ -127,7 +144,7 @@
               <v-dialog v-model="dialog" scrollable max-width="300px">
                 <template v-slot:activator="{ on }">
                   <div class="text-center">
-                    <v-btn  :disabled="revokePrivList.length<=0"  large color="primary" dark v-on="on">
+                    <v-btn v-bind="size" :disabled="revokePrivList.length<=0"  large color="primary" dark v-on="on">
                       <h1>Remove</h1>
                     </v-btn>
                   </div>
@@ -138,13 +155,13 @@
                   <v-divider></v-divider>
                   <v-card-text style="height: 300px;">
                     <ul>
-                      <li v-for="mod in revokePrivList" :key="mod.email">{{ mod.Email }}</li>
+                      <li v-for="user in revokePrivList" :key="user.email">{{ user.email }}</li>
                     </ul>
                   </v-card-text>
                   <v-divider></v-divider>
                   <v-card-actions>
-                    <v-btn color="blue darken-1"  @click="dialog = false">Cancel</v-btn>
-                    <v-btn color="blue darken-1"  @click="setPrivilege(viewtype, false)">Continune</v-btn>
+                    <v-btn v-bind="size" color="blue darken-1"  @click="dialog = false">Cancel</v-btn>
+                    <v-btn v-bind="size" color="blue darken-1"  @click="setPrivilege('user', false)">Continune</v-btn>
                   </v-card-actions>
                 </v-card>
               </v-dialog>
@@ -156,9 +173,11 @@
 </template>
 
 <script>
-import { userApiCall } from '../../dummyapicals/users.js'
+// import { userApiCall } from '../../dummyapicals/users.js'
+import { mapGetters } from 'vuex'
 export default {
   data: () => ({
+    invalidEmail: false,
     vieweruid: null,
     valid: true,
     adddialog: false,
@@ -167,71 +186,189 @@ export default {
     revokePrivList: [], // current selected user to delete
     formemail: '', // variable that holds email input from add user form
     addinguser: false,
-    path: ''
+    delegatedUserRoleID: null,
+    userPrivID: '', // user to change privileges id
+    userprivrole: null // user to change privilege role to give
   }),
-  mounted () {
-    this.path = ''
+  computed: {
+    ...mapGetters([
+      'uid',
+      'roleid'
+    ]),
+    path: function () {
+      return process.env.VUE_APP_API_HOST + process.env.VUE_APP_GET_USERS_BY_ROLE_1 + this.delegatedUserRoleID + process.env.VUE_APP_GET_USERS_BY_ROLE_2 + 0 + process.env.VUE_APP_GET_USERS_BY_ROLE_3 + 100
+    },
+    path2: function () {
+      return process.env.VUE_APP_API_HOST + process.env.VUE_APP_DELEGATED_USERS_1 + this.uid + process.env.VUE_APP_DELEGATED_USERS_2
+    },
+    getUserByEmailPath: function () {
+      return process.env.VUE_APP_API_HOST + process.env.VUE_APP_GET_USER_BY_EMAIL + this.formemail
+    },
+    changeRolePath: function () {
+      return process.env.VUE_APP_API_HOST + process.env.VUE_APP_CHANGE_USER_ROLE_1 + this.userPrivID + process.env.VUE_APP_CHANGE_USER_ROLE_2 + this.userprivrole
+    },
+    size: function () {
+      const size = { xs: 'x-small', sm: 'small', lg: 'large', xl: 'x-large' }[this.$vuetify.breakpoint.name]
+      return size ? { [size]: true } : {}
+    }
+  },
+  async mounted () {
+    // this.path = ''
     // console.log('here ' + process.env.VUE_APP_USERSLIST1)
-    this.getUsers()
+    console.log('roleid: ' + this.roleid)
+    console.log('prvilege management component mounted')
+    await this.getUsers()
   },
   methods: {
-    onScroll (e) {
-      this.offsetTop = e.target.scrollTop
-    },
-    setPrivilege: function (type, value) {
+    setPrivilege: async function (type, value) {
+      // controller instance to abort fetch when needed
+      var controller = new AbortController()
+      const { signal } = controller
       // removing moderator privileges
       if ((type === 'moderator' || type === 'eventcreator') && value === true) {
-        // POST method here to add moderator using email
-        // needs to make the correct POST depending if is a mod or event creator
-        // console.log(' POST grant privileges to' + this.formemail)
-        this.users.push({ UID: 12435, Email: this.formemail, SupEmail: 'sup@gmail.com' })
-        this.adddialog = false
-      } else if ((type === 'moderator' || type === 'eventcreator') && value === false) {
-        // no need to verify if they are moderators or event creator since user can only select from served lists
+        // verifies if the user is in the system
+        await fetch(
+          this.getUserByEmailPath, signal,
+          {
+            mode: 'cors',
+            credential: 'include',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(response => {
+            // if user emails is not in the system
+            if (response.status === 404) {
+              // if the entered emails is invalid set flag to true for warning message in dialog box
+              this.invalidEmail = !this.invalidEmail
+              // alert in browser
+              alert('The entered email is not from a registered user in the system')
+              // abort
+              controller.abort()
+              // Enters if the entered email is a valid email
+            } else if (response.status === 200) {
+              // Is the previous entered email was not valid hides the warning message
+              if (this.invalidEmail) this.invalidEmail = !this.invalidEmail
+              // returns the json response of the api call of get user by email
+              return response.json()
+            }
+          })
+          .then(data => {
+            // process the json body response of the get user by email api call
+            if (data.roleid === 2 && type === 'eventcreator') {
+              alert('the user is already an event creator')
+            } else if (data.roleid === 3 && type === 'moderator') {
+              // alerts if the user is already a moderator
+              alert('the user is already an moderator')
+            } else if (data.roleid === 4) {
+              // alets if teh user is an administrator
+              alert('the user is already an administartor')
+            } else {
+              // set instance to the value of the user id to be given privileges
+              this.userPrivID = data.uid
+              // set the instance of the role to be given to 3 (moderator) or 2 (event creator)
+              // based on the current type of the component that could be either 'moderator' or 'eventcreator' or 'user' when privilege is removed
+              this.userprivrole = (type === 'moderator' ? 3 : 2)
+              // makes api call to change the user role with the entered email
+              return fetch(this.changeRolePath,
+                {
+                  method: 'POST',
+                  mode: 'cors',
+                  credential: 'include',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  }
+                })
+                .then(response => {
+                  if (response.status === 200) {
+                    // update sthe current url page to update user list
+                    location.reload()
+                  } else if (response.status === 404) {
+                  }
+                })
+                .catch(error => {
+                  alert(error)
+                })
+            }
+          })
+          .catch(error => {
+            console.error(error)
+          })
+        // this.adddialog = false
+      } else if ((type === 'user') && value === false) {
+        // no need to verify if they are moderators or event creator since user can only select from view type lists to remove
         // A user ca not remove their status as moderator or administrator
-        this.dialog = false // set the dialog to false
-        var list = JSON.parse(JSON.stringify(this.revokePrivList))// list of selected users to revoke moderator privileges
-        for (var i = 0; i < list.length; i++) {
+        // role idto ve given 1
+        this.userprivrole = 1
+        for (var i = 0; i < this.revokePrivList.length; i++) {
           // here makes POST to each user selected to remove them from list
-          // console.log('POST delete:' + list[i].Email)
-          // get new updated list
+          console.log(this.revokePrivList[i].uid)
+          this.userPrivID = this.revokePrivList[i].uid
+          await fetch(this.changeRolePath,
+            {
+              method: 'POST',
+              mode: 'cors',
+              credential: 'include',
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            })
+            .then(response => {
+              if (response.status === 200) {
+                // update sthe current url page to update user list
+              } else if (response.status === 404) {
+              }
+            })
         }
-
-        this.users = this.users.filter(n => !this.revokePrivList.includes(n))
-        this.revokePrivList = []
+        // refres tab
+        this.dialog = false // set the dialog to false
+        location.reload()
+        // this.users = this.users.filter(n => !this.revokePrivList.includes(n))
+        // this.revokePrivList = []
       }
-      this.addinguser = false
     },
-    getUsers: function () {
-      if (this.viewtype === 'moderator') {
+    getUsers: async function () {
+      console.log('getUsers call')
+      console.log('view type: ' + this.viewtype + '  roleid: ' + this.roleid)
+      console.log("this.viewtype === 'moderator' && this.roleid === '4'")
+      console.log(this.viewtype === 'moderator' && this.roleid.toString() === '4')
+      if (this.viewtype === 'moderator' && this.roleid.toString() === '4') {
+        console.log("this.viewtype === 'moderator' && this.roleid === '4'")
         //  this view is only for admin makes calll of the moderators in system
-        return new Promise((resolve, reject) => {
-          userApiCall({ url: '/users/2', method: 'GET' })
-            .then(response => {
-              resolve(this.users = response.Users)
-              // console.log(response)
-            })
-            .catch(err => {
-              reject(err)
-            })
-        })
-      } else if (this.viewtype === 'eventcreator') {
-        return new Promise((resolve, reject) => {
-          userApiCall({ url: '/users/3', method: 'GET' })
-            .then(response => {
-              resolve(this.users = response.Users)
-            })
-            .catch(err => {
-              reject(err)
-            })
-        })
+        this.delegatedUserRoleID = '3'
+        await fetch(this.path)
+          .catch()
+          .then((response) => {
+            return response.json()
+          })
+          .then((data) => {
+            this.users = data.users
+          })
+      } else if (this.viewtype === 'eventcreator' && this.roleid.toString() === '4') {
+        console.log("this.viewtype === 'eventcreator' && this.roleid === '4'")
+        this.delegatedUserRoleID = '2'
+        await fetch(this.path)
+          .catch()
+          .then((response) => {
+            return response.json()
+          })
+          .then((data) => {
+            // for (var i = 0; i < data.length; i++) {
+            //   this.users.push(data[i])
+            // }
+            this.users = data.users
+          })
+      } else if (this.viewtype === 'eventcreator' && this.roleid.toString() === '3') {
+        console.log("this.viewtype === 'eventcreator' && this.roleid === '3'")
+        await fetch(this.path2)
+          .catch()
+          .then((response) => {
+            return response.json()
+          })
+          .then((data) => {
+            this.users = data.users
+          })
       }
-    },
-    getUserEvents: function () {
-
-    },
-    getUserSupervees: function (VUID, UID) {
-
     },
     validate: function () {
       if (this.$refs.form.validate()) {
@@ -241,8 +378,7 @@ export default {
     }
   },
   props: {
-    viewtype: String, // either moderator or eventcreator
-    UID: String // Id of the user to get view
+    viewtype: String // either moderator or eventcreator
   }
 }
 </script>

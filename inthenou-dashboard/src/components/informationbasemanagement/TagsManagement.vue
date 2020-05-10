@@ -1,87 +1,223 @@
 <template>
-  <v-container class="grey lighten-5 mb-6" >
-    <v-card class="pa-2" outlined tile >
+<v-container class="grey lighten-5 mb-6" style="max-width: 600px;">
+      <v-text-field
+            v-model="search"
+            label="Search"
+            class="mb-5"
+            prepend-inner-icon="mdi-magnify"
+            flat
+            single-line
+            hide-details
+          ></v-text-field>
     <v-card class="justify-center" >
-      <v-img src="https://image.flaticon.com/icons/svg/1946/1946422.svg" aspect-ratio="1.7" contain></v-img>
-      <v-card-title class="headline justify-center" >Tags</v-card-title>
-      <v-dialog v-model="editTagDialog" persistent max-width="900px">
-        <template v-slot:activator="{ on }">
-          <v-row  justify="center">
-            <v-btn color="primary mb-5 pa-0" dark v-on="on" class="mx-2" fab>
-              <v-icon dark>mdi-plus</v-icon>
-            </v-btn>
-          </v-row>
-        </template>
-        <v-card>
-          <v-card-title>New Tag Form</v-card-title>
-          <v-form ref="form" v-model="valid" lazy-validation class="ma-6" >
-            <v-row>
-              <v-col cols="4">
-                <v-text-field v-model="tagFormInput" :counter="10" :rules="[ v => !!v || 'Tag is required', v => (v && v.length <= 10) || 'Tag must be less than 10 characters' ]" label="Tag" filled required ></v-text-field>
-              </v-col>
-              <v-col>
-                <v-btn @click="addTagToList()" color="primary mb-0 mt-3 pa-0 " dark  class="mx-2" fab>
-                  <v-icon dark>mdi-plus</v-icon>
-                </v-btn>
-                <v-btn @click="removeTagFromList()" color="red mb-0 mt-3 pa-0 " dark  class="mx-2" fab>
-                  <v-icon dark>mdi-minus</v-icon>
-                </v-btn>
-              </v-col>
-              <v-col cols="12">
-                <v-textarea v-model="tagList" label="Tag List" filled readonly ></v-textarea>
-              </v-col>
-              <v-col cols="12">
-                <v-btn color="success" class="mr-4" @click="editTagDialog = false" >
-                  Cancel
-                </v-btn>
-                <v-btn :disabled="!valid" color="success" class="mr-4" @click="validate">
-                  Create
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-form>
+        <v-card >
+            <v-data-table
+              :headers="headers"
+              :items="tagObjectsList"
+              :search="search"
+              class="elevation-1"
+              max-heigth="500px"
+            >
+              <template v-slot:top>
+                <v-toolbar flat color="white">
+                  <v-toolbar-title>Rooms</v-toolbar-title>
+                  <v-divider
+                    class="mx-4"
+                    inset
+                    vertical
+                  ></v-divider>
+                  <v-spacer></v-spacer>
+                  <v-form
+                    ref="form"
+                    v-model="valid"
+                    class="ma-6"
+                  >
+                  <v-dialog v-model="dialog" max-width="400px">
+                    <template v-slot:activator="{ on }">
+                      <v-btn color="primary" dark class="mb-2" v-on="on">New Tag</v-btn>
+                    </template>
+                    <v-card >
+                      <v-card-title>
+                        <span class="headline">{{ formTitle }}</span>
+                      </v-card-title>
+                      <v-card-text>
+                        <v-container>
+                          <v-row>
+                            <v-col cols="6">
+                              <v-text-field v-model="editedTagObject.tname"
+                              label="Tag name"
+                              :counter="10"
+                              :rules="[ v => !!v || 'Tag name is required', v => (v && v.length <= 10) || 'Name must be less than 10 characters' ]"
+                              ></v-text-field>
+                            </v-col>
+                          </v-row>
+                        </v-container>
+                      </v-card-text>
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                        <v-btn color="blue darken-1" text :disabled="!valid"  @click="save">Save</v-btn>
+                      </v-card-actions>
+                    </v-card>
+                  </v-dialog>
+                  </v-form>
+                </v-toolbar>
+              </template>
+              <template v-slot:item.actions="{ item }">
+                <v-icon
+                  small
+                  class="mr-2"
+                  @click="editTagObject(item)"
+                >
+                  mdi-pencil
+                </v-icon>
+              </template>
+            </v-data-table>
         </v-card>
-      </v-dialog>
-    </v-card>
     </v-card>
   </v-container>
 </template>
-
 <script>
 export default {
   data: () => ({
-    valid: true,
-    tagFormInput: null,
-    editTagDialog: null,
-    tags: [],
-    tagList: []
+    search: '',
+    valid: false,
+    dialog: false,
+
+    headers: [
+      { text: 'Building', align: 'start', sortable: true, value: 'tname' },
+      { text: 'Actions', value: 'actions', sortable: false }
+    ],
+    tagObjectsList: [],
+    editedTagObjectIndex: -1,
+    editedTagObject: {
+      tid: 0,
+      tname: ''
+    },
+    defaultTagObject: {
+      tid: 0,
+      tname: ''
+    }
   }),
+  /**
+   *
+   */
+  async created () {
+    await this.fetchTags()
+  },
+  computed: {
+    /**
+     *
+     */
+    formTitle () {
+      return this.editedTagObjectIndex === -1 ? 'New Tag' : 'Edit Tag'
+    }
+  },
+  watch: {
+    /**
+     *
+     */
+    dialog (val) {
+      val || this.close()
+    }
+  },
   methods: {
-    addTagToList: function () {
-      var contains = false
-      for (var i = 0; i < this.websites.length; i++) {
-        // console.log(this.tagList[i].URL)
-        if (this.tagList[i].Tag === this.tagFormInput) contains = true
-        else contains = false
-      }
-      // regex for ###-###-#### or ###-###-####,####
-      if (this.tagFormInput != null && this.tagFormInput.length < 10 && !contains) {
-        var tag = {}
-        tag.URL = this.tagFormInput.toString()
-        this.tagList.push(tag)
-        this.tagList = JSON.stringify(this.tagList)
-      } else {
-        alert('1.The entered number must be valid \n 2.A type must be selected ')
-      }
-    },
-    removeTagFromList: function () {
-      if (this.websites.length > 0) {
-        this.websites.pop()
-        this.websitesList = JSON.stringify(this.websites)
-      }
-    },
-    validate () {
+    /**
+     *
+     */
+    validate: function () {
       this.$refs.form.validate()
+      // if (this.valid) {
+      //   this.save()
+      // }
+    },
+    /**
+     *
+     */
+    fetchTags: async function () {
+      await fetch(process.env.VUE_APP_API_HOST + process.env.VUE_APP_GET_TAGS)
+        .then((response) => {
+          return response.json()
+        })
+        .then((data) => {
+          this.tagObjectsList = data.tags
+        })
+    },
+    /**
+     *
+     */
+    editTagObject (item) {
+      this.editedTagObjectIndex = this.tagObjectsList.indexOf(item)
+      this.editedTagObject = Object.assign({}, item)
+      this.dialog = true
+    },
+    /**
+     *
+     */
+    close () {
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedTagObject = Object.assign({}, this.defaultTagObject)
+        this.editedTagObjectIndex = -1
+      })
+    },
+    /**
+     *
+     */
+    save: async function () {
+      if (this.editedTagObjectIndex > -1) {
+        // the existing tag was edited
+        this.editedTagObject.tname = this.editedTagObject.tname.toUpperCase()
+        Object.assign(this.tagObjectsList[this.editedTagObjectIndex], this.editedTagObject)
+        await fetch(
+          process.env.VUE_APP_API_HOST + process.env.VUE_APP_EDIT_TAG_1 + this.editedTagObject.tid + process.env.VUE_APP_EDIT_TAG_2,
+          {
+            method: 'POST',
+            mode: 'cors',
+            credential: 'include',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ tname: this.editedTagObject.tname })
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok')
+            }
+            return response.json()
+          })
+          .catch((error) => {
+            console.error('There has been a problem with your fetch operation:', error)
+          })
+      } else {
+        // a new tag was created
+        this.defaultTagObject.tname = this.defaultTagObject.tname.toUpperCase()
+        this.tagObjectsList.push(this.editedTagObject)
+        await fetch(
+          process.env.VUE_APP_API_HOST + process.env.VUE_APP_CREATE_TAG,
+          {
+            method: 'POST',
+            mode: 'cors',
+            credential: 'include',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ Tags: [{ tname: this.editedTagObject.tname }] })
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok')
+            }
+            return response.json()
+          })
+          .then(data => {
+            // this.editedTagObject.tid = data.tid // update to new websites urls
+          })
+          .catch((error) => {
+            console.error('There has been a problem with your fetch operation:', error)
+          })
+      }
+      this.close()
     }
   }
 }

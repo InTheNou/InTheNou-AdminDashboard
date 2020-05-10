@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import Navbar from '../components/Navbar.vue'
+import Navbar from '../components/utils/Navbar.vue'
 import UserEvents from '../components/eventsmanagement/UserEvents'
 export default {
   components: {

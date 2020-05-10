@@ -1,7 +1,6 @@
 <template>
-    <v-btn @click="logout" text color="grey">
-            <GoogleLogin :params="params" :logoutButton=true @click="logout()"><v-btn>Logout</v-btn></GoogleLogin>
-            <v-icon right></v-icon>
+    <v-btn dense v-bind="size" @click="logout"  color="grey">
+            <GoogleLogin :params="params" :logoutButton=true @click="logout()">Logout</GoogleLogin>
     </v-btn>
 </template>
 
@@ -11,6 +10,12 @@ export default {
   data: () => ({
     params: { client_id: process.env.VUE_APP_CLIENT_ID }
   }),
+  computed: {
+    size: function () {
+      const size = { xs: 'x-small', sm: 'small', lg: 'large', xl: 'x-large' }[this.$vuetify.breakpoint.name]
+      return size ? { [size]: true } : {}
+    }
+  },
   methods: {
     logout: function () {
       this.$store.dispatch('AUTH_LOGOUT')

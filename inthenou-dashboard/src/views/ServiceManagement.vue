@@ -1,16 +1,17 @@
 <template>
     <v-content>
       <nav-bar></nav-bar>
-        <floor-rooms></floor-rooms>
+      <service-management-view></service-management-view>
     </v-content>
 </template>
+
 <script>
 import Navbar from '../components/utils/Navbar.vue'
-import FloorRooms from '../components/informationbase/FloorRooms.vue'
+import serviceManagement from '../components/informationbasemanagement/ServiceManagement'
 export default {
   components: {
     'nav-bar': Navbar,
-    'floor-rooms': FloorRooms
+    'service-management-view': serviceManagement
   }
 }
 </script>

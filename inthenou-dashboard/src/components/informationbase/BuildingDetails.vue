@@ -1,9 +1,14 @@
 <template>
-    <v-layout row wrap align-center justify-center>
-  <v-flex xs6 offset xs-1 sm6 offset-sm1 md6 offset-md1>
-        <v-col cols="12" >
-          <v-card>
-            <v-card-title class="headline indigo darken-4 white--text ">{{building.bname}}</v-card-title>
+    <!-- <v-layout row wrap align-center justify-center>
+  <v-flex xs6 offset xs-1 sm6 offset-sm1 md6 offset-md1> -->
+    <v-container style="max-width: 600px; text-start">
+      <v-row dense>
+        <v-col
+          style="height: 500px">
+          <v-card dense style="text-start">
+            <v-card-title class="headline indigo darken-4 white--text ">
+              <h6>{{building.bname}}</h6>
+              </v-card-title>
             <v-img height="200" :src= "(building.photourl==null? 'https://via.placeholder.com/250' : building.photourl)" ></v-img>
             <hr>
             <v-card-subtitle class="pt-0 pb-0  ma-0">Abbreviation: {{building.babbrev}} </v-card-subtitle>
@@ -15,14 +20,14 @@
               <v-spacer></v-spacer>
             </v-card-actions>
            <v-list>
-            <v-list-group value="true">
+            <v-list-group value="false">
             <template v-slot:activator>
             <v-list-item-content>
               <v-list-item-title>Floors</v-list-item-title>
             </v-list-item-content>
            </template>
            <v-container id="scroll-target" style="max-height: 200px" class="overflow-y-auto">
-           <v-row  style="height: 500px"  >
+           <v-row  style="height: 350px"  >
             <v-list-item
             v-for=" floor in building.distinctfloors"
             :key="floor"
@@ -41,9 +46,11 @@
           </v-list-group>
         </v-list>
           </v-card>
-        </v-col>
-  </v-flex>
-  </v-layout>
+      </v-col>
+  <!-- </v-flex>
+  </v-layout> -->
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -52,11 +59,17 @@ export default {
     bid: null,
     building: []
   }),
+  /**
+   *
+   */
   mounted () {
     this.bid = this.$route.params.bid
     this.getBuildings()
   },
   methods: {
+    /**
+     *
+     */
     getBuildings: async function () {
       await fetch(process.env.VUE_APP_API_HOST + process.env.VUE_APP_BUILDINGS_DETAIL + this.bid)
         .then((response) => {
@@ -67,6 +80,9 @@ export default {
           // console.log(data)
         })
     },
+    /**
+     *
+     */
     followRoute: function (bid, floor) {
       this.$router.push('/informationbase/buildings/' + bid + '/floors/' + floor + '/rooms')
     }

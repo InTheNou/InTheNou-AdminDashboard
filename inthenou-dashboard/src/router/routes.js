@@ -1,18 +1,19 @@
 /* eslint-disable */
 import Login from '../components/auth/login.vue'
 import InformationBase from '../views/InformationBase.vue'
-import InformationBaseManagement from '../views/InformationBaseManagement.vue'
-import AllcurrentEvents from '../views/AllCurrentEvents.vue'
-import MyEvents from '../views/MyEvents.vue'
-import MyEventsArchive from '../views/MyEventsArchive.vue'
-import AllEventsArchive from '../views/AllEventsArchive.vue'
+import serviceManagement from '../views/ServiceManagement.vue'
+import Events from '../views/Events.vue'
 import PrivilegeManagement from '../views/PrivilegeManagement.vue'
 import BuildingDetails from '../views/BuildingDetails.vue'
 import FloorRooms from '../views/FloorRooms.vue'
 import RoomServices from '../views/RoomServices.vue'
 import DelegatedUsers from '../views/DelegatedUsers.vue'
 import UserEvents from '../views/UserEvents.vue'
-import Home from '../views/Home.vue'
+import Search from '../views/Search.vue'
+import ServiceDetail from '../views/ServiceDetail.vue'
+import TagsManagement from '../views/TagsManagement.vue'
+import RoomsCoordinatesManagement from '../views/RoomsCoordinatesManagement.vue'
+import EventDetails from '../views/EventDetails.vue'
 import store from '../store/Store.js'
 
 const ifIsNotAuthenticated = (to, from, next) => {
@@ -37,33 +38,10 @@ export const routes = [
     // beforeEnter: ifIsNotAuthenticated
   },
   {
-    path: '/login/succeed',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/allcurrentevents',
-    name: 'all current events',
-    component: AllcurrentEvents,
+    path: '/events/:eventtype',
+    name: 'events',
+    component: Events,
     // beforeEnter: ifIsAuthenticated
-  },
-  {
-    path: '/myevents',
-    name: 'myevents',
-    component: MyEvents,
-    beforeEnter: ifIsAuthenticated
-  },
-  {
-    path: '/alleventsarchive',
-    name: 'all events archive',
-    component: AllEventsArchive,
-    beforeEnter: ifIsAuthenticated
-  },
-  {
-    path: '/myeventsarchive',
-    name: 'myeventsarchive',
-    component: MyEventsArchive,
-    beforeEnter: ifIsAuthenticated
   },
   {
     path: '/privilegemanagement',
@@ -97,9 +75,9 @@ export const routes = [
     beforeEnter: ifIsAuthenticated
   },
   {
-    path: '/informationbasemanagement',
-    name: 'information base management',
-    component: InformationBaseManagement,
+    path: '/servicemanagement',
+    name: 'service management',
+    component: serviceManagement,
     beforeEnter: ifIsAuthenticated
   },
   {
@@ -113,7 +91,36 @@ export const routes = [
     name: 'user events',
     component: UserEvents,
     beforeEnter: ifIsAuthenticated
+  },
+  {
+    path: '/search/:searchtype/:keyword',
+    name: 'search',
+    component: Search,
+    beforeEnter: ifIsAuthenticated
+  },
+  {
+    path: '/informationbase/servicedetails/:sid',
+    name: 'service',
+    component: ServiceDetail,
+    beforeEnter: ifIsAuthenticated
+  },
+  {
+    path: '/tagsmanagement',
+    name: 'tags',
+    component: TagsManagement,
+    beforeEnter: ifIsAuthenticated
+  },
+  {
+    path: '/roomscoordinatesmanagement',
+    name: 'room coordinates management',
+    component: RoomsCoordinatesManagement,
+    beforeEnter: ifIsAuthenticated
+  },
+  {
+    path: '/eventsmanagement/eventdetails/:eventtype/event/:eid',
+    name: 'event details',
+    component: EventDetails,
+    beforeEnter: ifIsAuthenticated
   }
-
 ]
 /* eslint-enable */

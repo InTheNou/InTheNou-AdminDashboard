@@ -17,6 +17,7 @@
 <script>
 // import axios from 'axios'
 import GoogleLogin from 'vue-google-login'
+import { mapGetters } from 'vuex'
 export default {
   data: () => ({
     user: {
@@ -28,6 +29,12 @@ export default {
     params: { client_id: process.env.VUE_APP_CLIENT_ID },
     renderParams: { width: 250, height: 50, longtitle: true }
   }),
+  computed: {
+    ...mapGetters([
+      'roleid',
+      'status'
+    ])
+  },
   components: {
     GoogleLogin
   },
@@ -50,7 +57,6 @@ export default {
       "email":"jonathan.santiago27@upr.edu",
       "display_name": "Jonathan X Santiago Gonzalez"
       } */
-      // console.log('login: ' + process.env.VUE_APP_API_HOST + process.env.VUE_APP_LOGIN)
       return await fetch(
         process.env.VUE_APP_API_HOST + process.env.VUE_APP_LOGIN,
         {
@@ -58,6 +64,7 @@ export default {
           mode: 'cors',
           credential: 'include',
           headers: {
+            Accept: 'application/json',
             'Content-Type': 'application/json'
           },
           body: JSON.stringify(this.user)
@@ -70,8 +77,9 @@ export default {
         })
         .then(data => {
           this.$store.dispatch('AUTH_REQUEST', data.uid).then(() => {
-            console.log('here')
-            // this.$router.push('/allcurrentevents')
+            console.log('login status: ' + this.status + '/n roleid : ' + this.roleid)
+
+            this.$router.push('/events/allcurrentevents')
           })
         })
     }

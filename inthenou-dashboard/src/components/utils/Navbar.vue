@@ -1,0 +1,271 @@
+<template>
+    <v-container class="pb-0">
+        <v-app-bar
+          :clipped-left="$vuetify.breakpoint.lgAndUp"
+          app
+          color="blue darken-3"
+          dark
+        >
+          <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+          <v-toolbar-title
+            class="ml-0 pl-4"
+          >
+            <span class="hidden-sm-and-down"><h1>In<span style="color:red">The</span>Nou</h1></span>
+          </v-toolbar-title>
+            <v-col class="pt-8" cols="6">
+            <v-text-field
+            @keydown.enter="followRoute"
+            v-model="search"
+              flat
+              dense
+              solo-inverted
+              prepend-inner-icon="mdi-magnify"
+              label="Search"
+            />
+            </v-col>
+            <v-col cols="2" class="pa-0 pt-8 pb-3">
+                <v-select
+                    v-model="selectedSearch"
+                      :items="['buildings','rooms','services']"
+                      label="Type"
+                      dense
+                      flat
+                      solo-inverted >
+                </v-select>
+            </v-col>
+            <v-spacer />
+            <log-out></log-out>
+        </v-app-bar>
+        <v-navigation-drawer
+          v-model="drawer"
+          :width="310"
+          :clipped="$vuetify.breakpoint.lgAndUp"
+          app
+        >
+          <v-list dense>
+            <template v-for="item in items">
+              <v-row
+                v-if="item.heading"
+                :key="item.heading"
+                align="center"
+              >
+                <v-col cols="6">
+                  <v-subheader v-if="item.heading">
+                    {{ item.heading }}
+                  </v-subheader>
+                </v-col>
+                <v-col
+                  cols="6"
+                  class="text-center"
+                >
+                  <a
+                    href="#!"
+                    class="body-2 black--text"
+                  >EDIT</a>
+                </v-col>
+              </v-row>
+              <v-list-group
+                v-else-if="item.children"
+                :key="item.text"
+                v-model="item.model"
+                :prepend-icon="item.model ? item.icon : item['icon-alt']"
+                append-icon=""
+              >
+                <template v-slot:activator>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      {{ item.text }}
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </template>
+                <v-list-item
+                  v-for="(child, i) in item.children"
+                  :key="i"
+                  link
+                  router :to="child.route"
+                >
+                  <v-list-item-action v-if="child.icon" class="ml-5">
+                    <v-icon class="mr-1">{{ child.icon }}</v-icon>
+                  </v-list-item-action>
+                  <v-list-item-content >
+                    <v-list-item-title>
+                      {{ child.text }}
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list-group>
+              <v-list-item
+                v-else
+                :key="item.text"
+                link
+                router :to="link.route"
+              >
+                <v-list-item-action>
+                  <v-icon>{{ item.icon }}</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                  <v-list-item-title>
+                    {{ item.text }}
+                  </v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-navigation-drawer>
+    </v-container>
+</template>
+<script>
+import Logout from '../auth/logout.vue'
+import { mapGetters } from 'vuex'
+export default {
+  data: () => ({
+    drawer: null,
+    selectedSearch: 'buildings',
+    search: '',
+    // items: [
+    //   {
+    //     icon: 'mdi-chevron-up',
+    //     'icon-alt': 'mdi-chevron-down',
+    //     text: 'Events',
+    //     model: true,
+    //     children: [
+    //       { text: 'Current Events', icon: 'mdi-calendar', route: '/events/allcurrentevents' },
+    //       { text: 'Events Archive', icon: 'mdi-history', route: '/events/alleventsarchive' },
+    //       { text: 'Deleted Events', icon: ' mdi-calendar-remove ', route: '/events/alldeletedevents' },
+    //       { text: 'My Events ', icon: 'mdi-calendar', route: '/events/myevents' }
+    //     ]
+    //   },
+    //   {
+    //     icon: 'mdi-chevron-up',
+    //     'icon-alt': 'mdi-chevron-down',
+    //     text: 'Information Base',
+    //     model: true,
+    //     children: [
+    //       { text: 'Information Navigation', icon: 'mdi-database', route: '/informationbase' },
+    //       { text: 'Service Management', icon: 'mdi-desktop-mac-dashboard', route: '/servicemanagement' },
+    //       { text: 'Tags Management', icon: 'mdi-tag-multiple', route: '/tagsmanagement' },
+    //       { text: 'Coordinates Management', icon: 'mdi-map-marker-radius', route: '/roomscoordinatesmanagement' }
+    //     ]
+    //   },
+    //   {
+    //     icon: 'mdi-chevron-up',
+    //     'icon-alt': 'mdi-chevron-down',
+    //     text: 'Privilege',
+    //     model: true,
+    //     children: [
+    //       { text: 'Privilege Management', icon: 'mdi-account-key-outline', route: '/privilegemanagement' }
+    //     ]
+    //   }
+    // ],
+    color: 'primary',
+    colors: [
+      'primary',
+      'blue',
+      'success',
+      'red',
+      'teal'
+    ]
+  }),
+  computed: {
+    ...mapGetters([
+      'roleid'
+    ]),
+    items: function () {
+      if (this.roleid === 4) {
+        return [
+          {
+            icon: 'mdi-chevron-up',
+            'icon-alt': 'mdi-chevron-down',
+            text: 'Events',
+            model: true,
+            children: [
+              { text: 'Current Events', icon: 'mdi-calendar', route: '/events/allcurrentevents' },
+              { text: 'Events Archive', icon: 'mdi-history', route: '/events/alleventsarchive' },
+              { text: 'Deleted Events', icon: ' mdi-calendar-remove ', route: '/events/alldeletedevents' },
+              { text: 'My Events ', icon: 'mdi-calendar', route: '/events/myevents' }
+            ]
+          },
+          {
+            icon: 'mdi-chevron-up',
+            'icon-alt': 'mdi-chevron-down',
+            text: 'Information Base',
+            model: true,
+            children: [
+              { text: 'Information Navigation', icon: 'mdi-database', route: '/informationbase' },
+              { text: 'Service Management', icon: 'mdi-desktop-mac-dashboard', route: '/servicemanagement' },
+              { text: 'Tags Management', icon: 'mdi-tag-multiple', route: '/tagsmanagement' },
+              { text: 'Coordinates Management', icon: 'mdi-map-marker-radius', route: '/roomscoordinatesmanagement' }
+            ]
+          },
+          {
+            icon: 'mdi-chevron-up',
+            'icon-alt': 'mdi-chevron-down',
+            text: 'Privilege',
+            model: true,
+            children: [
+              { text: 'Privilege Management', icon: 'mdi-account-key-outline', route: '/privilegemanagement' }
+            ]
+          }
+        ]
+      } else {
+        return [
+          {
+            icon: 'mdi-chevron-up',
+            'icon-alt': 'mdi-chevron-down',
+            text: 'Events',
+            model: true,
+            children: [
+              { text: 'Current Events', icon: 'mdi-calendar', route: '/events/allcurrentevents' },
+              { text: 'Events Archive', icon: 'mdi-history', route: '/events/alleventsarchive' },
+              { text: 'Deleted Events', icon: ' mdi-calendar-remove ', route: '/events/alldeletedevents' },
+              { text: 'My Events ', icon: 'mdi-calendar', route: '/events/myevents' }
+            ]
+          },
+          {
+            icon: 'mdi-chevron-up',
+            'icon-alt': 'mdi-chevron-down',
+            text: 'Information Base',
+            model: true,
+            children: [
+              { text: 'Information Navigation', icon: 'mdi-database', route: '/informationbase' },
+              { text: 'Service Management', icon: 'mdi-desktop-mac-dashboard', route: '/servicemanagement' },
+              { text: 'Coordinates Management', icon: 'mdi-map-marker-radius', route: '/roomscoordinatesmanagement' }
+            ]
+          },
+          {
+            icon: 'mdi-chevron-up',
+            'icon-alt': 'mdi-chevron-down',
+            text: 'Privilege',
+            model: true,
+            children: [
+              { text: 'Privilege Management', icon: 'mdi-account-key-outline', route: '/privilegemanagement' }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  components: {
+    'log-out': Logout
+  },
+  methods: {
+    followRoute: function () {
+      if ((this.selectedSearch !== this.$route.params.searchtype && this.search !== this.$route.params.keyword) && (this.$route.params.keyword !== 'null' && this.search.trim() !== '')) {
+        this.$router.push({ name: 'search', params: { searchtype: this.selectedSearch, keyword: (this.search.trim() === '' ? 'null' : this.search) } })
+      }
+    }
+  },
+  watch: {
+    search: function () {
+      if ((this.$route.params.keyword !== 'null' || this.search.trim() !== '') && (this.$route.name === 'search')) {
+        this.$router.push({ name: 'search', params: { searchtype: this.selectedSearch, keyword: (this.search.trim() === '' ? 'null' : this.search) } })
+      }
+    },
+    selectedSearch: function () {
+      if ((this.$route.name === 'search')) {
+        this.$router.push({ name: 'search', params: { searchtype: this.selectedSearch, keyword: (this.search.trim() === '' ? 'null' : this.search) } })
+      }
+    }
+  }
+}
+</script>

@@ -1,17 +1,17 @@
 <template>
    <v-content>
      <nav-bar></nav-bar>
-    <building-floors></building-floors>
+    <room-deatil-view></room-deatil-view>
    </v-content>
 </template>
 
 <script>
 import Navbar from '../components/utils/Navbar.vue'
-import BuildingDetails from '../components/informationbase/BuildingDetails.vue'
+import RoomDetails from '../components/eventsmanagement/EventDetails.vue'
 export default {
   components: {
     'nav-bar': Navbar,
-    'building-floors': BuildingDetails
+    'room-deatil-view': RoomDetails
   }
 }
 </script>

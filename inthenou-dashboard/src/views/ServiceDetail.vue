@@ -1,16 +1,16 @@
 <template>
     <v-content>
       <nav-bar></nav-bar>
-        <floor-rooms></floor-rooms>
+      <service-detail-view></service-detail-view>
     </v-content>
 </template>
 <script>
 import Navbar from '../components/utils/Navbar.vue'
-import FloorRooms from '../components/informationbase/FloorRooms.vue'
+import ServiceDetail from '../components/informationbase/ServiceDetails.vue'
 export default {
   components: {
     'nav-bar': Navbar,
-    'floor-rooms': FloorRooms
+    'service-detail-view': ServiceDetail
   }
 }
 </script>

@@ -1,16 +1,16 @@
 <template>
     <v-content>
       <nav-bar></nav-bar>
-        <floor-rooms></floor-rooms>
+      <tags-management-view></tags-management-view>
     </v-content>
 </template>
 <script>
 import Navbar from '../components/utils/Navbar.vue'
-import FloorRooms from '../components/informationbase/FloorRooms.vue'
+import TagsManagement from '../components/informationbasemanagement/TagsManagement.vue'
 export default {
   components: {
     'nav-bar': Navbar,
-    'floor-rooms': FloorRooms
+    'tags-management-view': TagsManagement
   }
 }
 </script>

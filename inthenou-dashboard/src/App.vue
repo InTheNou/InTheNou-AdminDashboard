@@ -3,6 +3,7 @@
       <v-container
         fluid
         fill-height
+        class="pt-0 pb-0"
       >
         <v-layout>
         <router-view></router-view>

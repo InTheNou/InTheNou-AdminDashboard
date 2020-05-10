@@ -7,7 +7,7 @@
 
 <script>
 // verifies if the user is either and admin or moderator using UID
-import Navbar from '../components/Navbar.vue'
+import Navbar from '../components/utils/Navbar.vue'
 import DelegatedUsers from '../components/privilegemanagement/DelegatedUsers.vue'
 export default {
   components: {
