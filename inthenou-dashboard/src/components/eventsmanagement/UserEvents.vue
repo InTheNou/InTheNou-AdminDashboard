@@ -11,7 +11,7 @@
           style="height: 1000px"
         >
         <v-col cols="12">
-          <v-spacer><h1>User Events Events </h1></v-spacer>
+          <v-spacer><h1>User Events</h1></v-spacer>
         </v-col>
           <v-card-actions>
             <v-btn justify="start" rounded color="primary" dark @click="previous()"><v-icon large right>mdi-skip-previous</v-icon> <h1 class="ml-4">Previous</h1> </v-btn>
@@ -33,7 +33,7 @@
             <v-container v-if="listofevents.length === 0" fluid>
               <v-row dense>
                 <v-col>
-                  <h1>User does not have events at the moment</h1>
+                  <h3>User does not have upcoming created events at the moment</h3>
                 </v-col>
               </v-row>
             </v-container>
@@ -50,6 +50,7 @@
                     </v-card-subtitle>
                       <v-img height="150" :src= "(event.photourl==null? 'https://via.placeholder.com/250' : event.photourl)" ></v-img>
                     <v-card-text height="150">
+                      <v-card-subtitle class="pt-0 pb-0 ma-0">Status: {{(isPastDate(event.estart)&&isPastDate(event.eend)? 'past' : event.estatus !="deleted"? 'Upcoming' : 'deleted')}}</v-card-subtitle>
                     <v-card-subtitle class="pt-0 pb-0 ma-0">Created: {{formatDate(event.ecreation)}}</v-card-subtitle>
                     <v-card-subtitle  class="pt-0 pb-0 ma-0">
                       Building: {{event.room.building.bname}}
@@ -61,7 +62,7 @@
                     <v-card-subtitle class="pt-0 pb-0 ma-0" >End: {{formatDate(event.eend)}} </v-card-subtitle>
                     <v-card-subtitle class="pt-0 pb-0  ma-0" >Description: {{event.edescription}} </v-card-subtitle>
                     </v-card-text>
-                    <v-card-actions class="card-actions">
+                    <v-card-actions v-if="event.estatus === 'active' && !isPastDate(event.eend)" class="card-actions">
                     <v-btn @click="dialog=true, eidtoremove=event.eid, etitletoremove=event.etitle" large bottom right color="primary">
                       Delete
                     </v-btn>
@@ -93,7 +94,7 @@
 </template>
 
 <script>
-import { getEvents, previous, next, deleteEvent, formatDate } from './events.js'
+import { getEvents, previous, next, deleteEvent, formatDate, isPastDate } from './events.js'
 export default {
   data: () => ({
     uid: null,
@@ -106,7 +107,10 @@ export default {
   }),
   computed: {
     eventsApiPath: function () {
-      return process.env.VUE_APP_API_HOST + process.env.VUE_APP_USER_EVENTS_1 + this.uid + process.env.VUE_APP_USER_EVENTS_2 + this.offset + process.env.VUE_APP_USER_EVENTS_3 + this.limit
+      return process.env.VUE_APP_API_HOST + process.env.VUE_APP_GET_USERS_EVENTS_1 + this.uid + process.env.VUE_APP_GET_USERS_EVENTS_2 + this.offset + process.env.VUE_APP_GET_USERS_EVENTS_3 + this.limit
+    },
+    deleteEventApiPath: function () {
+      return process.env.VUE_APP_API_HOST + process.env.VUE_APP_DELETE_EVENT_1 + this.eidtoremove + process.env.VUE_APP_DELETE_EVENT_3 + 'deleted'
     }
   },
   async mounted () {
@@ -120,7 +124,8 @@ export default {
     deleteEvent,
     previous,
     next,
-    formatDate
+    formatDate,
+    isPastDate
   }
 }
 </script>

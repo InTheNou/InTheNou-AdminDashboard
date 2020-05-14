@@ -21,6 +21,25 @@ const router = new VueRouter({
   mode: 'hash',
   base: process.env.BASE_URL
 })
+router.beforeResolve((to, from, next) => {
+  // console.log('to: ' + to.name + 'from ' + from.name)
+  var status = localStorage.getItem('status') || ''
+  var authenticated = (status === 'success')
+  var unregistered = (status === 'unregistered')
+  // console.log('authenticated: ' + authenticated)
+  // console.log('unregistered: ' + unregistered)
+  if (to.name !== 'login') {
+    if (unregistered && to.path === '/login/failed') {
+      next()
+    } else if (authenticated) {
+      next()
+    } else {
+      next({ name: 'login' })
+    }
+  } else {
+    next()
+  }
+})
 
 new Vue({
   router,

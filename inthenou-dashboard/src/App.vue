@@ -13,14 +13,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 export default {
-  name: 'App',
-  components: {
-  },
-  computed: mapGetters(['authStatus', 'isAuthenticated']),
-  mounted () {
-    // console.log('App.vue mounted:' + this.isAuthenticated)
-  }
+  name: 'App'
 }
 </script>

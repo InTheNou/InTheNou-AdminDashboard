@@ -85,7 +85,7 @@ export default {
     dialog: false,
 
     headers: [
-      { text: 'Building', align: 'start', sortable: true, value: 'tname' },
+      { text: 'Tags', align: 'start', sortable: true, value: 'tname' },
       { text: 'Actions', value: 'actions', sortable: false }
     ],
     tagObjectsList: [],

@@ -1,27 +1,146 @@
 <template>
-  <v-col cols="6">
+  <v-row>
+    <v-container style="max-width: 800px;" align="center">
+      <v-col xsm="12" sm="6" md="12">
       <v-card class="pa-5">
         <v-card-title class="headline justify-center blue darken-4 white--text" >
           <v-row>
             <v-col cols="8">
-              <h3 v-if="viewtype=='moderator'">Moderator  List</h3>
-              <h3 v-else-if="viewtype==='eventcreator'">Event Creator List</h3>
+              <h3 v-if="viewtype=='moderator'">Moderators  List</h3>
+              <h3 v-else-if="viewtype==='eventcreator'">Event Creators List</h3>
             </v-col>
             <v-spacer></v-spacer>
-             <v-card-actions>
-                <v-col cols="4">
+          </v-row>
+        </v-card-title>
+        <hr />
+        <v-container id="scroll-target" style="max-height: 500px" class="overflow-y-auto">
+              <v-card v-model="users">
+                <v-list shaped>
+                  <v-list-item-group v-model="revokePrivList" multiple>
+                    <template v-for="(user, i) in users">
+                      <v-divider v-if="!user" :key="`divider-${i}`"></v-divider>
+                      <v-list-item v-else :key="`item-${i}`" :value="user" active-class="blue--text text--accent-4" >
+                        <template v-slot:default="{ active, toggle }">
+                          <v-col v-if="viewtype==='moderator'">
+                            <v-list-item-content >
+                                <v-row>
+                                <v-col cols="8" md="7" class="pa-0">
+                                <v-list-item-action class="pl-4">
+                                  <v-checkbox
+                                    :input-value="active"
+                                    :true-value="user"
+                                    color="blue accent-4"
+                                    @click="toggle"
+                                  ></v-checkbox>
+                                </v-list-item-action>
+                                   {{user.email}}
+                                </v-col>
+                                <v-col xsm="3" sm="3" md="5" class="pa-0">
+                                <v-list-item-action>
+                                  <v-tooltip top>
+                                    <template v-slot:activator="{ on }">
+                                      <router-link :to="'/userevents/'+ user.uid"> <v-btn v-bind="size" color="primary" class="ml-3" dark v-on="on"><v-icon v-bind="size" dark>mdi-calendar</v-icon> </v-btn></router-link>
+                                    </template>
+                                    <span>User Events</span>
+                                  </v-tooltip>
+                                </v-list-item-action>
+                                <v-list-item-action>
+                                  <v-tooltip top>
+                                    <template v-slot:activator="{ on }">
+                                      <router-link :to="'/delegatedusers/'+ user.uid"> <v-btn v-bind="size" color="primary" dark v-on="on"><v-icon v-bind="size" dark>mdi-account-multiple</v-icon> </v-btn></router-link>
+                                    </template>
+                                    <span>Delegated Users</span>
+                                  </v-tooltip>
+                                </v-list-item-action>
+                                </v-col>
+                                </v-row>
+                            </v-list-item-content>
+                          </v-col>
+                          <v-col v-else-if="viewtype==='eventcreator'">
+                            <v-col v-if="user.length>0">
+                              <h6>No delegated Event Creators at users at the moment</h6>
+                            </v-col>
+                            <v-list-item-content v-else>
+                                <v-row>
+                                <v-col cols="8" md="7" class="pa-0">
+                                <v-list-item-action class="pl-4">
+                                  <v-checkbox
+                                    :input-value="active"
+                                    :true-value="user"
+                                    color="blue accent-4"
+                                    @click="toggle"
+                                  ></v-checkbox>
+                                  </v-list-item-action>
+                                     {{user.email}}
+                                </v-col>
+                                <v-col xsm="3" sm="3" md="5" class="pa-0">
+                                  <v-list-item-action>
+                                    <v-tooltip top>
+                                    <template v-slot:activator="{ on }">
+                                      <router-link :to="'/userevents/'+ user.uid"> <v-btn v-bind="size" color="primary" dark v-on="on"><v-icon v-bind="size" dark>mdi-calendar</v-icon> </v-btn></router-link>
+                                    </template>
+                                    <span>User Events</span>
+                                  </v-tooltip>
+                                  </v-list-item-action>
+                                </v-col>
+                                </v-row>
+                            </v-list-item-content>
+                          </v-col>
+                        </template>
+                      </v-list-item>
+                    </template>
+                  </v-list-item-group>
+                </v-list>
+              </v-card>
+        </v-container>
+        <v-card-actions>
+        <v-row>
+        <v-col cols="6">
+        <!-- <v-card-actions> -->
+          <!-- <v-row> -->
+            <!-- <v-col cols="12"> -->
+              <v-dialog v-model="dialog" scrollable max-width="300px">
+                <template v-slot:activator="{ on }">
+                  <div class="text-center pa-0">
+                    <v-btn v-bind="size" :disabled="revokePrivList.length<=0"  color="primary" v-on="on">
+                      <v-icon v-bind="size" dark>Remove</v-icon>
+                    </v-btn>
+                  </div>
+                </template>
+                <v-card>
+                  <v-card-title>You are about to Revoke</v-card-title>
+                  <v-card-title>Privileges To:</v-card-title>
+                  <v-divider></v-divider>
+                  <v-card-text style="height: 300px;">
+                    <ul>
+                      <li v-for="user in revokePrivList" :key="user.email">{{ user.email }}</li>
+                    </ul>
+                  </v-card-text>
+                  <v-divider></v-divider>
+                  <v-card-actions>
+                    <v-btn v-bind="size"   @click="dialog = false">Cancel</v-btn>
+                    <v-btn v-bind="size"   @click="setPrivilege('user', false)">Continune</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            <!-- </v-col> -->
+          <!-- </v-row> -->
+        <!-- </v-card-actions> -->
+        </v-col>
+        <v-spacer />
+        <v-col cols="6">
                   <v-dialog v-model="adddialog" persistent max-width="600px">
                     <template v-slot:activator="{ on }">
-                        <div class="text-right">
-                        <v-btn v-bind="size" color="primary mb-0 pa-0" dark v-on="on" class="mx-2" fab>
-                            <v-icon v-bind="size" dark>mdi-plus</v-icon>
+                        <div class="text-center pa-0">
+                        <v-btn v-bind="size" color="primary"  v-on="on" >
+                            <v-icon v-bind="size" dark>Add</v-icon>
                         </v-btn>
                         </div>
                     </template>
                     <v-card>
                       <v-row justify="space-around">
                       </v-row>
-                      <v-form ref="form" v-model="valid" lazy-validation >
+                      <v-form ref="form" v-model="valid" >
                         <v-card-title>
                           <span v-if="viewtype==='moderator'" vclass="headline">Grant Moderator Privileges</span>
                           <span v-else-if="viewtype==='eventcreator'" vclass="headline">Grant Event Creator Privileges</span>
@@ -47,133 +166,16 @@
                       </v-form>
                     </v-card>
                   </v-dialog>
-                </v-col>
-             </v-card-actions>
-          </v-row>
-        </v-card-title>
-        <hr />
-        <v-row align="center">
-          <div v-if="viewtype=='moderator'">
-            <v-subheader>1.to add a new Moderator press the + sign above.</v-subheader>
-            <v-subheader>2.to remove Moderators select from the list then press remove button.</v-subheader>
-          </div>
-          <div v-else-if="viewtype=='eventcreator'">
-            <v-subheader>1.to add a new Event Creator press the + sign above.</v-subheader>
-            <v-subheader>2.to remove Event creators select from the list then press remove button.</v-subheader>
-          </div>
+        </v-col>
         </v-row>
-        <v-container id="scroll-target" style="max-height: 600px" class="overflow-y-auto">
-          <v-row  style="height: 300px"  >
-            <v-col cols="12">
-              <v-card v-model="users">
-                <v-list shaped>
-                  <v-list-item-group v-model="revokePrivList" multiple>
-                    <template v-for="(user, i) in users">
-                      <v-divider v-if="!user" :key="`divider-${i}`"></v-divider>
-                      <v-list-item v-else :key="`item-${i}`" :value="user" active-class="blue--text text--accent-4" >
-                        <template v-slot:default="{ active, toggle }">
-                          <v-col v-if="viewtype==='moderator'">
-                            <v-list-item-content >
-                              <v-list-item-title>
-                                <v-list-item-action>
-                                  <v-checkbox
-                                    :input-value="active"
-                                    :true-value="user"
-                                    color="blue accent-4"
-                                    @click="toggle"
-                                  ></v-checkbox>
-                                </v-list-item-action>
-                                <v-list-item-action>
-                                   {{user.email}}
-                                </v-list-item-action>
-                                <v-list-item-action>
-                                  <v-tooltip top>
-                                    <template v-slot:activator="{ on }">
-                                      <router-link :to="'/userevents/'+ user.uid"> <v-btn v-bind="size" color="primary" class="ml-3" dark v-on="on"><v-icon v-bind="size" dark>mdi-calendar</v-icon> </v-btn></router-link>
-                                    </template>
-                                    <span>User Events</span>
-                                  </v-tooltip>
-                                </v-list-item-action>
-                                <v-list-item-action>
-                                  <v-tooltip top>
-                                    <template v-slot:activator="{ on }">
-                                      <router-link :to="'/delegatedusers/'+ user.uid"> <v-btn v-bind="size" color="primary" dark v-on="on"><v-icon v-bind="size" dark>mdi-account-multiple</v-icon> </v-btn></router-link>
-                                    </template>
-                                    <span>Delegated Users</span>
-                                  </v-tooltip>
-                                </v-list-item-action>
-                            </v-list-item-title>
-                            </v-list-item-content>
-                          </v-col>
-                          <v-col v-else-if="viewtype==='eventcreator'">
-                            <v-list-item-content>
-                              <v-list-item-title>
-                                <v-list-item-action>
-                                  <v-checkbox
-                                    :input-value="active"
-                                    :true-value="user"
-                                    color="blue accent-4"
-                                    @click="toggle"
-                                  ></v-checkbox>
-                                  </v-list-item-action>
-                                     {{user.email}}
-                                  <v-list-item-action>
-                                    <v-tooltip top>
-                                    <template v-slot:activator="{ on }">
-                                      <router-link :to="'/userevents/'+ user.uid"> <v-btn v-bind="size" color="primary" dark v-on="on"><v-icon v-bind="size" dark>mdi-calendar</v-icon> </v-btn></router-link>
-                                    </template>
-                                    <span>User Events</span>
-                                  </v-tooltip>
-                                  </v-list-item-action>
-                                </v-list-item-title>
-                            </v-list-item-content>
-                          </v-col>
-                        </template>
-                      </v-list-item>
-                    </template>
-                  </v-list-item-group>
-                </v-list>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-container>
-        <div></div>
-        <v-card-actions class="justify-center">
-          <v-row>
-            <v-col cols="12">
-              <v-dialog v-model="dialog" scrollable max-width="300px">
-                <template v-slot:activator="{ on }">
-                  <div class="text-center">
-                    <v-btn v-bind="size" :disabled="revokePrivList.length<=0"  large color="primary" dark v-on="on">
-                      <h1>Remove</h1>
-                    </v-btn>
-                  </div>
-                </template>
-                <v-card>
-                  <v-card-title>You are about to Revoke</v-card-title>
-                  <v-card-title>Privileges To:</v-card-title>
-                  <v-divider></v-divider>
-                  <v-card-text style="height: 300px;">
-                    <ul>
-                      <li v-for="user in revokePrivList" :key="user.email">{{ user.email }}</li>
-                    </ul>
-                  </v-card-text>
-                  <v-divider></v-divider>
-                  <v-card-actions>
-                    <v-btn v-bind="size" color="blue darken-1"  @click="dialog = false">Cancel</v-btn>
-                    <v-btn v-bind="size" color="blue darken-1"  @click="setPrivilege('user', false)">Continune</v-btn>
-                  </v-card-actions>
-                </v-card>
-              </v-dialog>
-            </v-col>
-          </v-row>
-        </v-card-actions>
+        <v-card-actions>
       </v-card>
-  </v-col>
+      </v-col>
+    </v-container>
+  </v-row>
 </template>
 
 <script>
-// import { userApiCall } from '../../dummyapicals/users.js'
 import { mapGetters } from 'vuex'
 export default {
   data: () => ({
@@ -196,7 +198,7 @@ export default {
       'roleid'
     ]),
     path: function () {
-      return process.env.VUE_APP_API_HOST + process.env.VUE_APP_GET_USERS_BY_ROLE_1 + this.delegatedUserRoleID + process.env.VUE_APP_GET_USERS_BY_ROLE_2 + 0 + process.env.VUE_APP_GET_USERS_BY_ROLE_3 + 100
+      return process.env.VUE_APP_API_HOST + process.env.VUE_APP_GET_USERS_BY_ROLE_1 + this.delegatedUserRoleID + process.env.VUE_APP_GET_USERS_BY_ROLE_2 + 0 + process.env.VUE_APP_GET_USERS_BY_ROLE_3 + 5000
     },
     path2: function () {
       return process.env.VUE_APP_API_HOST + process.env.VUE_APP_DELEGATED_USERS_1 + this.uid + process.env.VUE_APP_DELEGATED_USERS_2
@@ -208,7 +210,7 @@ export default {
       return process.env.VUE_APP_API_HOST + process.env.VUE_APP_CHANGE_USER_ROLE_1 + this.userPrivID + process.env.VUE_APP_CHANGE_USER_ROLE_2 + this.userprivrole
     },
     size: function () {
-      const size = { xs: 'x-small', sm: 'small', lg: 'large', xl: 'x-large' }[this.$vuetify.breakpoint.name]
+      const size = { xs: 'x-small', sm: 'small', lg: 'large', xl: 'large' }[this.$vuetify.breakpoint.name]
       return size ? { [size]: true } : {}
     }
   },
@@ -323,50 +325,55 @@ export default {
         // refres tab
         this.dialog = false // set the dialog to false
         location.reload()
-        // this.users = this.users.filter(n => !this.revokePrivList.includes(n))
-        // this.revokePrivList = []
       }
     },
     getUsers: async function () {
-      console.log('getUsers call')
-      console.log('view type: ' + this.viewtype + '  roleid: ' + this.roleid)
-      console.log("this.viewtype === 'moderator' && this.roleid === '4'")
-      console.log(this.viewtype === 'moderator' && this.roleid.toString() === '4')
+      // console.log('getUsers call')
+      // console.log('view type: ' + this.viewtype + '  roleid: ' + this.roleid)
+      // console.log("this.viewtype === 'moderator' && this.roleid === '4'")
+      // console.log(this.viewtype === 'moderator' && this.roleid.toString() === '4')
       if (this.viewtype === 'moderator' && this.roleid.toString() === '4') {
-        console.log("this.viewtype === 'moderator' && this.roleid === '4'")
+        // console.log("this.viewtype === 'moderator' && this.roleid === '4'")
         //  this view is only for admin makes calll of the moderators in system
         this.delegatedUserRoleID = '3'
         await fetch(this.path)
-          .catch()
           .then((response) => {
             return response.json()
           })
           .then((data) => {
-            this.users = data.users
+            if (data.users === null) {
+              this.users = []
+            } else {
+              this.users = data.users
+            }
           })
       } else if (this.viewtype === 'eventcreator' && this.roleid.toString() === '4') {
-        console.log("this.viewtype === 'eventcreator' && this.roleid === '4'")
+        // console.log("this.viewtype === 'eventcreator' && this.roleid === '4'")
         this.delegatedUserRoleID = '2'
         await fetch(this.path)
-          .catch()
           .then((response) => {
             return response.json()
           })
           .then((data) => {
-            // for (var i = 0; i < data.length; i++) {
-            //   this.users.push(data[i])
-            // }
-            this.users = data.users
+            if (data.users === null) {
+              this.users = []
+            } else {
+              this.users = data.users
+            }
           })
       } else if (this.viewtype === 'eventcreator' && this.roleid.toString() === '3') {
-        console.log("this.viewtype === 'eventcreator' && this.roleid === '3'")
+        // console.log("this.viewtype === 'eventcreator' && this.roleid === '3'")
         await fetch(this.path2)
           .catch()
           .then((response) => {
             return response.json()
           })
           .then((data) => {
-            this.users = data.users
+            if (data.users === null) {
+              this.users = []
+            } else {
+              this.users = data.users
+            }
           })
       }
     },

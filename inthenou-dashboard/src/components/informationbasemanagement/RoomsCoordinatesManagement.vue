@@ -220,6 +220,7 @@ export default {
      */
     selectedBuilding: function () {
       this.floorsSelectList.length = 0
+      this.selectedFloor = ''
       for (var i = 0; i < this.buildingObjectsList.length; i++) {
         if (this.buildingObjectsList[i].bname === this.selectedBuilding) {
           for (var n = 0; n < this.buildingObjectsList[i].numfloors; n++) {

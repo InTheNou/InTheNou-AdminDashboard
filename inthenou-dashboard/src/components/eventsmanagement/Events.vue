@@ -45,8 +45,8 @@
               <v-container>
                 <v-row style="height: 450px" >
                   <v-list v-model="listofevents" style="width: 100%;">
-                    <v-list-item v-if="noDataAvailable">
-                      <h2 class="text-center" style="height:100%; align:center;">ROOM SEARCH NOT FOUND... </h2>
+                    <v-list-item v-if="listofevents === null">
+                      <h2 class="text-center" style="height:100%; align:center;">No events at the moment</h2>
                     </v-list-item>
                     <v-col v-else-if="listofevents != null" cols="12">
                       <v-list-item
@@ -65,7 +65,10 @@
                             Room: {{event.room.building.babbrev}}-{{event.room.rcode}}
                           </v-list-item-subtitle>
                           <v-list-item-subtitle>
-                            Start: {{formatDate(event.estart)}},  End: {{formatDate(event.eend)}}
+                            Start: {{formatDate(event.estart)}}
+                          </v-list-item-subtitle>
+                          <v-list-item-subtitle>
+                            End: {{formatDate(event.eend)}}
                           </v-list-item-subtitle>
                         </v-list-item-content>
                       </v-list-item>
@@ -83,6 +86,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { getEvents, previous, next, formatDate } from './events.js'
 export default {
   data: () => ({
     offsetTop: 0,
@@ -110,7 +114,7 @@ export default {
       } else if (this.$route.params.eventtype === 'alldeletedevents') {
         return process.env.VUE_APP_API_HOST + process.env.VUE_APP_DELETED_EVENTS_1 + this.offset + process.env.VUE_APP_DELETED_EVENTS_2 + this.limit
       } else if (this.$route.params.eventtype === 'myevents') {
-        return process.env.VUE_APP_API_HOST + process.env.VUE_APP_USER_EVENTS_1 + this.uid + process.env.VUE_APP_USER_EVENTS_2 + this.offset + process.env.VUE_APP_USER_EVENTS_3 + this.limit
+        return process.env.VUE_APP_API_HOST + process.env.VUE_APP_USER_EVENTS_1 + this.offset + process.env.VUE_APP_USER_EVENTS_2 + this.limit
       } else if (this.$route.params.eventtype === 'userevents') {
         return process.env.VUE_APP_API_HOST + process.env.VUE_APP_USER_EVENTS_1 + this.$route.params.uid + process.env.VUE_APP_USER_EVENTS_2 + this.offset + process.env.VUE_APP_USER_EVENTS_3 + this.limit
       } else return ''
@@ -120,9 +124,9 @@ export default {
     /**
      *
      */
-    deleteEventApiPath: function () {
-      return process.env.VUE_APP_API_HOST + process.env.VUE_APP_DELETE_EVENT_1 + this.eventIDToRemove + process.env.VUE_APP_DELETE_EVENT_3 + 'deleted'
-    },
+    // deleteEventApiPath: function () {
+    //   return process.env.VUE_APP_API_HOST + process.env.VUE_APP_DELETE_EVENT_1 + this.eventIDToRemove + process.env.VUE_APP_DELETE_EVENT_3 + 'deleted'
+    // },
     size: function () {
       const size = { xs: 'x-small', sm: 'small', lg: 'large', xl: 'x-large' }[this.$vuetify.breakpoint.name]
       return size ? { [size]: true } : {}
@@ -144,68 +148,10 @@ export default {
     this.listofevents = await this.getEvents()
   },
   methods: {
-    getEvents: async function () {
-      var newList
-      await fetch(this.eventsApiPath)
-        .then((response) => {
-          return response.json()
-        })
-        .then((data) => {
-          console.log(data)
-          newList = data.events
-        })
-      return newList
-    },
-    deleteEvent: async function () {
-      await fetch(
-        this.deleteEventApiPath,
-        {
-          method: 'POST',
-          mode: 'cors',
-          credential: 'include',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        .catch()
-        .then(response => {
-          console.log(response)
-          // response.headers.forEach(console.log)
-          return response.json()
-        })
-        .then(data => {
-        })
-      this.listofevents = await this.getEvents()
-      this.dialog = false
-    },
-    previous: async function () {
-      if ((this.offset - this.limit) >= 0) {
-        if (this.disablenext) this.disablenext = !this.disablenext
-        this.offset -= this.limit
-        this.listofevents = await this.getEvents()
-      } else {
-        this.disableprev = !this.disableprev
-      }
-    },
-    next: async function () {
-      this.offset += this.limit
-      var newList = await this.getEvents()
-      if (newList == null || newList.length <= 0) {
-        this.offset -= this.limit
-        this.disablenext = !this.disablenext
-      } else {
-        this.disableprev = (this.disableprev ? !this.disableprev : this.disableprev)
-        this.listofevents = newList
-      }
-    },
-    formatDate: function (date) {
-      var day = date.substring(8, 10)
-      var month = date.substring(5, 7)
-      var year = date.substring(0, 4)
-      var hour = (date.substring(10, 13) < 12 ? (date.substring(10, 13) % 12 || 12) + ':' + date.substring(14, 16) + ' AM' : (date.substring(10, 13) % 12 || 12) + ':' + date.substring(14, 16) + ' PM')
-
-      return (' ' + day + '/' + month + '/' + year + ', ' + hour)
-    },
+    getEvents,
+    previous,
+    next,
+    formatDate,
     followRoute: function (eid) {
       this.$router.push('/eventsmanagement/eventdetails/' + this.$route.params.eventtype + '/event/' + eid)
     }

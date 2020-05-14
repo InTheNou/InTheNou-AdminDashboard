@@ -13,15 +13,24 @@
             <span class="hidden-sm-and-down"><h1>In<span style="color:red">The</span>Nou</h1></span>
           </v-toolbar-title>
             <v-col class="pt-8" cols="6">
+              <v-form
+                    ref="searchForm"
+                    persistent
+                    v-model="validSearch"
+                    class="ma-0 pa-0"
+                  >
             <v-text-field
             @keydown.enter="followRoute"
             v-model="search"
+            v-click-outside="clearValdation"
               flat
               dense
+              :rules="[v => /^[a-zA-Z0-9]*$/.test() || 'only serach by keyword, without spaces']"
               solo-inverted
               prepend-inner-icon="mdi-magnify"
               label="Search"
             />
+              </v-form>
             </v-col>
             <v-col cols="2" class="pa-0 pt-8 pb-3">
                 <v-select
@@ -122,41 +131,7 @@ export default {
     drawer: null,
     selectedSearch: 'buildings',
     search: '',
-    // items: [
-    //   {
-    //     icon: 'mdi-chevron-up',
-    //     'icon-alt': 'mdi-chevron-down',
-    //     text: 'Events',
-    //     model: true,
-    //     children: [
-    //       { text: 'Current Events', icon: 'mdi-calendar', route: '/events/allcurrentevents' },
-    //       { text: 'Events Archive', icon: 'mdi-history', route: '/events/alleventsarchive' },
-    //       { text: 'Deleted Events', icon: ' mdi-calendar-remove ', route: '/events/alldeletedevents' },
-    //       { text: 'My Events ', icon: 'mdi-calendar', route: '/events/myevents' }
-    //     ]
-    //   },
-    //   {
-    //     icon: 'mdi-chevron-up',
-    //     'icon-alt': 'mdi-chevron-down',
-    //     text: 'Information Base',
-    //     model: true,
-    //     children: [
-    //       { text: 'Information Navigation', icon: 'mdi-database', route: '/informationbase' },
-    //       { text: 'Service Management', icon: 'mdi-desktop-mac-dashboard', route: '/servicemanagement' },
-    //       { text: 'Tags Management', icon: 'mdi-tag-multiple', route: '/tagsmanagement' },
-    //       { text: 'Coordinates Management', icon: 'mdi-map-marker-radius', route: '/roomscoordinatesmanagement' }
-    //     ]
-    //   },
-    //   {
-    //     icon: 'mdi-chevron-up',
-    //     'icon-alt': 'mdi-chevron-down',
-    //     text: 'Privilege',
-    //     model: true,
-    //     children: [
-    //       { text: 'Privilege Management', icon: 'mdi-account-key-outline', route: '/privilegemanagement' }
-    //     ]
-    //   }
-    // ],
+    validSearch: true,
     color: 'primary',
     colors: [
       'primary',
@@ -171,8 +146,10 @@ export default {
       'roleid'
     ]),
     items: function () {
-      if (this.roleid === 4) {
-        return [
+      // console.log('checking items')
+      // console.log('roleid: ' + this.roleid)
+      if (this.roleid === 4 || this.roleid === '4') {
+        return ([
           {
             icon: 'mdi-chevron-up',
             'icon-alt': 'mdi-chevron-down',
@@ -200,15 +177,17 @@ export default {
           {
             icon: 'mdi-chevron-up',
             'icon-alt': 'mdi-chevron-down',
-            text: 'Privilege',
+            text: 'Privilege Management',
             model: true,
             children: [
-              { text: 'Privilege Management', icon: 'mdi-account-key-outline', route: '/privilegemanagement' }
+              // { text: 'Privilege Management', icon: 'mdi-account-key-outline', route: '/privilegemanagement/eventcreators' },
+              { text: 'Moderators', icon: 'mdi-account-key-outline', route: '/privilegemanagement/moderators' },
+              { text: 'Event creators', icon: 'mdi-account-key-outline', route: '/privilegemanagement/eventcreators' }
             ]
           }
-        ]
+        ])
       } else {
-        return [
+        return ([
           {
             icon: 'mdi-chevron-up',
             'icon-alt': 'mdi-chevron-down',
@@ -235,14 +214,20 @@ export default {
           {
             icon: 'mdi-chevron-up',
             'icon-alt': 'mdi-chevron-down',
-            text: 'Privilege',
+            text: 'Privilege Management',
             model: true,
             children: [
-              { text: 'Privilege Management', icon: 'mdi-account-key-outline', route: '/privilegemanagement' }
+              // { text: 'Privilege Management', icon: 'mdi-account-key-outline', route: '/privilegemanagement' },
+              { text: 'Event creators', icon: 'mdi-account-key-outline', route: '/privilegemanagement/eventcreators' }
             ]
           }
-        ]
+        ])
       }
+    }
+  },
+  mounted () {
+    if (this.$route.name === 'search') {
+      this.search = this.$route.params.keyword
     }
   },
   components: {
@@ -253,17 +238,57 @@ export default {
       if ((this.selectedSearch !== this.$route.params.searchtype && this.search !== this.$route.params.keyword) && (this.$route.params.keyword !== 'null' && this.search.trim() !== '')) {
         this.$router.push({ name: 'search', params: { searchtype: this.selectedSearch, keyword: (this.search.trim() === '' ? 'null' : this.search) } })
       }
+    },
+    clearValdation: function () {
+      this.$refs.searchForm.resetValidation()
     }
   },
   watch: {
     search: function () {
       if ((this.$route.params.keyword !== 'null' || this.search.trim() !== '') && (this.$route.name === 'search')) {
+        this.selectedSearch = this.$route.params.searchtype
         this.$router.push({ name: 'search', params: { searchtype: this.selectedSearch, keyword: (this.search.trim() === '' ? 'null' : this.search) } })
       }
     },
     selectedSearch: function () {
       if ((this.$route.name === 'search')) {
+        // this.selectedSearch = this.$route.params.searchtype
         this.$router.push({ name: 'search', params: { searchtype: this.selectedSearch, keyword: (this.search.trim() === '' ? 'null' : this.search) } })
+      }
+    },
+    $route: function () {
+      if ((this.$route.name === 'search')) {
+        // this.selectedSearch = this.$route.params.searchtype
+        this.selectedSearch = this.$route.params.searchtype
+      }
+    }
+  },
+  directives: {
+    'click-outside': {
+      bind: function (el, binding, vNode) {
+        // Provided expression must evaluate to a function.
+        if (typeof binding.value !== 'function') {
+          const compName = vNode.context.name
+          let warn = `[Vue-click-outside:] provided expression '${binding.expression}' is not a function, but has to be`
+          if (compName) { warn += `Found in component '${compName}'` }
+          console.warn(warn)
+        }
+        // Define Handler and cache it on the element
+        const bubble = binding.modifiers.bubble
+        const handler = (e) => {
+          if (bubble || (!el.contains(e.target) && el !== e.target)) {
+            binding.value(e)
+          }
+        }
+        el.__vueClickOutside__ = handler
+
+        // add Event Listeners
+        document.addEventListener('click', handler)
+      },
+      unbind: function (el, binding) {
+        // Remove Event Listeners
+        document.removeEventListener('click', el.__vueClickOutside__)
+        el.__vueClickOutside__ = null
       }
     }
   }

@@ -1,7 +1,22 @@
 <template>
+<v-container class="fill-height">
+<nav>
+  <v-app-bar text app color = "blue darken-4">
+    <v-toolbar-title class="text-uppercase grey--text">
+      <h1>In<span style="color:red">The</span>Nou</h1>
+    </v-toolbar-title>
+  </v-app-bar >
+</nav>
+  <v-row align="center" justify="center">
+    <v-col cols="12">
+    <h4> You need to be registered and have administartor or moderator privileges to use the dashboard</h4>
+    <h4> Please register through InTheNou APP and ask for access</h4>
     <v-btn dense v-bind="size" @click="logout"  color="grey">
             <GoogleLogin :params="params" :logoutButton=true :onSuccess="onSuccess">Logout</GoogleLogin>
     </v-btn>
+    </v-col>
+  </v-row>
+</v-container>
 </template>
 
 <script>
@@ -22,24 +37,6 @@ export default {
       await Vue.GoogleAuth.then(auth2 => {
         auth2.signOut()
       })
-      await fetch(
-        process.env.VUE_APP_API_HOST + process.env.VUE_APP_LOGOUT,
-        {
-          method: 'POST',
-          mode: 'cors',
-          credential: 'include',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(response => {
-          return response.json()
-        })
-        .then(data => {
-          // console.log('logout' + data)
-          return data
-        })
       this.$store.dispatch('AUTH_LOGOUT')
       this.$router.push('/') // push to the login screen
     }

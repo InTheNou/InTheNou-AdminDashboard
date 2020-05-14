@@ -1,6 +1,4 @@
 <template>
- <!-- <v-layout row wrap align-center justify-center>
-  <v-flex xs6 offset xs-1 sm6 offset-sm1 md6 offset-md1> -->
     <v-container style="max-width: 600px;">
     <v-row>
       <v-col>
@@ -23,39 +21,12 @@
                       Schedule: {{service.sschedule}}
                     </v-card-subtitle>
                     <v-card-text>
-                    <!-- <v-card-subtitle class="pt-0 pb-0 ma-0" >
-                      Description: {{service.sdescription}}
-                    </v-card-subtitle> -->
-                    <!-- <v-card-subtitle class="pt-0 pb-0 ma-0" >
-                      Websites:
-                     </v-card-subtitle>
-                    <v-container id="scroll-target" style="max-height: 110px" class="overflow-y-auto">
-                      <v-row >
-                        <v-col
-                        class="ma-0 pa-0"
-                         v-for="website in service.websites"
-                        :key="website.wid"
-                        :cols="12" >
-                        <v-divider v-if="!website" :key="`divider-${i}`"></v-divider>
-                        <v-list-item v-else :key="`item-${service.wdescription}`" :value="i" active-class="blue--text text--accent-4" >
-                        <v-list-item-action>
-                          <a
-                          :href="website.url"
-                          target="_blank"
-                          class="body-2 black--text" >
-                          -{{website.wdescription}}
-                          </a>
-                        </v-list-item-action>
-                        </v-list-item>
-                        </v-col>
-                      </v-row>
-                    </v-container> -->
                     <v-expansion-panels flat>
                       <v-expansion-panel>
                         <v-expansion-panel-header class="pt-0 pl-0">website</v-expansion-panel-header>
                           <v-expansion-panel-content>
                             <v-card-subtitle style="height: 100px" class="pt-0 pb-0  ma-0 text--primary overflow-y-auto" >
-                             <v-row >
+                             <v-row v-if="service.websites.length ==0">
                               <v-col
                                 class="ma-0 pa-0"
                                  v-for="website in service.websites"
@@ -74,34 +45,18 @@
                                   </v-list-item>
                                </v-col>
                              </v-row>
+                             <v-row v-else>
+                              <p>Service has no phones at the moment</p>
+                            </v-row>
                             </v-card-subtitle>
                           </v-expansion-panel-content>
                         </v-expansion-panel>
                     </v-expansion-panels>
-                    <!-- <v-card-subtitle class="pt-0 pb-0 ma-0" >
-                      Phones:
-                    </v-card-subtitle> -->
-                    <!-- <v-container  style="max-height: 100px" class="overflow-y-auto">
-                      <v-row >
-                        <v-col
-                        class="ma-0 pa-0"
-                        v-for="phone in service.numbers"
-                        :key="phone.phoneid"
-                        :cols="12" >
-                        <v-divider v-if="!phone" :key="`divider-${i}`"></v-divider>
-                        <v-list-item v-else :key="`item-${i}`" :value="i" active-class="blue--text text--accent-4" >
-                        <v-list-item-content>
-                          <p>Phone:{{phone.pnumber}} - Type:{{phone.ptype}}</p>
-                        </v-list-item-content>
-                        </v-list-item>
-                        </v-col>
-                      </v-row>
-                    </v-container> -->
                     <v-expansion-panels flat>
                       <v-expansion-panel>
                         <v-expansion-panel-header class="pt-0 pl-0">Phones</v-expansion-panel-header>
                           <v-expansion-panel-content>
-                           <v-row >
+                           <v-row v-if="service.numbers.length == 0">
                              <v-col
                               class="ma-0 pa-0"
                               v-for="phone in service.numbers"
@@ -114,7 +69,10 @@
                               </v-list-item-content>
                               </v-list-item>
                                </v-col>
-                              </v-row>
+                            </v-row>
+                            <v-row v-else>
+                              <p>Service has no phones at the moment</p>
+                            </v-row>
                         </v-expansion-panel-content>
                       </v-expansion-panel>
                     </v-expansion-panels>
@@ -135,15 +93,13 @@
       </v-col>
     </v-row>
     </v-container>
-  <!-- </v-flex>
- </v-layout> -->
 </template>
 
 <script>
 export default {
   data: () => ({
     noDataAvailable: false,
-    service: [],
+    service: { numbers: '', room: { building: { babbrev: '', bcommonname: '', bid: 1, bname: '', btype: '', distinctfloors: [], numfloors: 0, photourl: '' }, photourl: '', raltitude: 50.04, rcode: '', rcustodian: '', rdept: '', rdescription: '', rfloor: 0, rid: 0, rlatitude: 18.209641, rlongitude: -67.139923, roccupancy: 0 }, sdescription: '', sid: 0, sname: '', sschedule: '', websites: '' },
     filteredServicesList: [],
     formInputPhoneNumber: null,
     search: ''
@@ -170,6 +126,8 @@ export default {
           } else {
             this.noDataAvailable = false
             this.service = data
+            if (this.service.numbers === null || this.service.numbers === undefined) this.service.numbers = []
+            if (this.service.websites === null || this.service.websites === undefined) this.service.websites = []
           }
         })
         .catch((error) => {

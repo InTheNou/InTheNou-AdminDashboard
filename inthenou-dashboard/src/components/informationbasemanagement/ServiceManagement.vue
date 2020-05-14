@@ -54,7 +54,6 @@
                               :rules="[v => !!v]"
                               label="Building*"
                               outlined
-                              clearable
                               required
                               ></v-select>
                             </v-col>
@@ -65,7 +64,6 @@
                               :rules="[v => (!isNaN(parseFloat(v)) && v >= 0)]"
                               label="Floor*"
                               outlined
-                              clearable
                               required
                               ></v-select>
                             </v-col>
@@ -76,7 +74,6 @@
                               :rules="[v => !!v]"
                               label="Room*"
                               outlined
-                              clearable
                               required
                               ></v-select>
                             </v-col>
@@ -86,37 +83,268 @@
                               <v-text-field
                                 v-model="editedServiceObject.sname"
                                 :counter="50"
-                                :rules="[ v => !!v || 'Name is required', v => (v && v.length <= 50) || 'Name must be less than 50 characters' ]"
+                                :rules="[ v => !!v.trim() || 'Service Name is required', v => (v.trim() && v.length <= 50) || 'Name must be less than 50 characters', /^[A-Za-z0-9]+(?: +[A-Za-z0-9]+)*$/.test() || 'No leading or trailing allowed' ]"
                                 label="Service Name*"
                                 outlined
-                                clearable
                                 required
                               ></v-text-field>
                             </v-col>
                             <v-col cols="12">
                             <v-text-field
                               v-model="editedServiceObject.sschedule"
-                              :rules="[ v => ( v.length <= 200) || 'schedule must be less than 200 characters' ]"
+                              :rules="[ v => !!v.trim() || 'Schedule is required', v => ( v.length <= 200) || 'schedule must be less than 200 characters' ]"
                               label="Schedule"
                               persistent-hint="L,M,W,V,S,D: HH:MM PM/AM - HH:MM PM/AM, L-V: HH:MM PM/AM - HH:MM PM/AM"
                               placeholder="L,M,W,V,S,D: HH:MM PM/AM - HH:MM PM/AM, L-V: HH:MM PM/AM - HH:MM PM/AM"
                               :counter="200"
                               outlined
-                              clearable
+                              required
                             ></v-text-field>
                             </v-col>
                           </v-row>
                           <v-row>
                             <v-textarea
                               v-model="editedServiceObject.sdescription"
-                              :rules="[ v => !!v || 'Description is required', v => (v && v.length <= 400) || 'Description must be less than 400 characters' ]"
+                              :rules="[ v => !!v.trim() || 'Description is required', v => (v && v.length <= 400) || 'Description must be less than 400 characters', /^[A-Za-z0-9]+(?: +[A-Za-z0-9]+)*$/.test() || 'No leading or trailing allowed' ]"
                               label="Description*"
                               :counter="400"
                               outlined
-                              clearable
                               required
                             ></v-textarea>
                           </v-row>
+                          <v-form
+                           v-show="editedServiceObjectIndex <= -1"
+                            ref="servicePhoneForm"
+                            persistent
+                            v-model="validServicePhone"
+                            class="ma-6"
+                          >
+                        <v-container>
+                          <v-row>
+                            <v-col cols="5">
+                              <v-text-field
+                                v-model="phoneNumberFormInput"
+                                :rules="[!!phoneTypeSelected || 'A Type is required' , v => /^(\d{3})[-](\d{3})[-](\d{4})([,](\d{4}))|(\d{3})[-](\d{3})[-](\d{4})$/.test(v) || 'Mobile, Fax: ###-###-####   Extentions: ###-###-####, ####']"
+                                label="Phone"
+                                hint=" Mobile, Fax: ###-###-####   Extentions: ###-###-####, ####"
+                                outlined
+                                required
+                              ></v-text-field>
+                            </v-col>
+                            <v-col cols="4">
+                              <v-select
+                              v-model="phoneTypeSelected"
+                              :items="phoneTypeSelectList"
+                              :rules="[v => !!v || 'A Type is required']"
+                              label="Type"
+                              outlined
+                              required
+                              ></v-select>
+                            </v-col>
+                            <v-col cols="3">
+                            <v-btn :disabled="!validServicePhone" @click="validate('phoneServiceCreation')" color="primary mb-0 mt-3 pa-0 "  class="mx-2" >
+                              ADD
+                            </v-btn>
+                            </v-col>
+                            <v-card class="pa-5" style="width: 100%;">
+                              <v-card-title class="headline justify-center blue darken-4 white--text" >
+                                Current phone List
+                              </v-card-title>
+                              <hr />
+                              <v-container id="scroll-target" style="max-height: 200px" class="overflow-y-auto">
+                                <v-row  style="height: 200px"  >
+                                  <v-col cols="12" v-if="(editedServiceObject.numbers.length <= 0)">
+                                    <v-card>
+                                      <v-card-title>
+                                      The service has  no phone numbers at the moment
+                                      </v-card-title>
+                                    </v-card>
+                                  </v-col>
+                                  <v-col v-else cols="12">
+                                    <v-card >
+                                      <v-list shaped>
+                                        <v-list-item-group v-model="removedPhoneNumbers" multiple>
+                                          <template v-for="(phone, i) in editedServiceObject.numbers">
+                                            <v-divider v-if="!phone" :key="`divider-${i}`"></v-divider>
+                                            <v-list-item v-else :key="`item-${i}`" :value="phone" active-class="blue--text text--accent-4" >
+                                              <template v-slot:default="{ active, toggle }">
+                                                  <v-row>
+                                                    <v-col cols="12" class="pt-0">
+                                                    <v-list-item-title class="pa-0">
+                                                      <v-icon>{{(phone.ptype == 'M' ?  'mdi-cellphone' : phone.ptype == 'E' ? 'mdi-deskphone' :  'mdi-phone' )}}</v-icon> ({{phone.pnumber}}, {{(phone.ptype == 'M' ?  'Mobile' : phone.ptype == 'E' ? 'Extension' :  'Fax' )}})
+                                                    </v-list-item-title>
+                                                    </v-col>
+                                                  </v-row>
+                                                      <v-list-item-action>
+                                                        <v-checkbox
+                                                          :input-value="active"
+                                                          :true-value="website"
+                                                          color="blue accent-4"
+                                                          @click="toggle"
+                                                        ></v-checkbox>
+                                                      </v-list-item-action>
+                                              </template>
+                                            </v-list-item>
+                                          </template>
+                                        </v-list-item-group>
+                                      </v-list>
+                                    </v-card>
+                                  </v-col>
+                                </v-row>
+                              </v-container>
+                              <v-card-actions class="justify-center">
+                                <v-row>
+                                  <v-col cols="12">
+                                    <v-dialog v-model="phonestoRemoveDialog" scrollable max-width="300px">
+                                      <template v-slot:activator="{ on }">
+                                        <div class="text-center">
+                                          <v-btn  :disabled="removedPhoneNumbers.length <= 0"  large color="primary"  v-on="on" class="pa-0">
+                                            <h1>Remove</h1>
+                                          </v-btn>
+                                        </div>
+                                      </template>
+                                      <v-card>
+                                        <v-card-title>Deleting  phones</v-card-title>
+                                        <v-divider></v-divider>
+                                        <v-card-text style="height: 300px;">
+                                          <ul>
+                                            <li v-for="phone in removedPhoneNumbers" :key="phone.id">{{ phone.pnumber }}</li>
+                                          </ul>
+                                        </v-card-text>
+                                        <v-divider></v-divider>
+                                        <v-card-actions>
+                                          <v-btn   @click="phonestoRemoveDialog = false">Cancel</v-btn>
+                                          <v-btn   @click="removeNumberFromList">Continune</v-btn>
+                                        </v-card-actions>
+                                      </v-card>
+                                    </v-dialog>
+                                  </v-col>
+                                </v-row>
+                              </v-card-actions>
+                            </v-card>
+                          </v-row>
+                      </v-container>
+                          </v-form>
+                          <v-form
+                          v-show="editedServiceObjectIndex <= -1"
+                            ref="servicewebsiteForm"
+                            persistent
+                            v-model="validServicewebsite"
+                            class="ma-6"
+                          >
+                            <v-container>
+                             <v-row>
+                                <v-col cols="9">
+                                  <v-text-field
+                                    v-model="websiteFormInput"
+                                    :rules="[!!websiteDescriptionFormInput.length || 'A website description is required', websiteFormInput => (/^(https?:\/\/)?(www\.)?([a-zA-Z0-9]+(-?[a-zA-Z0-9])*\.)+[\w]{2,}(\/\S*)?$/.test(websiteFormInput) || (!/^(https?:\/\/)?(www\.)?([a-zA-Z0-9]+(-?[a-zA-Z0-9])*\.)+[\w]{2,}(\/\S*)?$/.test(websiteFormInput) && websiteDescriptionFormInput.length === 0)) || 'invalid website format' ]"
+                                    label="Website*"
+                                    v-click-outside="clearValdation"
+                                    placeholder="http://sub.domain.extension/paths..."
+                                    persistent-hint="http://sub.domain.extension/paths..."
+                                    outlined
+                                  ></v-text-field>
+                                </v-col>
+                                <v-col cols="3">
+                                <v-btn :disabled="!validServicewebsite" @click="validate('websiteServiceCreation')" color="primary mb-0 mt-3 pa-0 "   class="mx-2" >
+                                  ADD
+                                </v-btn>
+                                </v-col>
+                                <v-col cols="9">
+                                  <v-text-field
+                                    v-model="websiteDescriptionFormInput"
+                                    label="Website Description*"
+                                    :counter="30"
+                                    :rules="[websiteDescriptionFormInput => ((!!websiteDescriptionFormInput && !!websiteFormInput) || (websiteFormInput.length === 0 && websiteDescriptionFormInput.length === 0)) || 'A description must be given along a url', /^[A-Za-z0-9]+(?: +[A-Za-z0-9]+)*$/.test() || 'No leading or trailing allowed' ]"
+                                    outlined
+                                  ></v-text-field>
+                                </v-col>
+                                <v-card class="pa-5" style="width: 100%;">
+                                  <v-card-title class="headline justify-center blue darken-4 white--text" >
+                                    Websites List
+                                  </v-card-title>
+                                  <hr />
+                                  <v-container id="scroll-target" style="max-height: 200px" class="overflow-y-auto">
+                                    <v-row  style="height: 200px"  >
+                                      <v-col cols="12" v-if="editedServiceObject.websites.length <= 0">
+                                        <v-card>
+                                          <v-card-title>
+                                          The service has  no websites at the moment
+                                          </v-card-title>
+                                        </v-card>
+                                      </v-col>
+                                      <v-col cols="12" v-else>
+                                        <v-card >
+                                          <v-list shaped>
+                                            <v-list-item-group v-model="removedWebsitesList" multiple>
+                                              <template v-for="(website, i) in editedServiceObject.websites">
+                                                <v-divider v-if="!website" :key="`divider-${i}`"></v-divider>
+                                                <v-list-item v-else :key="`item-${i}`" :value="website" active-class="blue--text text--accent-4" >
+                                                  <template v-slot:default="{ active, toggle }">
+                                                      <v-row>
+                                                        <v-col cols="12" class="pb-0">
+                                                          Url:
+                                                          <a
+                                                          :href="website.url"
+                                                          target="_blank"
+                                                          class="body-2 black--text" >
+                                                          {{website.url}}
+                                                          </a>
+                                                          </v-col>
+                                                        <v-col cols="12" class="pt-0">
+                                                        <v-list-item-title class="pa-0">Description:{{website.wdescription}}</v-list-item-title>
+                                                        </v-col>
+                                                      </v-row>
+                                                          <v-list-item-action>
+                                                            <v-checkbox
+                                                              :input-value="active"
+                                                              :true-value="website"
+                                                              color="blue accent-4"
+                                                              @click="toggle"
+                                                            ></v-checkbox>
+                                                          </v-list-item-action>
+                                                  </template>
+                                                </v-list-item>
+                                              </template>
+                                            </v-list-item-group>
+                                          </v-list>
+                                        </v-card>
+                                      </v-col>
+                                    </v-row>
+                                  </v-container>
+                                  <v-card-actions class="justify-center">
+                                    <v-row>
+                                      <v-col cols="12">
+                                        <v-dialog v-model="websitestoRemoveDialog" scrollable max-width="300px">
+                                          <template v-slot:activator="{ on }">
+                                            <div class="text-center ma-0 pa-0">
+                                              <v-btn  :disabled="removedWebsitesList.length<=0"  large color="primary"  v-on="on" class="pa-0">
+                                                <h1>Remove</h1>
+                                              </v-btn>
+                                            </div>
+                                          </template>
+                                          <v-card>
+                                            <v-card-title>Remove  websites</v-card-title>
+                                            <v-divider></v-divider>
+                                            <v-card-text style="height: 300px;">
+                                              <ul>
+                                                <li v-for="website in removedWebsitesList" :key="website.id">{{ website.url }}</li>
+                                              </ul>
+                                            </v-card-text>
+                                            <v-divider></v-divider>
+                                            <v-card-actions>
+                                              <v-btn color="blue darken-1"  @click="websitestoRemoveDialog = false">Cancel</v-btn>
+                                              <v-btn color="blue darken-1"  @click="removeWebsiteFromList">Continune</v-btn>
+                                            </v-card-actions>
+                                          </v-card>
+                                        </v-dialog>
+                                      </v-col>
+                                    </v-row>
+                                  </v-card-actions>
+                                </v-card>
+                              </v-row>
+                            </v-container>
+                          </v-form>
                         </v-container>
                       </v-card-text>
                       <v-card-actions>
@@ -148,17 +376,15 @@
                             <v-col cols="9">
                               <v-text-field
                                 v-model="websiteFormInput"
-                                :rules="websiteRules"
+                                :rules="[!!websiteDescriptionFormInput.length || 'A website description is required', websiteFormInput => (/^(https?:\/\/)?(www\.)?([a-zA-Z0-9]+(-?[a-zA-Z0-9])*\.)+[\w]{2,}(\/\S*)?$/.test(websiteFormInput) || (!/^(https?:\/\/)?(www\.)?([a-zA-Z0-9]+(-?[a-zA-Z0-9])*\.)+[\w]{2,}(\/\S*)?$/.test(websiteFormInput) && websiteDescriptionFormInput.length === 0)) || 'invalid website format' ]"
                                 label="Website*"
                                 required
                                 placeholder="http://sub.domain.extension/paths..."
                                 outlined
-                                clearable
                               ></v-text-field>
                             </v-col>
                             <v-col cols="3">
                             <v-btn :disabled="!validWebsite" @click="validate('website')" color="primary mb-0 mt-3 pa-0 "   class="mx-2" >
-                              <!-- <v-icon dark>mdi-plus</v-icon> -->
                               ADD
                             </v-btn>
                             </v-col>
@@ -167,10 +393,9 @@
                                 v-model="websiteDescriptionFormInput"
                                 label="Website Description*"
                                 :counter="30"
-                                :rules="websiteDescriptionRules"
+                                :rules="[!!websiteDescriptionFormInput.length || 'A website description is required']"
                                 outlined
                                 required
-                                clearable
                               ></v-text-field>
                             </v-col>
                             <v-card class="pa-5" style="width: 100%;">
@@ -248,7 +473,7 @@
                                         <v-divider></v-divider>
                                         <v-card-actions>
                                           <v-btn color="blue darken-1"  @click="websitestoRemoveDialog = false">Cancel</v-btn>
-                                          <v-btn color="blue darken-1"  @click="removeWebsiteFromList">Continune</v-btn>
+                                          <v-btn color="blue darken-1"  @click="removeWebsiteFromService">Continune</v-btn>
                                         </v-card-actions>
                                       </v-card>
                                     </v-dialog>
@@ -259,10 +484,6 @@
                           </v-row>
                       </v-container>
                       </v-card-text>
-                      <!-- <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" text @click="close('website')">Close</v-btn>
-                      </v-card-actions> -->
                     </v-card>
                   </v-dialog>
                   </v-form>
@@ -288,12 +509,11 @@
                             <v-col cols="5">
                               <v-text-field
                                 v-model="phoneNumberFormInput"
-                                :rules="[v => !!v || 'a phone number is required', v => /^(\d{3})[-](\d{3})[-](\d{4})([,](\d{4}))|(\d{3})[-](\d{3})[-](\d{4})$/.test(v) || 'Mobile, Frame: ###-###-####   Extentions: ###-###-####, ####']"
+                                :rules="[v => !!v || 'a phone number is required', v => /^(\d{3})[-](\d{3})[-](\d{4})([,](\d{4}))|(\d{3})[-](\d{3})[-](\d{4})$/.test(v) || 'Mobile, Fax: ###-###-####   Extentions: ###-###-####, ####']"
                                 label="Phone"
-                                hint=" Mobile, Frame: ###-###-####   Extentions: ###-###-####, ####"
+                                hint=" Mobile, Fax: ###-###-####   Extentions: ###-###-####, ####"
                                 outlined
                                 required
-                                clearable
                               ></v-text-field>
                             </v-col>
                             <v-col cols="4">
@@ -304,12 +524,10 @@
                               label="Type"
                               outlined
                               required
-                              clearable
                               ></v-select>
                             </v-col>
                             <v-col cols="3">
                             <v-btn :disabled="!validPhone" @click="validate('phone')" color="primary mb-0 mt-3 pa-0 "  class="mx-2" >
-                              <!-- <v-icon dark>mdi-plus</v-icon> -->
                               ADD
                             </v-btn>
                             </v-col>
@@ -338,7 +556,7 @@
                                                   <v-row>
                                                     <v-col cols="12" class="pt-0">
                                                     <v-list-item-title class="pa-0">
-                                                      <v-icon>{{(phone.ptype == 'M' ?  'mdi-cellphone' : phone.ptype == 'E' ? 'mdi-deskphone' :  'mdi-phone' )}}</v-icon> ({{phone.pnumber}}, {{(phone.ptype == 'M' ?  'Mobile' : phone.ptype == 'E' ? 'Extension' :  'Frame' )}})
+                                                      <v-icon>{{(phone.ptype == 'M' ?  'mdi-cellphone' : phone.ptype == 'E' ? 'mdi-deskphone' :  'mdi-phone' )}}</v-icon> ({{phone.pnumber}}, {{(phone.ptype == 'M' ?  'Mobile' : phone.ptype == 'E' ? 'Extension' :  'Fax' )}})
                                                     </v-list-item-title>
                                                     </v-col>
                                                   </v-row>
@@ -381,7 +599,7 @@
                                         <v-divider></v-divider>
                                         <v-card-actions>
                                           <v-btn   @click="phonestoRemoveDialog = false">Cancel</v-btn>
-                                          <v-btn   @click="removeNumberFromList">Continune</v-btn>
+                                          <v-btn   @click="removeNumberFromService">Continune</v-btn>
                                         </v-card-actions>
                                       </v-card>
                                     </v-dialog>
@@ -394,13 +612,10 @@
                       </v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <!-- <v-btn color="blue darken-1" text @click="close('phone')">Close</v-btn> -->
-                        <!-- <v-btn color="blue darken-1" text :disabled="!valid"  @click="save">Save</v-btn> -->
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
                   </v-form>
-                  <!-- </v-form> -->
                 </v-toolbar>
               </template>
               <template v-slot:item.actions="{ item }">
@@ -446,6 +661,9 @@ export default {
     validService: true,
     validWebsite: true,
     validPhone: true,
+    validServicePhone: true,
+    validServicewebsite: true,
+    // validPhoneServiceCreation: true,
     dialog: false,
 
     scheduleDaySelectList:
@@ -456,17 +674,9 @@ export default {
     websiteDescriptionFormInput: '',
     websitesList: { websites: [] },
     removedWebsitesList: [],
-    websiteRules:
-    [
-      websiteDescriptionFormInput => /^(https?:\/\/)?(www\.)?([a-zA-Z0-9]+(-?[a-zA-Z0-9])*\.)+[\w]{2,}(\/\S*)?$/.test(websiteDescriptionFormInput) || 'invalid website format'
-    ],
-    websiteDescriptionRules:
-    [
-      websiteDescriptionRules => !!websiteDescriptionRules || 'A description must be given along a url'
-    ],
-    phoneNumberFormInput: null,
-    phoneTypeSelectList: ['Extension', 'Mobile', 'Frame'],
-    phoneTypeSelected: null,
+    phoneNumberFormInput: '',
+    phoneTypeSelectList: ['Extension', 'Mobile', 'Fax'],
+    phoneTypeSelected: '',
     phoneNumbers: { numbers: [] },
     removedPhoneNumbers: [],
     buildingSelectList: [],
@@ -556,8 +766,15 @@ export default {
     /**
      *
      */
-    'editedServiceObject.room.building.bname': function () {
+    'editedServiceObject.room.building.bname': async function () {
       this.floorSelectList.length = 0
+      if (this.editedServiceObject.room.rfloor !== null) {
+        this.roomsSelectList.length = 0
+        await this.fetchRooms()
+        for (var m = 0; m < this.roomObjectsList.length; m++) {
+          this.roomsSelectList.push(this.roomObjectsList[m].rcode)
+        }
+      }
       for (var i = 0; i < this.buildingObjectsList.length; i++) {
         if (this.buildingObjectsList[i].bname === this.editedServiceObject.room.building.bname) {
           this.editedServiceObject.room.building.bid = this.buildingObjectsList[i].bid
@@ -635,15 +852,17 @@ export default {
         .catch((error) => {
           console.error('There has been a problem with your fetch operation:', error)
         })
+      for (var i = 0; i < this.serviceObjectsList.length; i++) {
+        if (this.serviceObjectsList[i].websites === null) this.serviceObjectsList[i].websites = []
+        if (this.serviceObjectsList[i].numbers === null) this.serviceObjectsList[i].numbers = []
+      }
     },
     /**
      *
      */
-    editServiceObject (item, view) {
+    editServiceObject: function (item, view) {
       this.editedServiceObjectIndex = this.serviceObjectsList.indexOf(item)
       this.editedServiceObject = Object.assign({}, item)
-      if (this.editedServiceObject.websites === null) this.editedServiceObject.websites = []
-      if (this.editedServiceObject.numbers === null) this.editedServiceObject.numbers = []
       switch (view) {
         case 'phone':
           this.phonesDialog = true
@@ -659,6 +878,11 @@ export default {
      *
      */
     close (type) {
+      this.websiteFormInput = ''
+      this.websiteDescriptionFormInput = ''
+      this.buildingObjectsList.length = 0
+      this.floorSelectList = 0
+      this.roomsSelectList = 0
       if (type === 'service') {
         this.dialog = false
       } else if (type === 'phone') {
@@ -702,13 +926,20 @@ export default {
       }
     },
     save: async function () {
+      this.websiteFormInput = ''
+      this.websiteDescriptionFormInput = ''
       if (this.editedServiceObjectIndex > -1) {
         // the existing  was edited
         await this.editService()
       } else {
-        // a new tag was created
+        // a new service was created
         await this.createService()
       }
+      this.editedServiceObject = this.defaultServiceObject
+      this.websiteFormInput = ''
+      this.websiteDescriptionFormInput = ''
+      this.phoneNumberFormInput = ''
+      this.phoneTypeSelected = ''
       this.close('service')
     },
     // form methods
@@ -721,14 +952,26 @@ export default {
       } else if (type === 'phone') {
         this.$refs.websiteForm.validate()
         if (this.validPhone) {
-          this.addNumberToList()
+          this.addNumberToService()
         }
       } else if (type === 'website') {
         this.$refs.phoneForm.validate()
         if (this.validWebsite) {
+          this.addWebsiteToService()
+        }
+      } else if (type === 'websiteServiceCreation') {
+        this.$refs.servicewebsiteForm.validate()
+        if (this.validPhone) {
           this.addWebsiteToList()
         }
+      } else if (type === 'phoneServiceCreation') {
+        this.$refs.servicePhoneForm.validate()
+        if (this.validPhone) {
+          this.addNumberToList()
+        }
       }
+      this.websiteFormInput = ''
+      this.websiteDescriptionFormInput = ''
     },
     /**
      *
@@ -840,7 +1083,7 @@ export default {
     /**
      *
      */
-    addNumberToList: async function () {
+    addNumberToService: async function () {
       var contains = false
       for (var i = 0; i < this.editedServiceObject.numbers.length; i++) {
         if ((this.editedServiceObject.numbers[i].pnumber === this.phoneNumberFormInput) && (this.editedServiceObject.numbers[i].ptype === (this.phoneTypeSelected === 'Mobile' ? 'M' : this.phoneTypeSelected === 'Extension' ? 'E' : 'F'))) {
@@ -851,11 +1094,10 @@ export default {
         }
       }
       // regex for ###-###-#### or ###-###-####,####
-      if (((this.phoneNumberFormInput.match(/^(\d{3})[-](\d{3})[-](\d{4})$/) && (this.phoneTypeSelected === 'Mobile' || this.phoneTypeSelected === 'Frame')) || (this.phoneNumberFormInput.match(/^(\d{3})[-](\d{3})[-](\d{4})([,](\d{4}))$/) && this.phoneTypeSelected === 'Extension')) && !contains) {
+      if (((this.phoneNumberFormInput.match(/^(\d{3})[-](\d{3})[-](\d{4})$/) && (this.phoneTypeSelected === 'Mobile' || this.phoneTypeSelected === 'Fax')) || (this.phoneNumberFormInput.match(/^(\d{3})[-](\d{3})[-](\d{4})([,](\d{4}))$/) && this.phoneTypeSelected === 'Extension')) && !contains) {
         var newphone = { numbers: [{ pnumber: '', ptype: '' }] }
         newphone.numbers[0].pnumber = this.phoneNumberFormInput.toString()
         newphone.numbers[0].ptype = (this.phoneTypeSelected === 'Mobile' ? 'M' : this.phoneTypeSelected === 'Extension' ? 'E' : 'F')
-        if (this.editedServiceObject.numbers === null) this.editedServiceObject.numbers = []
         await fetch(
           process.env.VUE_APP_API_HOST + '/API/Dashboard/Services/sid=' + this.editedServiceObject.sid + '/phone/add',
           {
@@ -881,14 +1123,38 @@ export default {
             console.error(error)
           })
       } else if (!contains) {
-        alert('Invalid Number:. \n A valid type must be selected. \n **Extensions: ###-###-####,#### \n **Mobile, Frame: ###-###-#### ')
+        alert('Invalid Number:. \n A valid type must be selected. \n **Extensions: ###-###-####,#### \n **Mobile, Fax: ###-###-#### ')
+      }
+    },
+    addNumberToList: function () {
+      var contains = false
+      for (var i = 0; i < this.editedServiceObject.numbers.length; i++) {
+        if ((this.editedServiceObject.numbers[i].pnumber === this.phoneNumberFormInput) && (this.editedServiceObject.numbers[i].ptype === (this.phoneTypeSelected === 'Mobile' ? 'M' : this.phoneTypeSelected === 'Extension' ? 'E' : 'F'))) {
+          contains = true
+          alert('Entered number already in the phone list')
+        } else {
+          contains = false
+        }
+      }
+      // regex for ###-###-#### or ###-###-####,####
+      if (((this.phoneNumberFormInput.match(/^(\d{3})[-](\d{3})[-](\d{4})$/) && (this.phoneTypeSelected === 'Mobile' || this.phoneTypeSelected === 'Fax')) || (this.phoneNumberFormInput.match(/^(\d{3})[-](\d{3})[-](\d{4})([,](\d{4}))$/) && this.phoneTypeSelected === 'Extension')) && !contains) {
+        var newphone = { pnumber: this.phoneNumberFormInput.toString(), ptype: (this.phoneTypeSelected === 'Mobile' ? 'M' : this.phoneTypeSelected === 'Extension' ? 'E' : 'F') }
+        this.editedServiceObject.numbers.push(newphone)
+      } else if (!contains) {
+        alert('Invalid Number:. \n A valid type must be selected. \n **Extensions: ###-###-####,#### \n **Mobile, Fax: ###-###-#### ')
+      }
+    },
+    removeNumberFromList: function () {
+      this.phonestoRemoveDialog = false
+      for (var i = 0; i < this.removedPhoneNumbers.length; i++) {
+        var index = this.editedServiceObject.numbers.indexOf(this.removedPhoneNumbers[i])
+        this.editedServiceObject.numbers.splice(index, 1)
       }
     },
     /**
      *
      */
-    removeNumberFromList: async function () {
-      if (this.editedServiceObject.numbers === null) this.editedServiceObject.numbers = []
+    removeNumberFromService: async function () {
       this.phonestoRemoveDialog = false
       var removedPhones = { numbers: [] }
       for (var i = 0; i < this.removedPhoneNumbers.length; i++) {
@@ -917,7 +1183,7 @@ export default {
     /**
      *
      */
-    addWebsiteToList: async function () {
+    addWebsiteToService: async function () {
       var contains = false
       for (var i = 0; i < this.editedServiceObject.websites.length; i++) {
         if (this.editedServiceObject.websites[i].url === this.websiteFormInput) {
@@ -931,7 +1197,6 @@ export default {
         var newWebsite = { websites: [{ url: '', wdescription: '' }] }
         newWebsite.websites[0].url = this.websiteFormInput.toString()
         newWebsite.websites[0].wdescription = this.websiteDescriptionFormInput.toString()
-        if (this.editedServiceObject.websites === null) this.editedServiceObject.websites = []
         await fetch(
           process.env.VUE_APP_API_HOST + '/API/Dashboard/Services/sid=' + this.editedServiceObject.sid + '/website/add',
           {
@@ -962,20 +1227,36 @@ export default {
         alert(' A description must be given along url website ')
       }
     },
+    addWebsiteToList: function () {
+      var contains = false
+      for (var i = 0; i < this.editedServiceObject.websites.length; i++) {
+        if (this.editedServiceObject.websites[i].url === this.websiteFormInput) {
+          contains = true
+          alert('Entered url is already in the website list')
+        } else {
+          contains = false
+        }
+      }
+      if (this.websiteFormInput != null && (this.websiteFormInput.match(/^(https?:\/\/)?(www\.)?([a-zA-Z0-9]+(-?[a-zA-Z0-9])*\.)+[\w]{2,}(\/\S*)?$/)) && !contains && this.websiteDescriptionFormInput.length > 0) {
+        var newWebsite = { url: this.websiteFormInput.toString(), wdescription: this.websiteDescriptionFormInput.toString() }
+        this.editedServiceObject.websites.push(newWebsite)
+      } else if (!contains && this.websiteDescriptionFormInput.length > 0) {
+        alert(' The entered website must be a valid format ')
+      } else if (this.websiteDescriptionFormInput.length <= 0) {
+        alert(' A description must be given along url website ')
+      }
+    },
     /**
      *
      */
-    removeWebsiteFromList: async function () {
-      if (this.editedServiceObject.websites === null) this.editedServiceObject.websites = []
+    removeWebsiteFromService: async function () {
       this.websitestoRemoveDialog = false
       var removedWebsites = { websites: [] }
       for (var i = 0; i < this.removedWebsitesList.length; i++) {
         removedWebsites.websites.push({ wid: this.removedWebsitesList[i].wid })
-
         var index = this.editedServiceObject.websites.indexOf(this.removedWebsitesList[i])
         this.editedServiceObject.websites.splice(index, 1)
       }
-
       await fetch(
         process.env.VUE_APP_API_HOST + '/API/Dashboard/Services/sid=' + this.editedServiceObject.sid + '/website/remove',
         {
@@ -992,6 +1273,51 @@ export default {
         .catch(error => {
           console.error(error)
         })
+    },
+    removeWebsiteFromList: function () {
+      this.websitestoRemoveDialog = false
+      for (var i = 0; i < this.removedWebsitesList.length; i++) {
+        var index = this.editedServiceObject.websites.indexOf(this.removedWebsitesList[i])
+        this.editedServiceObject.websites.splice(index, 1)
+      }
+    },
+    clearValdation: function () {
+      if ((this.websiteFormInput === '' && this.websiteDescriptionFormInput === '' && this.dialog === true) || (this.websiteFormInput === null && this.websiteDescriptionFormInput === null && this.dialog === true)) {
+        if ((this.websiteFormInput === null && this.websiteDescriptionFormInput === null)) {
+          this.websiteFormInput = ''
+          this.websiteDescriptionFormInput = ''
+        }
+        this.$refs.servicewebsiteForm.resetValidation()
+      }
+    }
+  },
+  directives: {
+    'click-outside': {
+      bind: function (el, binding, vNode) {
+        // Provided expression must evaluate to a function.
+        if (typeof binding.value !== 'function') {
+          const compName = vNode.context.name
+          let warn = `[Vue-click-outside:] provided expression '${binding.expression}' is not a function, but has to be`
+          if (compName) { warn += `Found in component '${compName}'` }
+          console.warn(warn)
+        }
+        // Define Handler and cache it on the element
+        const bubble = binding.modifiers.bubble
+        const handler = (e) => {
+          if (bubble || (!el.contains(e.target) && el !== e.target)) {
+            binding.value(e)
+          }
+        }
+        el.__vueClickOutside__ = handler
+
+        // add Event Listeners
+        document.addEventListener('click', handler)
+      },
+      unbind: function (el, binding) {
+        // Remove Event Listeners
+        document.removeEventListener('click', el.__vueClickOutside__)
+        el.__vueClickOutside__ = null
+      }
     }
   }
 }

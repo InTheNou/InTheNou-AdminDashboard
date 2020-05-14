@@ -1,9 +1,15 @@
 <template>
-<v-container style="max-width: 600px;">
+<v-container style="max-width: 1200px;">
   <v-row>
+  <v-col>
     <nav-bar></nav-bar>
-    <administrator-privilege-management-view    v-if="roleid=='4'"></administrator-privilege-management-view>
-    <moderator-privilege-management-view       v-else-if="roleid=='3'"></moderator-privilege-management-view>
+    <v-col v-if="roleid=='4'" sm="12" md="6">
+    <administrator-privilege-management-view ></administrator-privilege-management-view>
+    </v-col>
+    <v-col v-else-if="roleid=='3'" sm="12" md="6">
+    <moderator-privilege-management-view ></moderator-privilege-management-view>
+    </v-col>
+  </v-col>
   </v-row>
 </v-container>
 </template>

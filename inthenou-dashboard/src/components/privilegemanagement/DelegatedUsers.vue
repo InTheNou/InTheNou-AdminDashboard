@@ -7,7 +7,7 @@
       <v-card v-if="noDataAvailable">
             <v-row  align="center" justify="center">
               <v-container >
-                <h2 class="text-center" style="height:100%; align:center;"> USER HAS NO DELEGATES USERS AT THE MOMENT </h2>
+                <h2 class="text-center" style="height:100%; align:center;"> USER HAS NO DELEGATED USERS AT THE MOMENT </h2>
               </v-container>
             </v-row>
       </v-card>
@@ -39,7 +39,7 @@
                                 Event Creator: {{user.display_name}}
                                 <v-list-item-subtitle>  Email: {{user.email}}</v-list-item-subtitle>
                                   <v-list-item-action>
-                                    <router-link :to="'/userevents/'+ user.UID"> <v-btn color="primary" dark ><v-icon dark>mdi-arrow-right-bold-circle-outline</v-icon> </v-btn></router-link>
+                                    <router-link :to="'/userevents/'+ user.uid"> <v-btn color="primary" dark ><v-icon dark>mdi-arrow-right-bold-circle-outline</v-icon> </v-btn></router-link>
                                   </v-list-item-action>
                                 </v-list-item-title>
                             </v-list-item-content>
@@ -84,11 +84,11 @@ export default {
           return response.json()
         })
         .then((data) => {
-          if (data.Users === null || data.Users === undefined) {
+          if (data.users === null || data.users === undefined) {
             this.noDataAvailable = true
           } else {
             this.noDataAvailable = false
-            this.users = data.Users
+            this.users = data.users
           }
         })
     }

@@ -1,16 +1,14 @@
 <template>
-    <!-- <v-layout row wrap align-center justify-center>
-  <v-flex xs6 offset xs-1 sm6 offset-sm1 md6 offset-md1> -->
    <v-container style="max-width: 600px;">
     <v-row>
       <v-col cols="12" class="text-center">
-      <P>{{searchType.toUpperCase()}} SEARCH</P>
+      <h5>{{searchType.toUpperCase()}} SEARCH</h5>
       <v-card>
       <v-container id="scroll-target" style="max-height: 700px" class="overflow-y-auto">
           <v-row  style="height: 500px">
             <v-list v-if="searchType === 'rooms'" v-model="roomsList">
               <v-list-item v-if="noDataAvailable">
-                <h2 class="text-center" style="height:100%; align:center;">ROOM SEARCH NOT FOUND... </h2>
+                <h6 class="text-center" style="height:100%; align:center;">ROOM SEARCH NOT FOUND... </h6>
               </v-list-item>
               <div v-else-if="roomsList != null">
               <v-list-item
@@ -111,8 +109,6 @@
     </v-col>
     </v-row>
    </v-container>
-  <!-- </v-flex>
-</v-layout> -->
 </template>
 
 <script>
@@ -129,7 +125,6 @@ export default {
     }
   },
   mounted () {
-    // console.log('search value' + this.$route.params.keyword)
     if (this.$route.params.searchtype === 'buildings') {
       this.buildingSearch()
     } else if (this.$route.params.searchtype === 'rooms') {
@@ -140,7 +135,6 @@ export default {
   },
   watch: {
     $route: async function () {
-    //   console.log('search value route' + this.$route.params.keyword)
       if (this.$route.params.searchtype === 'buildings') {
         this.buildingSearch()
       } else if (this.$route.params.searchtype === 'rooms') {
@@ -152,7 +146,6 @@ export default {
   },
   methods: {
     followRoomRoute: function (buildingid, floor, roomid) {
-      // console.log('follow route')
       this.$router.push('/informationbase/buildings/' + buildingid + '/floors/' + floor + '/rooms/' + roomid + '/services')
     },
     followBuildingRoute: function (bid) {
