@@ -22,10 +22,10 @@
             class="pb-2"
           />
   <v-card>
-    <v-container id="scroll-target" style="max-height: 400px" class="overflow-y-auto text-start">
+    <v-container id="scroll-target" style="max-height: 700px" class="overflow-y-auto text-start">
       <v-row
         v-model="filteredServicesList"
-        style="height: 400px" >
+        style="height: 500px" >
         <v-list v-model="filteredBuildingsList">
           <v-list-item
           v-for="building in filteredBuildingsList"
@@ -68,8 +68,6 @@ export default {
     filteredBuildingsList: [],
     buildingOffset: 0,
     builingLimit: 1000,
-    listOfBuildings: null,
-    path: '',
     search: ''
   }),
   watch: {
@@ -98,43 +96,20 @@ export default {
     }
   },
   mounted () {
-    this.path = '/informationbase/buildings'
-    this.getBuildings()
+    this.fetchBuildings()
   },
   methods: {
-    getBuildings: async function () {
+    fetchBuildings: async function () {
       await fetch(process.env.VUE_APP_API_HOST + process.env.VUE_APP_BUILDINGS_1 + this.buildingOffset + process.env.VUE_APP_BUILDINGS_2 + this.builingLimit)
         .then((response) => {
-          // console.log(response)
           return response.json()
         })
         .then((data) => {
-          this.buildings = data
-          // console.log(data)
+          this.buildings = data.buildings
         })
     },
     followRoute: function (bid) {
       this.$router.push('/informationbase/buildings/' + bid)
-    },
-    previous: async function () {
-      if ((this.offset - this.limit) >= 0) {
-        if (this.disablenext) this.disablenext = !this.disablenext
-        this.offset -= this.limit
-        this.listofevents = await this.getEvents()
-      } else {
-        this.disableprev = !this.disableprev
-      }
-    },
-    next: async function () {
-      this.offset += this.limit
-      var newList = await this.getEvents()
-      if (newList == null || newList.length <= 0) {
-        this.offset -= this.limit
-        this.disablenext = !this.disablenext
-      } else {
-        this.disableprev = (this.disableprev ? !this.disableprev : this.disableprev)
-        this.listofevents = newList
-      }
     }
   }
 }

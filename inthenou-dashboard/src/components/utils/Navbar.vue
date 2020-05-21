@@ -3,14 +3,14 @@
         <v-app-bar
           :clipped-left="$vuetify.breakpoint.lgAndUp"
           app
-          color="blue darken-3"
+          color="#24324f"
           dark
         >
           <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
           <v-toolbar-title
             class="ml-0 pl-4"
           >
-            <span class="hidden-sm-and-down"><h1>In<span style="color:red">The</span>Nou</h1></span>
+            <span class="hidden-sm-and-down" style="color:#afbec8;"><h1>In<span style="color:#ff3e4c;">The</span>Nou</h1></span>
           </v-toolbar-title>
             <v-col class="pt-8" cols="6">
               <v-form
@@ -70,7 +70,7 @@
                   <a
                     href="#!"
                     class="body-2 black--text"
-                  >EDIT</a>
+                  ></a>
                 </v-col>
               </v-row>
               <v-list-group
@@ -78,6 +78,7 @@
                 :key="item.text"
                 v-model="item.model"
                 :prepend-icon="item.model ? item.icon : item['icon-alt']"
+                color="#24324f"
                 append-icon=""
               >
                 <template v-slot:activator>
@@ -131,23 +132,21 @@ export default {
     drawer: null,
     selectedSearch: 'buildings',
     search: '',
-    validSearch: true,
-    color: 'primary',
-    colors: [
-      'primary',
-      'blue',
-      'success',
-      'red',
-      'teal'
-    ]
+    validSearch: true
+    // color: 'primary',
+    // colors: [
+    //   'primary',
+    //   'blue',
+    //   'success',
+    //   'red',
+    //   'teal'
+    // ]
   }),
   computed: {
     ...mapGetters([
       'roleid'
     ]),
     items: function () {
-      // console.log('checking items')
-      // console.log('roleid: ' + this.roleid)
       if (this.roleid === 4 || this.roleid === '4') {
         return ([
           {

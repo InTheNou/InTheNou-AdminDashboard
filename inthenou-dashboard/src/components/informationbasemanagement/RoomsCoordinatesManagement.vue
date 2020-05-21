@@ -61,6 +61,7 @@
                     lazy-validation
                   >
                   <v-dialog
+                  persistent
                     v-model="dialog"
                     max-width="400px"
                   >
@@ -106,14 +107,14 @@
                       <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn
-                          color="blue darken-1"
+                          color="#ff3e4c"
                           text
                           @click="close"
                         >
                           Cancel
                         </v-btn>
                         <v-btn
-                          color="blue darken-1"
+                          color="#24324f"
                          text
                          :disabled="!valid"
                          @click="save"
@@ -210,7 +211,7 @@ export default {
   /**
    *
    */
-  async created () {
+  async mounted () {
     await this.fetchBuildings() // once the component is created the fetchbuilding method is called
   },
   watch: {
@@ -229,6 +230,7 @@ export default {
           }
         }
       }
+      this.roomsObjectsList = []
     },
     /**
      * watch for changes in the selectedFloor variable
@@ -318,8 +320,8 @@ export default {
         .then((response) => {
           return response.json()
         })
-        .then((buildings) => {
-          this.buildingObjectsList = buildings
+        .then((data) => {
+          this.buildingObjectsList = data.buildings
         })
       for (var i = 0; i < this.buildingObjectsList.length; i++) {
         this.buildingsSelectList.push(this.buildingObjectsList[i].bname)

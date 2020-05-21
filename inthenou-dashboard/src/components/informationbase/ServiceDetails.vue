@@ -13,20 +13,23 @@
                 <v-col
                 :cols="12">
                   <v-card height="100%" style="text-start black--text">
-                    <v-card-title class="headline blue darken-4 white--text" style="font-size:1vw;">
+                    <v-card-title class="headline white--text" style="font-size:1vw; background-color:#24324f;">
                       <h6>{{service.sname}}</h6>
                     </v-card-title>
                     <v-img height="200" :src= "(service.photourl==null? 'https://via.placeholder.com/250' : service.photourl)" ></v-img>
-                    <v-card-subtitle class="pt-0 pb-0 ma-0">
+                    <v-card-text>
+                    <v-card-subtitle class="pt-0 pb-0 ma-0 text--primary">
                       Schedule: {{service.sschedule}}
                     </v-card-subtitle>
-                    <v-card-text>
+                      <v-card-subtitle style="height: 100px" class="pt-0 pb-0  ma-0 text--primary overflow-y-auto" >
+                        Description: {{service.sdescription}}
+                      </v-card-subtitle>
                     <v-expansion-panels flat>
                       <v-expansion-panel>
-                        <v-expansion-panel-header class="pt-0 pl-0">website</v-expansion-panel-header>
+                        <v-expansion-panel-header class="pt-0 pl-0">websites</v-expansion-panel-header>
                           <v-expansion-panel-content>
                             <v-card-subtitle style="height: 100px" class="pt-0 pb-0  ma-0 text--primary overflow-y-auto" >
-                             <v-row v-if="service.websites.length ==0">
+                             <v-row v-if="service.websites.length > 0">
                               <v-col
                                 class="ma-0 pa-0"
                                  v-for="website in service.websites"
@@ -56,7 +59,7 @@
                       <v-expansion-panel>
                         <v-expansion-panel-header class="pt-0 pl-0">Phones</v-expansion-panel-header>
                           <v-expansion-panel-content>
-                           <v-row v-if="service.numbers.length == 0">
+                           <v-row v-if="service.numbers.length > 0">
                              <v-col
                               class="ma-0 pa-0"
                               v-for="phone in service.numbers"
@@ -75,16 +78,6 @@
                             </v-row>
                         </v-expansion-panel-content>
                       </v-expansion-panel>
-                    </v-expansion-panels>
-                    <v-expansion-panels flat>
-                      <v-expansion-panel>
-                        <v-expansion-panel-header class="pt-0 pl-0">Description</v-expansion-panel-header>
-                          <v-expansion-panel-content>
-                            <v-card-subtitle style="height: 100px" class="pt-0 pb-0  ma-0 text--primary overflow-y-auto" >
-                             {{service.sdescription}}
-                            </v-card-subtitle>
-                          </v-expansion-panel-content>
-                        </v-expansion-panel>
                     </v-expansion-panels>
                     </v-card-text>
                   </v-card>

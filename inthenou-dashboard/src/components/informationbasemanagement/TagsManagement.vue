@@ -32,9 +32,9 @@
                     v-model="valid"
                     class="ma-6"
                   >
-                  <v-dialog v-model="dialog" max-width="400px">
+                  <v-dialog persistent v-model="dialog" max-width="400px">
                     <template v-slot:activator="{ on }">
-                      <v-btn color="primary" dark class="mb-2" v-on="on">New Tag</v-btn>
+                      <v-btn color="#39b54a" dark class="mb-2" v-on="on">New Tag</v-btn>
                     </template>
                     <v-card >
                       <v-card-title>
@@ -55,8 +55,8 @@
                       </v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                        <v-btn color="blue darken-1" text :disabled="!valid"  @click="save">Save</v-btn>
+                        <v-btn color="#ff3e4c" text @click="close">Cancel</v-btn>
+                        <v-btn color="#24324f" text :disabled="!valid"  @click="save">Save</v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>

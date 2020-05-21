@@ -3,23 +3,21 @@
         style="max-height: 400px"
         class="overflow-y-auto">
         <v-row>
-  <!-- <v-layout row wrap align-center justify-center>
-  <v-flex xs6 offset xs-1 sm6 offset-sm1 md6 offset-md1> -->
       <v-container v-if="event !== null && event !== undefined" class="pt-0" style="max-width: 600px;">
            <v-col
            style="height: 500px">
           <v-col cols="12" class="pa-0 text-center">
             <v-spacer>
-              <p class="title">
+              <h1 class="title">
               {{($route.params.eventtype == 'allcurrentevents' ?  'Current Events' : $route.params.eventtype == 'alleventsarchive' ? 'Events Archive' : $route.params.eventtype == 'alldeletedevents' ? 'Deleted Events' : $route.params.eventtype == 'myevents' ? 'My Events' : ' ' )}}
-              </p>
+              </h1>
             </v-spacer>
           </v-col>
           <v-card class="pa-2 " style="text-start">
             <v-container>
               <v-row>
                   <v-card height="100%" width="100%" class="card">
-                    <v-card-subtitle class="headline blue darken-4 white--text font">
+                    <v-card-subtitle class="headline white--text font" style="background-color:#24324f;">
                       <p class="title-font">{{event.etitle}}</p>
                     </v-card-subtitle>
                     <v-expansion-panels flat popout>
@@ -45,23 +43,17 @@
                         </v-card-subtitle>
                         <v-card-subtitle class="pt-0 pb-0 ma-0 " ><p>Start: {{formatDate(event.estart)}} </p></v-card-subtitle>
                         <v-card-subtitle class="pt-0 pb-0 ma-0 " ><p>End: {{formatDate(event.eend)}} </p></v-card-subtitle>
-                        </v-card-text>
-                        <v-expansion-panels flat >
-                        <v-expansion-panel>
-                        <v-expansion-panel-header class="pt-0 pl-8"><p>Description</p></v-expansion-panel-header>
-                        <v-expansion-panel-content class="card-text">
                         <v-card-subtitle style="height: 100px" class="pt-0 pb-0  ma-0  overflow-y-auto" >
+                          <p>Description:</p>
                           <p>{{event.edescription}}</p>
-                          </v-card-subtitle>
-                        </v-expansion-panel-content>
-                        </v-expansion-panel>
-                        </v-expansion-panels>
+                        </v-card-subtitle>
+                        </v-card-text>
                       </v-row>
                     </v-container>
                     <v-card-actions class="card-actions">
                       <v-spacer />
-                    <v-btn v-if="(event.estatus === 'active' && !isPastDate(event.eend) && isAuthorized)" @click="dialog=true, eventIDToRemove=event.eid, eventTitleToRemove=event.etitle" :disabled="!isAuthorized" large bottom right color="primary">
-                      Delete
+                    <v-btn v-if="(event.estatus === 'active' && !isPastDate(event.eend) && isAuthorized)" @click="dialog=true, eventTitleToRemove=event.etitle" :disabled="!isAuthorized" large bottom right color="#ff3e4c">
+                      <v-icon v-bind="size" color="#ffffff" dark>Delete </v-icon>
                     </v-btn>
                     </v-card-actions>
                   </v-card>
@@ -70,62 +62,52 @@
           </v-card>
         </v-col>
     </v-container>
-    <v-dialog v-model="dialog" scrollable max-width="300px">
+    <v-dialog v-model="dialog" scrollable max-width="500px">
       <v-card>
-        <v-card-title>Delete event:</v-card-title>
+        <v-card-title>Are you sure you want to delete the event?</v-card-title>
         <v-card-title>{{eventTitleToRemove}}</v-card-title>
         <v-card-actions>
-          <v-btn color="blue darken-1" text @click="dialog = false">Cancel</v-btn>
-          <v-btn class="continuebtn" color="blue darken-1"  text @click="refresh">Continue</v-btn>
+          <v-btn color="#ff3e4c" text @click="dialog = false">Cancel</v-btn>
+          <v-btn class="continuebtn" color="#24324f"  text @click="refresh">Continue</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
     </v-row>
-  <!-- </v-flex>
-  </v-layout> -->
 </template>
 
 <script>
-import { getEvents, previous, next, deleteEvent, formatDate, isPastDate } from './events.js'
+import { deleteEvent, formatDate, isPastDate } from './events.js'
 import { mapGetters } from 'vuex'
 export default {
   data: () => ({
-    eventIDToRemove: null,
     isAuthorized: false,
     eventTitleToRemove: null,
-    offset: 0,
-    limit: 6,
     dialog: false,
-    listofevents: [],
-    disablenext: false,
-    disableprev: true,
     event: { ecreation: '', ecreator: { display_name: '', email: '', roleid: 0, type: '', uid: 1 }, edescription: '', eend: '2020-05-14 12:30:00', eid: 0, estart: '2020-05-14 12:30:00', estatus: '', estatusdate: '', etitle: '', photourl: '', room: { building: { babbrev: '', bcommonname: '', bid: 0, bname: '', btype: '', distinctfloors: [], numfloors: 0, photourl: '' }, photourl: '', raltitude: 50.04, rcode: '', rcustodian: '', rdept: '', rdescription: '', rfloor: 0, rid: 0, rlatitude: 18.209641, rlongitude: -67.139923, roccupancy: 0 }, tags: [], websites: '' }
   }),
   computed: {
     ...mapGetters([
-      'uid'
+      'uid',
+      'roleid'
     ]),
     /**
      *
      */
-    eventsApiPath: function () {
-      return process.env.VUE_APP_API_HOST + process.env.VUE_APP_CURRENT_EVENTS_1 + this.offset + process.env.VUE_APP_CURRENT_EVENTS_2 + this.limit
+    eventApiPath: function () {
+      return process.env.VUE_APP_API_HOST + process.env.VUE_APP_GET_EVENT_BY_ID + this.$route.params.eid
     },
     /**
      *
      */
     deleteEventApiPath: function () {
-      return process.env.VUE_APP_API_HOST + process.env.VUE_APP_DELETE_EVENT_1 + this.eventIDToRemove + process.env.VUE_APP_DELETE_EVENT_3 + 'deleted'
+      return process.env.VUE_APP_API_HOST + process.env.VUE_APP_DELETE_EVENT_1 + this.$route.params.eid + process.env.VUE_APP_DELETE_EVENT_3 + 'deleted'
     }
   },
-  async created () {
+  async mounted () {
     await this.fetchEvent()
-    await this.isAuthorizedToRemove()
+    await this.isAuthorizedToDelete()
   },
   methods: {
-    getEvents,
-    previous,
-    next,
     deleteEvent,
     formatDate,
     isPastDate,
@@ -134,7 +116,7 @@ export default {
       window.history.back()
     },
     fetchEvent: async function () {
-      await fetch(process.env.VUE_APP_API_HOST + '/API/App/Events/eid=' + this.$route.params.eid)
+      await fetch(this.eventApiPath)
         .then((response) => {
           if (!response.ok) {
             throw new Error('Network response was not ok')
@@ -153,12 +135,11 @@ export default {
           console.error('There has been a problem with your fetch operation:', error)
         })
     },
-    isAuthorizedToRemove: async function () {
-      if ((this.event.ecreator.uid).toString() === this.uid.toString()) {
-        this.isAuthorized = true
-      } else {
-        this.isAuthorized = false
-      }
+    /**
+     * Verifies if the current user is authorise to delete the event
+     * if so set the isAuthorized variable to true
+     */
+    isAuthorizedToDelete: async function () {
       await fetch(process.env.VUE_APP_API_HOST + process.env.VUE_APP_DELEGATED_USERS_1 + this.uid + process.env.VUE_APP_DELEGATED_USERS_2)
         .then((response) => {
           if (!response.ok) {
@@ -169,7 +150,7 @@ export default {
         .then((data) => {
           if ((data.users !== null || data.users !== undefined)) {
             for (var i = 0; i < data.users.length; i++) {
-              if ((this.event.ecreator.uid).toString() === (data.users[i].uid.toString())) {
+              if ((this.event.ecreator.uid).toString() === (data.users[i].uid.toString()) || (this.event.ecreator.uid).toString() === this.uid.toString() || this.roleid.toString() === '4') {
                 this.isAuthorized = true
               } else if ((this.event.ecreator.uid).toString() !== this.uid.toString()) {
                 this.isAuthorized = false

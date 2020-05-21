@@ -50,26 +50,13 @@
 </template>
 
 <script>
-// import { offset, limit, next, previous } from '../utils/methods.js'
 export default {
   data: () => ({
     noDataAvailable: false,
-    editServiceDialog: false,
-    editServiceID: null,
-    editServiceObject: [],
-    buildingID: null,
-    floorID: null,
     roomID: null, // room ID
-    roomCode: null,
     servicesList: [],
     filteredServicesList: [],
-    phoneType: '',
     path: '',
-    // offset,
-    // limit,
-    formInputPhoneNumber: null,
-    formInputWebsite: null,
-    websites: [{ Websites: [{ url: 'url', wdescription: 'string' }, { url: 'url', wdescription: 'string' }] }], // dummy for now till Diego serves websites
     search: ''
   }),
   watch: {
@@ -98,17 +85,17 @@ export default {
     }
   },
   mounted () {
-    this.buildingID = this.$route.params.bid
-    this.floorID = this.$route.params.fid
+    // this.buildingID = this.$route.params.bid
+    // this.floorID = this.$route.params.fid
     this.roomID = this.$route.params.rid
-    this.getServices()
+    this.fetchServices()
   },
   methods: {
     /**
      * void : fetch all services of a room using the roomID variable instance of the Vue instance then assign the response value to servicesList instance
      * error: generates a Dialog in case of error notifying the user
      */
-    getServices: async function () {
+    fetchServices: async function () {
       await fetch(process.env.VUE_APP_API_HOST + process.env.VUE_APP_GET_ROOM_SERVICES_1 + this.roomID + process.env.VUE_APP_GET_ROOM_SERVICES_2)
         .then((response) => {
           if (!response.ok) {

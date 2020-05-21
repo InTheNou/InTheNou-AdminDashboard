@@ -1,8 +1,6 @@
 <template>
 <v-container class="pt-0" style="max-width: 600px;">
 <v-row>
-<!-- <v-layout row wrap align-center justify-center>
-  <v-flex xs6 offset xs-1 sm6 offset-sm1 md6 offset-md1> -->
     <v-text-field
             v-model.lazy="search"
             flat
@@ -15,11 +13,12 @@
       <h1>{{building.bname}}</h1>
     </v-col>
     <v-card >
-      <v-container id="scroll-target" style="max-height: 700px" class="overflow-y-auto">
+      <v-container id="scroll-target" style="max-height: 700px; max-width: 600px;" class="overflow-y-auto">
           <v-row  style="height: 500px"  >
+            <v-col>
             <v-list v-model="filteredRoomsList">
               <v-list-item v-if="noDataAvailable">
-                <h2 class="text-center" style="height:100%; align:center;"> NO AVAILABLE  SERVICES AT THE MOMENT </h2>
+                <h2 class="text-center" style="height:100%; align:center;"> NO AVAILABLE  ROOMS AT THE MOMENT </h2>
               </v-list-item>
               <v-list-item
               v-else
@@ -49,48 +48,25 @@
                       </v-list-item-content>
               </v-list-item>
             </v-list>
+            </v-col>
           </v-row>
         </v-container>
     </v-card>
     </v-row>
 </v-container>
-  <!-- </v-flex>
-</v-layout> -->
 </template>
 
 <script>
 export default {
   data: () => ({
     noDataAvailable: false,
-    editCoorDialog: false,
-    validCoordinates: false,
-    formLongitudeInput: null,
-    formLatitudeInput: null,
-    formAltitudeInput: null,
     buildingID: null,
     floorID: null,
-    roomID: null,
-    savedLongitude: null,
-    savedLatitude: null,
-    savedAltitude: null,
     roomsList: [],
     filteredRoomsList: [],
     search: '',
     building: []
   }),
-  // computed: {
-  //   filteredRoomsList: function () {
-  //     var newRoomsList = []
-  //     if (this.search.length > 0) {
-  //       for (var i = 0; i < this.roomsList.rooms.length; i++) {
-  //         if (this.roomsList.rooms[i].rcode === this.search) {
-  //           newRoomsList.push(this.roomsList.rooms[i])
-  //         }
-  //       }
-  //       return newRoomsList
-  //     } else { return this.roomsList }
-  //   }
-  // },
   watch: {
     search: function () {
       var newRoomsList = [{ rooms: [] }]
@@ -144,25 +120,7 @@ export default {
           console.error('There has been a problem with your fetch operation:', error)
         })
     },
-    editCoordinates: function (longitude, latitude, altitude) {
-
-    },
-    getCurrentCoordinates: function () {
-
-    },
-    /**
-     *  Validate form coordinate input using regex, the coordinate is a float number with a total of 0 to 4 decimals
-     */
-    validateCoordinates: function () {
-      if (this.formLongitudeInput != null && this.formLatitudeInput != null) {
-        if (this.formLongitudeInput.match(/^([+-]?\d{1,3})[.](\d{0,4})$/) && this.formLatitudeInput.match(/^([+-]?\d{1,3})[.](\d{0,4})$/)) {
-          return true
-        }
-      }
-      return false
-    },
     followRoute: function (buildingid, floor, roomid) {
-      // console.log('follow route')
       this.$router.push('/informationbase/buildings/' + buildingid + '/floors/' + floor + '/rooms/' + roomid + '/services')
     }
   }

@@ -1,11 +1,16 @@
 <template>
    <v-container style="max-width: 600px;">
     <v-row>
-      <v-col cols="12" class="text-center">
-      <h5>{{searchType.toUpperCase()}} SEARCH</h5>
+      <v-col cols="12" >
+        <v-col cols="12" class="pa-0 text-center">
+              <h1>
+                {{searchType.toUpperCase()}} SEARCH
+              </h1>
+        </v-col>
       <v-card>
       <v-container id="scroll-target" style="max-height: 700px" class="overflow-y-auto">
-          <v-row  style="height: 500px">
+          <v-row  style="height: 500px; max-width: 600px;" >
+            <v-col>
             <v-list v-if="searchType === 'rooms'" v-model="roomsList">
               <v-list-item v-if="noDataAvailable">
                 <h6 class="text-center" style="height:100%; align:center;">ROOM SEARCH NOT FOUND... </h6>
@@ -103,6 +108,7 @@
                 </v-list-item>
               </div>
             </v-list>
+            </v-col>
           </v-row>
         </v-container>
     </v-card>
@@ -167,7 +173,7 @@ export default {
             this.noDataAvailable = true
           } else {
             this.noDataAvailable = false
-            this.buildingsList = data
+            this.buildingsList = data.buildings
           }
         })
         .catch((error) => {

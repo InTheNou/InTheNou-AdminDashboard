@@ -1,26 +1,26 @@
 <template>
-  <v-container>
+  <v-container style="max-width: 800px;">
   <v-col
-    align="center"
+
     justify="center">
     <v-card class="pa-2 justify-center" outlined tile>
       <v-card v-if="noDataAvailable">
             <v-row  align="center" justify="center">
               <v-container >
-                <h2 class="text-center" style="height:100%; align:center;"> USER HAS NO DELEGATED USERS AT THE MOMENT </h2>
+                <h2 class="text-center" style="height:100%; align:center;"> USER HAVE NO DELEGATED USERS AT THE MOMENT </h2>
               </v-container>
             </v-row>
       </v-card>
       <v-card v-else class="justify-center pa-0">
-        <v-card-title class="headline justify-center blue darken-4 white--text">
+        <v-card-title class="headline white--text" style="background-color:#24324f;">
           <v-row>
-            <v-col cols="8">
+            <v-col cols="12">
               <h3>Delegated Users List</h3>
             </v-col>
           </v-row>
         </v-card-title>
         <hr />
-        <v-row align="center">
+        <v-row align="start">
           <div>
             <v-subheader></v-subheader>
           </div>
@@ -38,10 +38,10 @@
                               <v-list-item-title>
                                 Event Creator: {{user.display_name}}
                                 <v-list-item-subtitle>  Email: {{user.email}}</v-list-item-subtitle>
-                                  <v-list-item-action>
-                                    <router-link :to="'/userevents/'+ user.uid"> <v-btn color="primary" dark ><v-icon dark>mdi-arrow-right-bold-circle-outline</v-icon> </v-btn></router-link>
-                                  </v-list-item-action>
                                 </v-list-item-title>
+                                <v-list-item-action>
+                                    <router-link :to="'/userevents/'+ user.uid"> <v-btn color="#24324f"  dark ><v-icon color="#ffffff" v-bind="size" dark>mdi-calendar</v-icon> </v-btn></router-link>
+                                  </v-list-item-action>
                             </v-list-item-content>
                           </v-col>
                       </v-list-item>

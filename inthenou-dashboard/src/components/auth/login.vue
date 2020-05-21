@@ -1,21 +1,20 @@
 <template>
 <v-container class="fill-height">
 <nav>
-  <v-app-bar text app color = "blue darken-4">
+  <v-app-bar text app color = "#24324f">
     <v-toolbar-title class="text-uppercase grey--text">
-      <h1>In<span style="color:red">The</span>Nou</h1>
+      <h1>In<span style="color:#ff3e4c;">The</span>Nou</h1>
     </v-toolbar-title>
   </v-app-bar >
 </nav>
   <v-row align="center" justify="center">
-    <v-col cols="2">
+    <v-col cols="2" style="width: 200px; max-width: 100%;">
     <GoogleLogin :params="params" :renderParams="renderParams" :onSuccess="onSuccess"  :onFailure="onFailure"></GoogleLogin>
     </v-col>
   </v-row>
 </v-container>
 </template>
 <script>
-// import axios from 'axios'
 import GoogleLogin from 'vue-google-login'
 import { mapGetters } from 'vuex'
 import Vue from 'vue'
@@ -28,7 +27,7 @@ export default {
       display_name: ''
     },
     params: { client_id: process.env.VUE_APP_CLIENT_ID, cookie_policy: 'none', scope: 'profile email' },
-    renderParams: { width: 250, height: 50, longtitle: true }
+    renderParams: { width: 200, height: 50, longtitle: false }
   }),
   computed: {
     ...mapGetters([
@@ -41,12 +40,7 @@ export default {
   },
   methods: {
     async sendSessionToDB () {
-      /** Body of the POST API call ***
-      {"access_token":"ACCESTOKENCODE;",
-      "id":"113768707919850641968",
-      "email":"jonathan.santiago27@upr.edu",
-      "display_name": "Jonathan X Santiago Gonzalez"
-      } */
+      console.log('entered method session db')
       var dbusr
       var dbstatus
       await fetch(
@@ -64,7 +58,6 @@ export default {
         .then(response => {
           if (response.status === 404) {
             dbstatus = response.status
-            // alert('You need to be registered')
           } else if (response.status === 402) {
             dbstatus = response.status
           } else if (response.status === 401) {
@@ -77,34 +70,30 @@ export default {
         })
       await this.$store.dispatch('AUTH_CLEAN')
       if (dbstatus === 404) {
-        console.log('failed')
+        // console.log('failed')
         await this.$store.dispatch('AUTH_UNREGISTERED')
         this.$router.push('/login/failed')
       } else if (dbstatus === 402) {
-        console.log('failed')
+        // console.log('failed')
         await this.$store.dispatch('AUTH_UNREGISTERED')
         this.$router.push('/login/failed')
       } else {
         await this.$store.dispatch('AUTH_REQUEST', dbusr)
+        console.log('succeed')
         setTimeout(this.$router.push('/events/allcurrentevents'), 2000)
       }
     },
     onSuccess: async function (googleUser) {
-      this.user.access_token = googleUser.tc.access_token
+      console.log('entered method onSucesss')
       await Vue.GoogleAuth.then(auth2 => {
         var profile = auth2.currentUser.get().getBasicProfile()
-        // console.log(profile)
-        // console.log('ID: ' + profile.getId())
-        // console.log('Full Name: ' + profile.getName())
-        // console.log('Given Name: ' + profile.getGivenName())
-        // console.log('Family Name: ' + profile.getFamilyName())
-        // console.log('Image URL: ' + profile.getImageUrl())
-        // console.log('Email: ' + profile.getEmail())
+        this.user.access_token = auth2.currentUser.get().getAuthResponse(true).access_token
         this.user.id = profile.getId()
         this.user.email = profile.getEmail()
         this.user.display_name = profile.getName()
       })
-      this.sendSessionToDB(googleUser)
+      console.log('calling method sendSessionToDB')
+      this.sendSessionToDB()
     }
   }
 }

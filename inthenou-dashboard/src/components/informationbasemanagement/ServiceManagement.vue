@@ -35,13 +35,13 @@
                   >
                   <v-dialog persistent v-model="dialog" max-width="1000px">
                     <template v-slot:activator="{ on }">
-                      <v-btn color="primary" dark class="mb-2" v-on="on">New Service</v-btn>
+                      <v-col><v-btn color="#39b54a" dark class="mb-2" v-on="on">New Service</v-btn></v-col>
                     </template>
                     <v-card >
                       <v-card-title>
                         <span class="headline">{{ formTitle }}</span>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" text @click="close('service')"><v-icon dark>mdi-close</v-icon></v-btn>
+                        <v-btn color="#ff3e4c" text @click="close('service')"><v-icon dark>mdi-close</v-icon></v-btn>
                       </v-card-title>
                       <v-card-subtitle>* required field</v-card-subtitle>
                       <v-card-text>
@@ -142,13 +142,13 @@
                               ></v-select>
                             </v-col>
                             <v-col cols="3">
-                            <v-btn :disabled="!validServicePhone" @click="validate('phoneServiceCreation')" color="primary mb-0 mt-3 pa-0 "  class="mx-2" >
+                            <v-btn :disabled="!validServicePhone" @click="validate('phoneServiceCreation')" color="#39b54a"  class="mx-2" >
                               ADD
                             </v-btn>
                             </v-col>
                             <v-card class="pa-5" style="width: 100%;">
-                              <v-card-title class="headline justify-center blue darken-4 white--text" >
-                                Current phone List
+                              <v-card-title class="headline justify-center  white--text" style="background-color:#24324f;" >
+                                phone List
                               </v-card-title>
                               <hr />
                               <v-container id="scroll-target" style="max-height: 200px" class="overflow-y-auto">
@@ -198,7 +198,7 @@
                                     <v-dialog v-model="phonestoRemoveDialog" scrollable max-width="300px">
                                       <template v-slot:activator="{ on }">
                                         <div class="text-center">
-                                          <v-btn  :disabled="removedPhoneNumbers.length <= 0"  large color="primary"  v-on="on" class="pa-0">
+                                          <v-btn  :disabled="removedPhoneNumbers.length <= 0"  large color="#ff3e4c"  v-on="on" class="pa-0">
                                             <h1>Remove</h1>
                                           </v-btn>
                                         </div>
@@ -213,8 +213,8 @@
                                         </v-card-text>
                                         <v-divider></v-divider>
                                         <v-card-actions>
-                                          <v-btn   @click="phonestoRemoveDialog = false">Cancel</v-btn>
-                                          <v-btn   @click="removeNumberFromList">Continune</v-btn>
+                                          <v-btn color="#ff3e4c"  @click="phonestoRemoveDialog = false">Cancel</v-btn>
+                                          <v-btn  color="#24324f" @click="removeNumberFromList">Continune</v-btn>
                                         </v-card-actions>
                                       </v-card>
                                     </v-dialog>
@@ -246,7 +246,7 @@
                                   ></v-text-field>
                                 </v-col>
                                 <v-col cols="3">
-                                <v-btn :disabled="!validServicewebsite" @click="validate('websiteServiceCreation')" color="primary mb-0 mt-3 pa-0 "   class="mx-2" >
+                                <v-btn :disabled="!validServicewebsite" @click="validate('websiteServiceCreation')" color="#39b54a"   class="mx-2" >
                                   ADD
                                 </v-btn>
                                 </v-col>
@@ -260,7 +260,7 @@
                                   ></v-text-field>
                                 </v-col>
                                 <v-card class="pa-5" style="width: 100%;">
-                                  <v-card-title class="headline justify-center blue darken-4 white--text" >
+                                  <v-card-title class="headline justify-center  white--text" style="background-color:#24324f;">
                                     Websites List
                                   </v-card-title>
                                   <hr />
@@ -318,7 +318,7 @@
                                         <v-dialog v-model="websitestoRemoveDialog" scrollable max-width="300px">
                                           <template v-slot:activator="{ on }">
                                             <div class="text-center ma-0 pa-0">
-                                              <v-btn  :disabled="removedWebsitesList.length<=0"  large color="primary"  v-on="on" class="pa-0">
+                                              <v-btn  :disabled="removedWebsitesList.length<=0"  large color="#ff3e4c"  v-on="on" class="pa-0">
                                                 <h1>Remove</h1>
                                               </v-btn>
                                             </div>
@@ -333,8 +333,8 @@
                                             </v-card-text>
                                             <v-divider></v-divider>
                                             <v-card-actions>
-                                              <v-btn color="blue darken-1"  @click="websitestoRemoveDialog = false">Cancel</v-btn>
-                                              <v-btn color="blue darken-1"  @click="removeWebsiteFromList">Continune</v-btn>
+                                              <v-btn color="#ff3e4c"  @click="websitestoRemoveDialog = false">Cancel</v-btn>
+                                              <v-btn color="#24324f"  @click="removeWebsiteFromList">Continune</v-btn>
                                             </v-card-actions>
                                           </v-card>
                                         </v-dialog>
@@ -349,7 +349,7 @@
                       </v-card-text>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" text :disabled="!validService"  @click="save">Save</v-btn>
+                        <v-btn color="#24324f" text :disabled="!validService"  @click="save">Save</v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -365,7 +365,7 @@
                       <v-card-title>
                         <span class="headline">Service: {{editedServiceObject.sname}}</span>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" text @click="close('website')"><v-icon dark>mdi-close</v-icon></v-btn>
+                        <v-btn color="#ff3e4c" text @click="close('website')"><v-icon dark>mdi-close</v-icon></v-btn>
                       </v-card-title>
                       <v-card-subtitle>
                         <span>* Required fields</span>
@@ -384,7 +384,7 @@
                               ></v-text-field>
                             </v-col>
                             <v-col cols="3">
-                            <v-btn :disabled="!validWebsite" @click="validate('website')" color="primary mb-0 mt-3 pa-0 "   class="mx-2" >
+                            <v-btn :disabled="!validWebsite" @click="validate('website')" color="#39b54a"   class="mx-2" >
                               ADD
                             </v-btn>
                             </v-col>
@@ -399,7 +399,7 @@
                               ></v-text-field>
                             </v-col>
                             <v-card class="pa-5" style="width: 100%;">
-                              <v-card-title class="headline justify-center blue darken-4 white--text" >
+                              <v-card-title class="headline justify-center  white--text" style="background-color:#24324f;">
                                 Current Websites List
                               </v-card-title>
                               <hr />
@@ -457,7 +457,7 @@
                                     <v-dialog v-model="websitestoRemoveDialog" scrollable max-width="300px">
                                       <template v-slot:activator="{ on }">
                                         <div class="text-center ma-0 pa-0">
-                                          <v-btn  :disabled="removedWebsitesList.length<=0"  large color="primary"  v-on="on" class="pa-0">
+                                          <v-btn  :disabled="removedWebsitesList.length<=0"  large color="#ff3e4c"  v-on="on" class="pa-0">
                                             <h1>Remove</h1>
                                           </v-btn>
                                         </div>
@@ -472,8 +472,8 @@
                                         </v-card-text>
                                         <v-divider></v-divider>
                                         <v-card-actions>
-                                          <v-btn color="blue darken-1"  @click="websitestoRemoveDialog = false">Cancel</v-btn>
-                                          <v-btn color="blue darken-1"  @click="removeWebsiteFromService">Continune</v-btn>
+                                          <v-btn color="#ff3e4c"  @click="websitestoRemoveDialog = false">Cancel</v-btn>
+                                          <v-btn color="#24324f"  @click="removeWebsiteFromService">Continune</v-btn>
                                         </v-card-actions>
                                       </v-card>
                                     </v-dialog>
@@ -493,12 +493,12 @@
                     v-model="validPhone"
                     class="ma-6"
                   >
-                  <v-dialog v-model="phonesDialog" max-width="1000px">
+                  <v-dialog persistent v-model="phonesDialog" max-width="1000px">
                     <v-card>
                       <v-card-title>
                         <span class="headline">{{editedServiceObject.sname}}</span>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" text @click="close('phone')"><v-icon dark>mdi-close</v-icon></v-btn>
+                        <v-btn color="#ff3e4c" text @click="close('phone')"><v-icon dark>mdi-close</v-icon></v-btn>
                       </v-card-title>
                       <v-card-subtitle>
                         <span>* Required fields</span>
@@ -527,12 +527,12 @@
                               ></v-select>
                             </v-col>
                             <v-col cols="3">
-                            <v-btn :disabled="!validPhone" @click="validate('phone')" color="primary mb-0 mt-3 pa-0 "  class="mx-2" >
+                            <v-btn :disabled="!validPhone" @click="validate('phone')" color="#39b54a"  class="mx-2" >
                               ADD
                             </v-btn>
                             </v-col>
                             <v-card class="pa-5" style="width: 100%;">
-                              <v-card-title class="headline justify-center blue darken-4 white--text" >
+                              <v-card-title class="headline justify-center  white--text" style="background-color:#24324f;" >
                                 Current phone List
                               </v-card-title>
                               <hr />
@@ -583,7 +583,7 @@
                                     <v-dialog v-model="phonestoRemoveDialog" scrollable max-width="300px">
                                       <template v-slot:activator="{ on }">
                                         <div class="text-center">
-                                          <v-btn  :disabled="removedPhoneNumbers.length <= 0"  large color="primary"  v-on="on" class="pa-0">
+                                          <v-btn  :disabled="removedPhoneNumbers.length <= 0"  large color="#ff3e4c"  v-on="on" class="pa-0">
                                             <h1>Remove</h1>
                                           </v-btn>
                                         </div>
@@ -598,8 +598,8 @@
                                         </v-card-text>
                                         <v-divider></v-divider>
                                         <v-card-actions>
-                                          <v-btn   @click="phonestoRemoveDialog = false">Cancel</v-btn>
-                                          <v-btn   @click="removeNumberFromService">Continune</v-btn>
+                                          <v-btn color="#ff3e4c"   @click="phonestoRemoveDialog = false">Cancel</v-btn>
+                                          <v-btn  color="#24324f" @click="removeNumberFromService">Continune</v-btn>
                                         </v-card-actions>
                                       </v-card>
                                     </v-dialog>
@@ -663,21 +663,13 @@ export default {
     validPhone: true,
     validServicePhone: true,
     validServicewebsite: true,
-    // validPhoneServiceCreation: true,
     dialog: false,
-
-    scheduleDaySelectList:
-    [
-      'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'
-    ],
     websiteFormInput: '',
     websiteDescriptionFormInput: '',
-    websitesList: { websites: [] },
     removedWebsitesList: [],
     phoneNumberFormInput: '',
     phoneTypeSelectList: ['Extension', 'Mobile', 'Fax'],
     phoneTypeSelected: '',
-    phoneNumbers: { numbers: [] },
     removedPhoneNumbers: [],
     buildingSelectList: [],
     floorSelectList: [],
@@ -890,7 +882,7 @@ export default {
         this.removedPhoneNumbers = []
       } else if (type === 'website') {
         this.websiteDialog = false
-        this.removedWebsites = []
+        this.removedWebsitesList = []
       }
       this.$nextTick(() => {
         this.editedServiceObject = Object.assign({}, this.defaultServiceObject)
@@ -979,12 +971,10 @@ export default {
     fetchBuildings: async function () {
       await fetch(process.env.VUE_APP_API_HOST + process.env.VUE_APP_BUILDINGS_1 + 0 + process.env.VUE_APP_BUILDINGS_2 + 100)
         .then((response) => {
-          // console.log(response)
           return response.json()
         })
         .then((data) => {
-          this.buildingObjectsList = data
-          // console.log(data)
+          this.buildingObjectsList = data.buildings
         })
       for (var i = 0; i < this.buildingObjectsList.length; i++) {
         this.buildingSelectList.push(this.buildingObjectsList[i].bname)

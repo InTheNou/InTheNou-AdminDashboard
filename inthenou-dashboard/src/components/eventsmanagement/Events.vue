@@ -13,9 +13,8 @@
           </v-col>
         <v-col cols="4" class="pa-0">
           <v-container>
-              <v-btn  justify="start"  color="primary" style="max-width: 97%;" v-bind="size"  :disabled="disableprev" @click="previous(currentEventsApiPath)">
-                <v-icon>mdi-arrow-left-bold</v-icon>
-                <!-- <h1 class="ml-4">Previous</h1> -->
+              <v-btn  justify="start"  color="#24324f" style="max-width: 97%;" v-bind="size"  :disabled="disableprev" @click="previous(currentEventsApiPath)">
+                <v-icon color="#ffffff">mdi-arrow-left-bold</v-icon>
                 </v-btn>
           </v-container>
         </v-col>
@@ -31,9 +30,8 @@
         </v-col>
         <v-col cols="4" class="pa-0">
           <v-container>
-              <v-btn color="primary" v-bind="size" style="max-width: 97%;" :disabled="disablenext" @click="next(currentEventsApiPath)">
-                <v-icon>mdi-arrow-right-bold</v-icon>
-               <!-- <h1 class="ml-10 mr-10">Next</h1> -->
+              <v-btn color="#24324f" v-bind="size" style="max-width: 97%;" :disabled="disablenext" @click="next(currentEventsApiPath)">
+                <v-icon color="#ffffff">mdi-arrow-right-bold</v-icon>
                </v-btn>
           </v-container>
         </v-col>
@@ -45,8 +43,8 @@
               <v-container>
                 <v-row style="height: 450px" >
                   <v-list v-model="listofevents" style="width: 100%;">
-                    <v-list-item v-if="listofevents === null">
-                      <h2 class="text-center" style="height:100%; align:center;">No events at the moment</h2>
+                    <v-list-item v-if="listofevents === null || listofevents.length == 0">
+                      <h2 class="text-center" style="height:100%; align:center;">No events at the moment...</h2>
                     </v-list-item>
                     <v-col v-else-if="listofevents != null" cols="12">
                       <v-list-item
@@ -70,6 +68,7 @@
                           <v-list-item-subtitle>
                             End: {{formatDate(event.eend)}}
                           </v-list-item-subtitle>
+                          <v-divider></v-divider>
                         </v-list-item-content>
                       </v-list-item>
                     </v-col>
@@ -86,15 +85,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { getEvents, previous, next, formatDate } from './events.js'
+import { fetchEvents, previous, next, formatDate } from './events.js'
 export default {
   data: () => ({
-    offsetTop: 0,
-    eventIDToRemove: null,
-    eventTitleToRemove: null,
     offset: 0,
     limit: 6,
-    dialog: false,
     listofevents: [],
     disablenext: false,
     disableprev: true
@@ -118,15 +113,7 @@ export default {
       } else if (this.$route.params.eventtype === 'userevents') {
         return process.env.VUE_APP_API_HOST + process.env.VUE_APP_USER_EVENTS_1 + this.$route.params.uid + process.env.VUE_APP_USER_EVENTS_2 + this.offset + process.env.VUE_APP_USER_EVENTS_3 + this.limit
       } else return ''
-
-    //   return process.env.VUE_APP_API_HOST + process.env.VUE_APP_CURRENT_EVENTS_1 + this.offset + process.env.VUE_APP_CURRENT_EVENTS_2 + this.limit
     },
-    /**
-     *
-     */
-    // deleteEventApiPath: function () {
-    //   return process.env.VUE_APP_API_HOST + process.env.VUE_APP_DELETE_EVENT_1 + this.eventIDToRemove + process.env.VUE_APP_DELETE_EVENT_3 + 'deleted'
-    // },
     size: function () {
       const size = { xs: 'x-small', sm: 'small', lg: 'large', xl: 'x-large' }[this.$vuetify.breakpoint.name]
       return size ? { [size]: true } : {}
@@ -134,21 +121,21 @@ export default {
   },
   watch: {
     limit: async function () {
-      this.listofevents = await this.getEvents()
+      this.listofevents = await this.fetchEvents()
     },
     $route: async function () {
       this.offset = 0
       this.limit = 6
       this.disablenext = false
       this.disableprev = true
-      this.listofevents = await this.getEvents()
+      this.listofevents = await this.fetchEvents()
     }
   },
   async mounted () {
-    this.listofevents = await this.getEvents()
+    this.listofevents = await this.fetchEvents()
   },
   methods: {
-    getEvents,
+    fetchEvents,
     previous,
     next,
     formatDate,

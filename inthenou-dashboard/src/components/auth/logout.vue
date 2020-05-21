@@ -1,5 +1,5 @@
 <template>
-    <v-btn dense v-bind="size" @click="logout"  color="grey">
+    <v-btn dense v-bind="size" @click="logout"  color="#ff3e4c">
             <GoogleLogin :params="params" :logoutButton=true :onSuccess="onSuccess">Logout</GoogleLogin>
     </v-btn>
 </template>

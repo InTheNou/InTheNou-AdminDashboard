@@ -1,20 +1,20 @@
 <template>
-    <!-- <v-layout row wrap align-center justify-center>
-  <v-flex xs6 offset xs-1 sm6 offset-sm1 md6 offset-md1> -->
     <v-container style="max-width: 600px; text-start">
       <v-row dense>
         <v-col
           style="height: 500px">
           <v-card dense style="text-start">
-            <v-card-title class="headline indigo darken-4 white--text ">
+            <v-card-title class="headline white--text " style="background-color:#24324f;">
               <h6>{{building.bname}}</h6>
               </v-card-title>
             <v-img height="200" :src= "(building.photourl==null? 'https://via.placeholder.com/250' : building.photourl)" ></v-img>
             <hr>
-            <v-card-subtitle class="pt-0 pb-0  ma-0">Abbreviation: {{building.babbrev}} </v-card-subtitle>
-            <v-card-subtitle class="pt-0 pb-0 ma-0">Floors: {{building.numfloors}} </v-card-subtitle>
-            <v-card-subtitle class="pt-0 pb-0 ma-0">Common Name: {{building.bcommonname}} </v-card-subtitle>
-            <v-card-subtitle class="pt-0 pb-0 ma-0">Type: {{building.btype}} </v-card-subtitle>
+            <v-card-text height="200" class="text-left  pt-0 pb-0 card-text">
+            <v-card-subtitle class="pt-0 pb-0  ma-0"><p>Abbreviation: {{building.babbrev}}</p></v-card-subtitle>
+            <v-card-subtitle class="pt-0 pb-0 ma-0"><p>Floors: {{building.numfloors}}</p></v-card-subtitle>
+            <v-card-subtitle class="pt-0 pb-0 ma-0"><p>Common Name: {{building.bcommonname}}</p></v-card-subtitle>
+            <v-card-subtitle class="pt-0 pb-0 ma-0"><p>Type: {{building.btype}}</p></v-card-subtitle>
+            </v-card-text>
             <hr>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -47,8 +47,6 @@
         </v-list>
           </v-card>
       </v-col>
-  <!-- </v-flex>
-  </v-layout> -->
     </v-row>
   </v-container>
 </template>
@@ -64,20 +62,19 @@ export default {
    */
   mounted () {
     this.bid = this.$route.params.bid
-    this.getBuildings()
+    this.fetchBuilding()
   },
   methods: {
     /**
      *
      */
-    getBuildings: async function () {
+    fetchBuilding: async function () {
       await fetch(process.env.VUE_APP_API_HOST + process.env.VUE_APP_BUILDINGS_DETAIL + this.bid)
         .then((response) => {
           return response.json()
         })
         .then((data) => {
           this.building = data
-          // console.log(data)
         })
     },
     /**
@@ -90,3 +87,26 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+@media only screen and (max-width: 700px) {
+
+  p.title-font {
+    font-size: 6vw;
+  }
+  .card-text div> p {
+    margin: 0%;
+    font-size: 4vw;
+    color:black;
+  }
+}
+  @media only screen and (min-width: 700px) {
+  .title {
+    margin: 0;
+  }
+  .card-text div> p {
+    margin: 0%;
+    color:black;
+  }
+}
+</style>

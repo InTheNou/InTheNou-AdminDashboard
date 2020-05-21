@@ -1,5 +1,5 @@
 
-async function getEvents () {
+async function fetchEvents () {
   var newList
   await fetch(this.eventsApiPath)
     .then((response) => {
@@ -37,7 +37,7 @@ async function deleteEvent () {
     })
     .then(data => {
     })
-  this.listofevents = await this.getEvents()
+  this.listofevents = await this.fetchEvents()
   this.dialog = false
 }
 
@@ -45,7 +45,7 @@ async function previous () {
   if ((this.offset - this.limit) >= 0) {
     if (this.disablenext) this.disablenext = !this.disablenext
     this.offset -= this.limit
-    this.listofevents = await this.getEvents()
+    this.listofevents = await this.fetchEvents()
   } else {
     this.disableprev = !this.disableprev
   }
@@ -53,7 +53,7 @@ async function previous () {
 
 async function next () {
   this.offset += this.limit
-  var newList = await this.getEvents()
+  var newList = await this.fetchEvents()
   if (newList == null || newList.length <= 0) {
     this.offset -= this.limit
     this.disablenext = !this.disablenext
@@ -78,4 +78,4 @@ function isPastDate (date) {
     return (utcDate < utcDate2)
   } else return date
 }
-export { getEvents, previous, next, deleteEvent, formatDate, isPastDate }
+export { fetchEvents, previous, next, deleteEvent, formatDate, isPastDate }
