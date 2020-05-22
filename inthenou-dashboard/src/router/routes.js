@@ -3,7 +3,6 @@ import Login from '../components/auth/login.vue'
 import InformationBase from '../views/InformationBase.vue'
 import serviceManagement from '../views/ServiceManagement.vue'
 import Events from '../views/Events.vue'
-import PrivilegeManagement from '../views/PrivilegeManagement.vue'
 import Moderators from '../views/Moderators.vue'
 import EventCreators from '../views/EventCreators.vue'
 import BuildingDetails from '../views/BuildingDetails.vue'
@@ -35,11 +34,6 @@ export const routes = [
     path: '/events/:eventtype',
     name: 'events',
     component: Events
-  },
-  {
-    path: '/privilegemanagement',
-    name: 'privilege management',
-    component: PrivilegeManagement
   },
   {
     path: '/informationbase',

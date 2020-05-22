@@ -3,7 +3,7 @@
 <nav>
   <v-app-bar text app color = "#24324f">
     <v-toolbar-title class="text-uppercase grey--text">
-      <h1>In<span style="color:#ff3e4c;">The</span>Nou</h1>
+      <span style="color:#afbec8;"><h1>In<span style="color:#ff3e4c;">The</span>Nou</h1></span>
     </v-toolbar-title>
   </v-app-bar >
 </nav>
@@ -27,7 +27,7 @@ export default {
       display_name: ''
     },
     params: { client_id: process.env.VUE_APP_CLIENT_ID, cookie_policy: 'none', scope: 'profile email' },
-    renderParams: { width: 200, height: 50, longtitle: false }
+    renderParams: { width: 200, height: 50, longtitle: true }
   }),
   computed: {
     ...mapGetters([

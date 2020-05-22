@@ -1,9 +1,9 @@
 <template>
 <v-container class="fill-height">
 <nav>
-  <v-app-bar text app color = "blue darken-4">
+  <v-app-bar text app color = "#24324f">
     <v-toolbar-title class="text-uppercase grey--text">
-      <h1>In<span style="color:red">The</span>Nou</h1>
+      <span  style="color:#afbec8;"><h1>In<span style="color:#ff3e4c;">The</span>Nou</h1></span>
     </v-toolbar-title>
   </v-app-bar >
 </nav>

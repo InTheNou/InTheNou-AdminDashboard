@@ -13,7 +13,7 @@
             <v-col>
             <v-list v-if="searchType === 'rooms'" v-model="roomsList">
               <v-list-item v-if="noDataAvailable">
-                <h6 class="text-center" style="height:100%; align:center;">ROOM SEARCH NOT FOUND... </h6>
+                    <h2 class="text-center" style="height:100%; width:100%; align:center;"> ROOM SEARCH NOT FOUND... </h2>
               </v-list-item>
               <div v-else-if="roomsList != null">
               <v-list-item

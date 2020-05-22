@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>RoomsCoordinatesManagement.vue | InTheNou Dashboard Documentation</title>
+    <meta name="generator" content="VuePress 1.5.0">
+    <link rel="icon" type="image/png" sizes="32x32" href="/docs/dashboard/favicon-32x32.png">
+    <meta name="description" content="">
+    <link rel="preload" href="/docs/dashboard/assets/css/0.styles.418494fb.css" as="style"><link rel="preload" href="/docs/dashboard/assets/js/app.573b7570.js" as="script"><link rel="preload" href="/docs/dashboard/assets/js/2.06b0c650.js" as="script"><link rel="preload" href="/docs/dashboard/assets/js/19.7418e1eb.js" as="script"><link rel="prefetch" href="/docs/dashboard/assets/js/10.465f334e.js"><link rel="prefetch" href="/docs/dashboard/assets/js/11.3b5e5db0.js"><link rel="prefetch" href="/docs/dashboard/assets/js/12.7c235df8.js"><link rel="prefetch" href="/docs/dashboard/assets/js/13.038269b6.js"><link rel="prefetch" href="/docs/dashboard/assets/js/14.138d72cf.js"><link rel="prefetch" href="/docs/dashboard/assets/js/15.ddcae6d7.js"><link rel="prefetch" href="/docs/dashboard/assets/js/16.e1306e3a.js"><link rel="prefetch" href="/docs/dashboard/assets/js/17.950113ef.js"><link rel="prefetch" href="/docs/dashboard/assets/js/18.cf85d10a.js"><link rel="prefetch" href="/docs/dashboard/assets/js/20.6c814bd3.js"><link rel="prefetch" href="/docs/dashboard/assets/js/21.103383ba.js"><link rel="prefetch" href="/docs/dashboard/assets/js/22.51f2945b.js"><link rel="prefetch" href="/docs/dashboard/assets/js/23.396faa49.js"><link rel="prefetch" href="/docs/dashboard/assets/js/24.5c74983b.js"><link rel="prefetch" href="/docs/dashboard/assets/js/25.13e00932.js"><link rel="prefetch" href="/docs/dashboard/assets/js/26.0834465c.js"><link rel="prefetch" href="/docs/dashboard/assets/js/27.f375e5c5.js"><link rel="prefetch" href="/docs/dashboard/assets/js/3.c571e137.js"><link rel="prefetch" href="/docs/dashboard/assets/js/4.43a0bae3.js"><link rel="prefetch" href="/docs/dashboard/assets/js/5.c2f9b1e5.js"><link rel="prefetch" href="/docs/dashboard/assets/js/6.f83ab24e.js"><link rel="prefetch" href="/docs/dashboard/assets/js/7.bbc28b1e.js"><link rel="prefetch" href="/docs/dashboard/assets/js/8.ae878978.js"><link rel="prefetch" href="/docs/dashboard/assets/js/9.0f82c80d.js">
+    <link rel="stylesheet" href="/docs/dashboard/assets/css/0.styles.418494fb.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/docs/dashboard/" class="home-link router-link-active"><!----> <span class="site-name">InTheNou Dashboard Documentation</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <!----></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><!---->  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>General Information</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/docs/dashboard/generalinfo/projectsetup.html" class="sidebar-link">Project Setup</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>Authentication</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/docs/dashboard/authentication/login.html" class="sidebar-link">login.vue</a></li><li><a href="/docs/dashboard/authentication/logout.html" class="sidebar-link">logout.vue</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>Events Management</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/docs/dashboard/eventsmanagement/eventdetails.html" class="sidebar-link">EventDetails.vue</a></li><li><a href="/docs/dashboard/eventsmanagement/events.html" class="sidebar-link">Events.vue</a></li><li><a href="/docs/dashboard/eventsmanagement/userevents.html" class="sidebar-link">UserEvents.vue</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>Information Base</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/docs/dashboard/informationbase/buildingdetails.html" class="sidebar-link">BuildingDetails.vue</a></li><li><a href="/docs/dashboard/informationbase/buildings.html" class="sidebar-link">Buildings.vue</a></li><li><a href="/docs/dashboard/informationbase/floorrooms.html" class="sidebar-link">FloorRooms.vue</a></li><li><a href="/docs/dashboard/informationbase/roomservices.html" class="sidebar-link">RoomServices.vue</a></li><li><a href="/docs/dashboard/informationbase/servicedetails.html" class="sidebar-link">ServiceDetails.vue</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>Info. Base Management</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/docs/dashboard/informationbasemanagement/roomscoordiatesmanagement.html" class="active sidebar-link">RoomsCoordinatesManagement.vue</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/docs/dashboard/informationbasemanagement/roomscoordiatesmanagement.html#component-information" class="sidebar-link">Component Information</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/docs/dashboard/informationbasemanagement/roomscoordiatesmanagement.html#component-view" class="sidebar-link">Component view</a></li><li class="sidebar-sub-header"><a href="/docs/dashboard/informationbasemanagement/roomscoordiatesmanagement.html#expected-behaviour" class="sidebar-link">Expected Behaviour</a></li></ul></li><li class="sidebar-sub-header"><a href="/docs/dashboard/informationbasemanagement/roomscoordiatesmanagement.html#vue-instance" class="sidebar-link">Vue Instance</a></li></ul></li><li><a href="/docs/dashboard/informationbasemanagement/servicemanagement.html" class="sidebar-link">ServiceManagement.vue</a></li><li><a href="/docs/dashboard/informationbasemanagement/tagsmanagement.html" class="sidebar-link">TagsManagement.vue</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>Privilege Management</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/docs/dashboard/privilegemanagement/delegatedusers.html" class="sidebar-link">DelegatedUsers.vue</a></li><li><a href="/docs/dashboard/privilegemanagement/eventcreators.html" class="sidebar-link">EventCreators.vue</a></li><li><a href="/docs/dashboard/privilegemanagement/moderators.html" class="sidebar-link">Moderators.vue</a></li></ul></section></li><li><section class="sidebar-group depth-0"><p class="sidebar-heading"><span>Utils</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/docs/dashboard/utils/navbar.html" class="sidebar-link">Navbar.vue</a></li><li><a href="/docs/dashboard/utils/search.html" class="sidebar-link">Search.vue</a></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="roomscoordinatesmanagement-vue"><a href="#roomscoordinatesmanagement-vue" class="header-anchor">#</a> RoomsCoordinatesManagement.vue</h1> <h2 id="component-information"><a href="#component-information" class="header-anchor">#</a> Component Information</h2> <h3 id="component-view"><a href="#component-view" class="header-anchor">#</a> Component view</h3> <p><img src="/docs/dashboard/CoordinatesManagement.PNG" alt="Coordinates component view">
+Coordinates Management View</p> <p><img src="/docs/dashboard/EditCoordinatesform.PNG" alt="Coordinates component view">
+Coordinates Edit Form  View</p> <h3 id="expected-behaviour"><a href="#expected-behaviour" class="header-anchor">#</a> Expected Behaviour</h3> <p>The component allows the user to edit the room's coordinates latitude, longitude, and altitude of any given room of a selected building and floor.</p> <h2 id="vue-instance"><a href="#vue-instance" class="header-anchor">#</a> Vue Instance</h2> <h4 id="imports"><a href="#imports" class="header-anchor">#</a> Imports</h4> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">/** NONE USED **/</span>
+</code></pre></div><h4 id="data-properties"><a href="#data-properties" class="header-anchor">#</a> Data Properties</h4> <div class="language-js extra-class"><pre class="language-js"><code>    <span class="token comment">// When a Vue instance is created, it adds all the properties  </span>
+    <span class="token comment">// found in its data object to Vue’s reactivity system</span>
+    <span class="token function-variable function">data</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">(</span><span class="token punctuation">{</span>
+    search<span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span>
+    valid<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+    dialog<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+    buildingsSelectList<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token comment">// List of buildings names in the system</span>
+    selectedBuilding<span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span> <span class="token comment">// building selected from buildingsSelectList</span>
+    floorsSelectList<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token comment">// List of floors for a selected building</span>
+    selectedFloor<span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span> <span class="token comment">// floor selected from floorsSelectList</span>
+    selectedBuildingID<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token comment">// ID of selected building</span>
+    selectedFloorID<span class="token operator">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span> <span class="token comment">// number of selected floor</span>
+    buildingObjectsList<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token comment">// List holding building JSON objects of the system</span>
+    headers<span class="token operator">:</span> <span class="token comment">// Table headers</span>
+    <span class="token punctuation">[</span>
+      <span class="token punctuation">{</span> text<span class="token operator">:</span> <span class="token string">'Room'</span><span class="token punctuation">,</span> align<span class="token operator">:</span> <span class="token string">'start'</span><span class="token punctuation">,</span> value<span class="token operator">:</span> <span class="token string">'rcode'</span><span class="token punctuation">,</span> sortable<span class="token operator">:</span> <span class="token boolean">true</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span> text<span class="token operator">:</span> <span class="token string">'Latitude'</span><span class="token punctuation">,</span> value<span class="token operator">:</span> <span class="token string">'rlatitude'</span><span class="token punctuation">,</span> sortable<span class="token operator">:</span> <span class="token boolean">false</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span> text<span class="token operator">:</span> <span class="token string">'Longitude'</span><span class="token punctuation">,</span> value<span class="token operator">:</span> <span class="token string">'rlongitude'</span><span class="token punctuation">,</span> sortable<span class="token operator">:</span> <span class="token boolean">false</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span> text<span class="token operator">:</span> <span class="token string">'Altitude'</span><span class="token punctuation">,</span> value<span class="token operator">:</span> <span class="token string">'raltitude'</span><span class="token punctuation">,</span> sortable<span class="token operator">:</span> <span class="token boolean">false</span> <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token punctuation">{</span> text<span class="token operator">:</span> <span class="token string">'Actions'</span><span class="token punctuation">,</span> value<span class="token operator">:</span> <span class="token string">'actions'</span><span class="token punctuation">,</span> sortable<span class="token operator">:</span> <span class="token boolean">false</span> <span class="token punctuation">}</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    roomsObjectsList<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token comment">// List holding room JSON objects of a selected floor</span>
+    editedRoomObjectIndex<span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token comment">// Index of the room object being edit</span>
+    roomObject<span class="token operator">:</span> <span class="token comment">// structure of the JSON room objects fo makin edits</span>
+    <span class="token punctuation">{</span>
+      photourl<span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span> <span class="token comment">// url of the room</span>
+      raltitude<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token comment">// room altitude coordinate</span>
+      rcode<span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span> <span class="token comment">// room code without building prefix</span>
+      rcustodian<span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span> <span class="token comment">// custodian of the room</span>
+      rdept<span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span> <span class="token comment">// department in charge of the room</span>
+      rdescription<span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span> <span class="token comment">// room description</span>
+      rfloor<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token comment">// floor where the room is located</span>
+      rid<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token comment">// room id in the backend</span>
+      rlatitude<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token comment">// room latitude coordinate</span>
+      rlongitude<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token comment">// room longitude coordinate</span>
+      roccupancy<span class="token operator">:</span> <span class="token number">0</span> <span class="token comment">// room capacity</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    defalutRoomObject<span class="token operator">:</span> <span class="token comment">// temporary structure of the JSON room objects holds original values before editing roomObject</span>
+    <span class="token punctuation">{</span>
+      photourl<span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span> <span class="token comment">// url of the room</span>
+      raltitude<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token comment">// room altitude coordinate</span>
+      rcode<span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span> <span class="token comment">// room code without building prefix</span>
+      rcustodian<span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span> <span class="token comment">// custodian of the room</span>
+      rdept<span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span> <span class="token comment">// department in charge of the room</span>
+      rdescription<span class="token operator">:</span> <span class="token string">''</span><span class="token punctuation">,</span> <span class="token comment">// room description</span>
+      rfloor<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token comment">// floor where the room is located</span>
+      rid<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token comment">// room id in the backend</span>
+      rlatitude<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token comment">// room latitude coordinate</span>
+      rlongitude<span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token comment">// room longitude coordinate</span>
+      roccupancy<span class="token operator">:</span> <span class="token number">0</span> <span class="token comment">// room capacity</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    rLatitudeRules<span class="token operator">:</span>
+    <span class="token punctuation">[</span>
+      <span class="token parameter">v</span> <span class="token operator">=&gt;</span> <span class="token operator">!</span><span class="token operator">!</span>v <span class="token operator">||</span> <span class="token string">'Latitude is required'</span><span class="token punctuation">,</span>
+      <span class="token parameter">v</span> <span class="token operator">=&gt;</span> <span class="token regex">/^((18)([.]?[0-9]{0,6}))$/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token string">'latitude must be valid 18.######'</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    rLongitudeRules<span class="token operator">:</span>
+    <span class="token punctuation">[</span>
+      <span class="token parameter">v</span> <span class="token operator">=&gt;</span> <span class="token operator">!</span><span class="token operator">!</span>v <span class="token operator">||</span> <span class="token string">'Longitude is required'</span><span class="token punctuation">,</span>
+      <span class="token parameter">v</span> <span class="token operator">=&gt;</span> <span class="token regex">/^([-](67)([.]?[0-9]{0,6}))$/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token string">'longitude must be valid -67.######'</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    rAltitudeRules<span class="token operator">:</span>
+    <span class="token punctuation">[</span>
+      <span class="token parameter">v</span> <span class="token operator">=&gt;</span> <span class="token operator">!</span><span class="token operator">!</span>v <span class="token operator">||</span> <span class="token string">'Altitude is required'</span><span class="token punctuation">,</span>
+      <span class="token parameter">v</span> <span class="token operator">=&gt;</span> <span class="token regex">/^([01]?[0-9]?[0-9]|200)(((\.)(\d+){1,3}))?$/</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>v<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token string">'Altitudee must be valid 0 - 200.######'</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><h4 id="computed-properties"><a href="#computed-properties" class="header-anchor">#</a> Computed properties</h4> <div class="language-js extra-class"><pre class="language-js"><code> <span class="token comment">/** NONE USED **/</span>
+</code></pre></div><h4 id="methods"><a href="#methods" class="header-anchor">#</a> Methods</h4> <div class="language-js extra-class"><pre class="language-js"><code>methods<span class="token operator">:</span> <span class="token punctuation">{</span>
+   <span class="token comment">/**
+     * validates the edit coordinates form using
+     * the rules property in the v-text-field tags
+     * if inputs are valid calls save method
+     */</span>
+    <span class="token function-variable function">validate</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token comment">/**
+     * opens the editc coordinates form when called
+     * room : the room object being edited
+     */</span>
+    <span class="token function">editRoomObject</span> <span class="token punctuation">(</span><span class="token parameter">room</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token comment">/**
+     * close the edit coordinates dialog
+     * restore any chnages to the roomObject
+     * by interchanging it with the defaultRoomObject
+     */</span>
+    <span class="token function">close</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token comment">/**
+     * commit changes to the backend once the function is called
+     * uses POST method
+     */</span>
+    <span class="token function-variable function">save</span><span class="token operator">:</span> <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token comment">/**
+     * fetch List of buildings in the system
+     *
+     */</span>
+    <span class="token function-variable function">fetchBuildings</span><span class="token operator">:</span> <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token comment">/**
+     * fetch list of rooms once a building and floor is selected
+     */</span>
+    <span class="token function-variable function">fetchRooms</span><span class="token operator">:</span> <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+</code></pre></div><h4 id="watchers"><a href="#watchers" class="header-anchor">#</a> Watchers</h4> <div class="language-js extra-class"><pre class="language-js"><code>watch<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token comment">/**
+     * watch for chanes in the selectedBuilding variable
+     * if any changes occurs updates empty the room list
+     */</span>
+    <span class="token function-variable function">selectedBuilding</span><span class="token operator">:</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token comment">/**
+     * watch for changes in the selectedFloor variable
+     * if any changes occurs calls the method fetchRooms() which updates the selectRoomsList
+     */</span>
+    <span class="token function-variable function">selectedFloor</span><span class="token operator">:</span> <span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token comment">/**
+     * watches for changes in dialog variable
+     * if dialog is false calls method close()
+     */</span>
+    <span class="token function">dialog</span> <span class="token punctuation">(</span><span class="token parameter">val</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+</code></pre></div><h4 id="components"><a href="#components" class="header-anchor">#</a> Components</h4> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">/** NONE USED **/</span>
+</code></pre></div><h4 id="lifecycle-hooks"><a href="#lifecycle-hooks" class="header-anchor">#</a> Lifecycle hooks</h4> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">/**
+ * Called after the instance has been mounted, 
+ * where el is replaced by the newly created vm.$el
+ * call method fetchBuildings()
+ */</span>
+<span class="token keyword">async</span> <span class="token function">created</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+</code></pre></div></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/docs/dashboard/informationbase/servicedetails.html" class="prev">
+        ServiceDetails.vue
+      </a></span> <span class="next"><a href="/docs/dashboard/informationbasemanagement/servicemanagement.html">
+        ServiceManagement.vue
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"></div></div>
+    <script src="/docs/dashboard/assets/js/app.573b7570.js" defer></script><script src="/docs/dashboard/assets/js/2.06b0c650.js" defer></script><script src="/docs/dashboard/assets/js/19.7418e1eb.js" defer></script>
+  </body>
+</html>
